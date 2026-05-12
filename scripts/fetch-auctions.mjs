@@ -103,10 +103,17 @@ function parseDate(text) {
 
 function extractField(html, label) {
   const esc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Match label → </span> → <p ...> ... </p>, content may include <br> tags
   const m = html.match(
-    new RegExp(`${esc}[^<]*<\\/span>\\s*<p[^>]*>\\s*(?:<strong>)?([^<]+?)(?:<\\/strong>)?\\s*<\\/p>`, 's')
+    new RegExp(`${esc}[^<]*<\\/span>\\s*<p[^>]*>([\\s\\S]*?)<\\/p>`, 's')
   );
-  return m ? m[1].replace(/&nbsp;/g, ' ').replace(/&#178;/g, '²').trim() : '';
+  if (!m) return '';
+  return m[1]
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#178;/g, '²')
+    .trim();
 }
 
 const CATEGORY_NORM = {
@@ -366,7 +373,7 @@ async function main() {
         longitude: geo.lng,
         geocodeSource: geo.geocodeSource,
         ownershipType: parsed.ownershipType,
-        summary: '',
+        summary: parsed.ownershipType || '',
         riskTags: [],
         detailUrl: entry.detailUrl,
         pdfUrl: parsed.pdfUrl,
