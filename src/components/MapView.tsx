@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, Component, useState } from 'react'
+import React, { useEffect, useRef, Component, useState, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap, ZoomControl } from 'react-leaflet'
 import L from 'leaflet'
 import type { Auction } from '../types/auction'
@@ -135,12 +135,55 @@ const LAYERS = {
 }
 type LayerKey = keyof typeof LAYERS
 
+// Spread positions in a small fan when multiple auctions share the same coords
+function spreadPositions(lat: number, lng: number, count: number, index: number): [number, number] {
+  if (count === 1) return [lat, lng]
+  const angle = (2 * Math.PI * index) / count - Math.PI / 2
+  const radius = 0.0004
+  return [lat + radius * Math.cos(angle), lng + radius * Math.sin(angle)]
+}
+
+function createClusterIcon(count: number): L.DivIcon {
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      background:#B8922A;color:#fff;border:2px solid #fff;border-radius:50%;
+      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;
+      box-shadow:0 2px 8px rgba(0,0,0,0.4);cursor:pointer;
+    ">${count}</div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  })
+}
+
 export function MapView({ auctions, selectedId, onSelect }: Props) {
   const initialFit = useRef(false)
   const today = new Date().toISOString().split('T')[0]
   const validAuctions = auctions.filter(validCoord)
   const [layer, setLayer] = useState<LayerKey>('light')
+  const [expandedClusters, setExpandedClusters] = useState<Set<string>>(new Set())
   const current = LAYERS[layer]
+
+  // Group auctions by coordinate key
+  const coordGroups = useMemo(() => {
+    const groups = new Map<string, Auction[]>()
+    for (const a of validAuctions) {
+      const key = `${a.latitude.toFixed(4)},${a.longitude.toFixed(4)}`
+      if (!groups.has(key)) groups.set(key, [])
+      groups.get(key)!.push(a)
+    }
+    return groups
+  }, [validAuctions])
+
+  function toggleCluster(key: string) {
+    setExpandedClusters(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   return (
     <div className="relative w-full h-full">
@@ -184,32 +227,52 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
             initialFit={initialFit}
           />
 
-          {validAuctions.map((auction) => {
-            const isSelected = auction.id === selectedId
-            const isPast = auction.auctionDate < today
-            const label = formatPriceLabel(auction.minimumBid)
-            const icon = createPriceIcon(label, isSelected, isPast, auction.category)
+          {[...coordGroups.entries()].map(([coordKey, group]) => {
+            const isExpanded = expandedClusters.has(coordKey)
+            const isCluster = group.length > 1
 
-            return (
-              <Marker
-                key={auction.id}
-                position={[auction.latitude, auction.longitude]}
-                icon={icon}
-                zIndexOffset={isSelected ? 2000 : 0}
-                eventHandlers={{ click: () => onSelect(auction.id) }}
+            // Collapsed cluster: show count badge
+            if (isCluster && !isExpanded) {
+              const [lat, lng] = coordKey.split(',').map(Number)
+              return (
+                <Marker
+                  key={coordKey}
+                  position={[lat, lng]}
+                  icon={createClusterIcon(group.length)}
+                  zIndexOffset={1500}
+                  eventHandlers={{ click: () => toggleCluster(coordKey) }}
+                />
+              )
+            }
+
+            // Single or expanded: show individual markers
+            return group.map((auction, idx) => {
+              const isSelected = auction.id === selectedId
+              const isPast = auction.auctionDate < today
+              const label = formatPriceLabel(auction.minimumBid)
+              const icon = createPriceIcon(label, isSelected, isPast, auction.category)
+              const [lat, lng] = isCluster
+                ? spreadPositions(auction.latitude, auction.longitude, group.length, idx)
+                : [auction.latitude, auction.longitude]
+
+              return (
+                <Marker
+                  key={auction.id}
+                  position={[lat, lng]}
+                  icon={icon}
+                  zIndexOffset={isSelected ? 2000 : 0}
+                  eventHandlers={{ click: () => onSelect(auction.id) }}
               >
                 <Tooltip direction="top" offset={[0, -40]} opacity={1} className="leaflet-custom-tooltip">
                   <MapTooltip auction={auction} />
                 </Tooltip>
               </Marker>
             )
+            })
           })}
         </MapContainer>
       </MapErrorBoundary>
 
-      <div className="absolute bottom-8 left-2 z-[1000] bg-white bg-opacity-80 backdrop-blur-sm rounded px-2 py-1 text-xs text-warm-500 border border-cream-200">
-        ⚠ 演示版坐标：近似区级落点，非精确地址
-      </div>
     </div>
   )
 }
