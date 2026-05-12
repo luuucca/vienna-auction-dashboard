@@ -80,7 +80,8 @@ export const CATEGORY_LABELS: Record<string, string> = {
 }
 
 export function getCategoryLabel(cat: string): string {
-  return CATEGORY_LABELS[cat] ?? cat
+  const primary = cat.split(',')[0].trim()
+  return CATEGORY_LABELS[primary] ?? CATEGORY_LABELS[cat] ?? primary
 }
 
 function inferTypeFromSummary(summary: string): string {
@@ -103,9 +104,11 @@ export function generateTitle(auction: Auction): string {
   const match = auction.address.match(/^1(\d)(\d)0\s/)
   const district = match ? `${parseInt(match[1] + match[2])}区` : ''
 
-  let type = CATEGORY_LABELS[auction.category] ?? auction.category
-  // For "Sonstiges", try to infer a better label from the summary
-  if (auction.category === 'Sonstiges' && auction.summary) {
+  // Handle compound categories like "Wohnungseigentumsobjekt, Sonstiges"
+  const primaryCat = auction.category.split(',')[0].trim()
+  let type = CATEGORY_LABELS[primaryCat] ?? CATEGORY_LABELS[auction.category] ?? primaryCat
+  // For any entry containing "Sonstiges", try to infer from summary
+  if (auction.category.includes('Sonstiges') && auction.summary) {
     type = inferTypeFromSummary(auction.summary)
   }
 
