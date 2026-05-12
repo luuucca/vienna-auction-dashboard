@@ -83,13 +83,33 @@ export function getCategoryLabel(cat: string): string {
   return CATEGORY_LABELS[cat] ?? cat
 }
 
+function inferTypeFromSummary(summary: string): string {
+  const s = summary.toLowerCase()
+  if (/villa|herrschaftlich/.test(s)) return '别墅'
+  if (/dachgeschoss/.test(s)) return '顶层公寓'
+  if (/reihenhaus/.test(s)) return '联排住宅'
+  if (/wohnhaus|wohngebäude|wohnungen|mehrere wohnungen/.test(s)) return '住宅楼'
+  if (/bürogebäude|büro/.test(s)) return '办公楼'
+  if (/hotel|pension/.test(s)) return '酒店'
+  if (/geschäftslokal|geschäftshaus|geschäft/.test(s)) return '商铺'
+  if (/gewerbe|gewerblich/.test(s)) return '商业物业'
+  if (/lager|lagerhalle/.test(s)) return '仓库'
+  if (/grundstück|baugrund|liegenschaft/.test(s)) return '地皮'
+  return '其他'
+}
+
 export function generateTitle(auction: Auction): string {
   // Extract district number from postal code: "1190 Wien ..." → "19区"
   const match = auction.address.match(/^1(\d)(\d)0\s/)
   const district = match ? `${parseInt(match[1] + match[2])}区` : ''
 
-  const type = CATEGORY_LABELS[auction.category] ?? auction.category
-  const area = auction.area > 0 ? ` ${Math.round(auction.area)}㎡` : ''
+  let type = CATEGORY_LABELS[auction.category] ?? auction.category
+  // For "Sonstiges", try to infer a better label from the summary
+  if (auction.category === 'Sonstiges' && auction.summary) {
+    type = inferTypeFromSummary(auction.summary)
+  }
+
+  const area = auction.area > 0 ? `${Math.round(auction.area)}㎡` : ''
 
   return [district, type, area].filter(Boolean).join(' ')
 }
