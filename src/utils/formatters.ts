@@ -71,7 +71,7 @@ export function getRiskTagStyle(tag: string): { bg: string; text: string; border
 
 export const CATEGORY_LABELS: Record<string, string> = {
   Eigentumswohnung: '公寓',
-  Wohnungseigentumsobjekt: '区分所有',
+  Wohnungseigentumsobjekt: '公寓',
   Einfamilienhaus: '独栋住宅',
   Mehrfamilienhaus: '多户住宅',
   Mietshaus: '出租楼',
