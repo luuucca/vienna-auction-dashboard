@@ -108,8 +108,8 @@ export function generateTitle(auction: Auction): string {
   const primaryCat = auction.category.split(',')[0].trim()
   let type = CATEGORY_LABELS[primaryCat] ?? CATEGORY_LABELS[auction.category] ?? primaryCat
   // For any entry containing "Sonstiges", try to infer from summary
-  if (auction.category.includes('Sonstiges') && auction.summary) {
-    type = inferTypeFromSummary(auction.summary)
+  if (auction.category.includes('Sonstiges')) {
+    type = auction.summary ? inferTypeFromSummary(auction.summary) : '物业'
   }
 
   const area = auction.area > 0 ? `${Math.round(auction.area)}㎡` : ''
