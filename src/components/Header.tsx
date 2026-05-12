@@ -30,91 +30,76 @@ export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloa
       />
       <div className="relative h-0.5 bg-gradient-to-r from-transparent via-gold-400 to-transparent" />
 
-      <div className="relative px-6 py-4 lg:px-10 lg:py-5">
-        <div className="flex items-start justify-between gap-6">
+      <div className="relative px-4 py-3 sm:px-6 sm:py-4 lg:px-10 lg:py-5">
 
-          {/* Left: branding */}
-          <div className="flex items-start gap-4 min-w-0">
-            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gold-500 bg-opacity-20 border border-gold-400 border-opacity-40 flex items-center justify-center mt-0.5">
-              <Scale size={18} className="text-gold-400" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-3 mb-1">
-                <span className="text-xs font-medium tracking-widest uppercase text-gold-400 opacity-80">
-                  Ediktsdatei · Wien
-                </span>
-                <span className="hidden sm:inline-block text-xs text-warm-400 opacity-60">司法拍卖 · 尽职调查</span>
-              </div>
-              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-cream-100 leading-tight tracking-tight">
-                维也纳法拍房空间尽调看板
-              </h1>
-              <p className="mt-1 text-xs text-warm-300 opacity-70 max-w-xl leading-relaxed">
-                实时监控奥地利 Ediktsdatei 在拍房产 · 地图定位 · 估值起拍价 · 专家报告
-              </p>
-            </div>
+        {/* Top row: icon + title */}
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gold-500 bg-opacity-20 border border-gold-400 border-opacity-40 flex items-center justify-center">
+            <Scale size={16} className="text-gold-400" />
           </div>
-
-          {/* Right: status + controls */}
-          <div className="flex-shrink-0 flex flex-col items-end gap-2">
-
-            {/* Data status */}
-            <div className="flex items-center gap-2 text-xs text-warm-400 opacity-70">
-              <Clock size={11} />
-              <span>数据更新：{fmtTime(lastModified)}</span>
-              <span className="opacity-50">·</span>
-              <span>{auctionCount} 条在拍</span>
+          <div className="min-w-0">
+            <div className="text-xs font-medium tracking-widest uppercase text-gold-400 opacity-80">
+              Ediktsdatei · Wien
             </div>
-
-            {/* Buttons row */}
-            <div className="flex items-center gap-2">
-
-              {/* Reload JSON (fast, no scrape) */}
-              <button
-                onClick={onReloadData}
-                disabled={refresh.running}
-                title="重新读取本地数据文件"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-warm-300 border border-warm-600 border-opacity-30 hover:border-opacity-60 hover:text-cream-100 transition-colors disabled:opacity-40"
-              >
-                <RefreshCw size={11} />
-                刷新显示
-              </button>
-
-              {/* Trigger scraper (slow, fetches from Ediktsdatei) */}
-              <button
-                onClick={refresh.running ? undefined : onRefresh}
-                disabled={refresh.running}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all
-                  ${refresh.running
-                    ? 'bg-gold-600 bg-opacity-20 text-gold-400 cursor-not-allowed'
-                    : 'bg-gold-500 bg-opacity-20 text-gold-300 border border-gold-500 border-opacity-40 hover:bg-opacity-30 hover:text-gold-200'
-                  }`}
-              >
-                {refresh.running
-                  ? <Loader2 size={11} className="animate-spin" />
-                  : <RefreshCw size={11} />
-                }
-                {refresh.running ? '抓取中…' : '从 Ediktsdatei 更新数据'}
-              </button>
-            </div>
-
-            {/* Progress / last status */}
-            {(refresh.lastLine || refresh.error) && (
-              <div className="flex items-center gap-1.5">
-                <span className={`text-xs truncate max-w-xs ${refresh.error ? 'text-red-400' : 'text-warm-400 opacity-70'}`}>
-                  {refresh.error ?? refresh.lastLine}
-                </span>
-                {refresh.progress.length > 0 && (
-                  <button
-                    onClick={() => setLogOpen((o) => !o)}
-                    className="text-warm-500 opacity-60 hover:opacity-100 flex-shrink-0"
-                  >
-                    {logOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  </button>
-                )}
-              </div>
-            )}
+            <h1 className="font-serif text-base sm:text-xl font-semibold text-cream-100 leading-tight tracking-tight">
+              维也纳法拍房空间尽调看板
+            </h1>
           </div>
         </div>
+
+        {/* Status row */}
+        <div className="flex items-center gap-2 text-xs text-warm-400 opacity-70 mb-2.5">
+          <Clock size={11} />
+          <span>数据更新：{fmtTime(lastModified)}</span>
+          <span className="opacity-50">·</span>
+          <span>{auctionCount} 条在拍</span>
+        </div>
+
+        {/* Buttons row — wraps on small screens */}
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={onReloadData}
+            disabled={refresh.running}
+            title="重新读取本地数据文件"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-warm-300 border border-warm-600 border-opacity-30 hover:border-opacity-60 hover:text-cream-100 transition-colors disabled:opacity-40"
+          >
+            <RefreshCw size={11} />
+            刷新显示
+          </button>
+
+          <button
+            onClick={refresh.running ? undefined : onRefresh}
+            disabled={refresh.running}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all
+              ${refresh.running
+                ? 'bg-gold-600 bg-opacity-20 text-gold-400 cursor-not-allowed'
+                : 'bg-gold-500 bg-opacity-20 text-gold-300 border border-gold-500 border-opacity-40 hover:bg-opacity-30 hover:text-gold-200'
+              }`}
+          >
+            {refresh.running
+              ? <Loader2 size={11} className="animate-spin" />
+              : <RefreshCw size={11} />
+            }
+            {refresh.running ? '抓取中…' : '从 Ediktsdatei 更新数据'}
+          </button>
+        </div>
+
+        {/* Progress / last status */}
+        {(refresh.lastLine || refresh.error) && (
+          <div className="flex items-center gap-1.5 mt-2">
+            <span className={`text-xs truncate max-w-xs ${refresh.error ? 'text-red-400' : 'text-warm-400 opacity-70'}`}>
+              {refresh.error ?? refresh.lastLine}
+            </span>
+            {refresh.progress.length > 0 && (
+              <button
+                onClick={() => setLogOpen((o) => !o)}
+                className="text-warm-500 opacity-60 hover:opacity-100 flex-shrink-0"
+              >
+                {logOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Collapsible log panel */}

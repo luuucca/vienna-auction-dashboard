@@ -104,7 +104,7 @@ export default function App() {
 
   /* ── Main layout ── */
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-cream-100">
+    <div className="flex flex-col bg-cream-100 min-h-screen md:h-screen md:overflow-hidden">
       <Header
         lastModified={lastModified}
         auctionCount={auctions.length}
@@ -117,24 +117,28 @@ export default function App() {
 
       <FilterBar filters={filters} onChange={setFilters} resultCount={filteredAuctions.length} />
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left: Map (60%) */}
-        <div className="hidden md:block w-3/5 overflow-hidden border-r border-cream-200">
+      {/* Mobile: map on top, list below — all scrollable */}
+      <div className="md:hidden">
+        <div className="h-[50vw] min-h-[240px] max-h-[360px] border-b border-cream-200">
           <MapView auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
         </div>
+        {selectedAuction && (
+          <DetailPanel auction={selectedAuction} onClose={() => setSelectedId('')} />
+        )}
+        <AuctionList auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
+      </div>
 
-        {/* Right: Detail + List (40%) */}
-        <div className="flex-1 md:w-2/5 flex flex-col overflow-hidden bg-cream-100">
+      {/* Desktop: side-by-side */}
+      <div className="hidden md:flex flex-1 overflow-hidden">
+        <div className="w-3/5 overflow-hidden border-r border-cream-200">
+          <MapView auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
+        </div>
+        <div className="flex-1 flex flex-col overflow-hidden bg-cream-100">
           {selectedAuction && (
             <DetailPanel auction={selectedAuction} onClose={() => setSelectedId('')} />
           )}
           <AuctionList auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
         </div>
-      </div>
-
-      {/* Mobile map */}
-      <div className="md:hidden h-[45vh] border-t border-cream-200 flex-shrink-0">
-        <MapView auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
       </div>
     </div>
   )
