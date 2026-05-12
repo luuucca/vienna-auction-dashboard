@@ -46,8 +46,15 @@ export function useAuctions(): UseAuctionsResult {
         return res.json() as Promise<Auction[]>
       })
       .then((data) => {
-        // 只保留有起拍价或估值的条目（过滤残留 mock/空数据）
-        setAuctions(data.filter((a) => a.estimatedValue > 0 || a.minimumBid > 0))
+        const PARKING_KEYWORDS = /stellplatz|parkplatz|garage|tiefgarage|abstellplatz|motorrad|fahrrad/i
+        setAuctions(data.filter((a) => {
+          if (!(a.estimatedValue > 0 || a.minimumBid > 0)) return false
+          // 剔除停车位、车库等非住宅标的
+          if (PARKING_KEYWORDS.test(a.summary ?? '')) return false
+          // 估值极低（< €15,000）基本是停车位或储藏室
+          if (a.estimatedValue > 0 && a.estimatedValue < 15000) return false
+          return true
+        }))
         setLoading(false)
       })
       .catch((err: Error) => {
