@@ -1,0 +1,111 @@
+@import 'leaflet/dist/leaflet.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-cream: #F8F5EE;
+  --color-forest: #1D3A2A;
+  --color-gold: #B8922A;
+  --color-gold-light: #D4A843;
+  --color-border: #DDD7C8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-cream);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1c1a17;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: #e8e4dc;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-border);
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
+}
+
+.leaflet-popup-tip-container {
+  margin-top: -1px;
+}
+
+/* Custom price marker */
+.price-marker-wrap {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.price-marker-wrap:hover {
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0ece3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5bfb3;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a09a8e;
+}
+
+/* Auction list scroll area */
+.auction-list-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c5bfb3 #f0ece3;
+}
+
+/* Transition utilities */
+.transition-card {
+  transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+/* Header grid pattern overlay */
+.header-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40zm0-40h2l-2 2V0zm0 4l4-4h2l-6 6V4zm0 4l8-8h2L40 10V8zm0 4L52 0h2L40 14v-2zm0 4L56 0h2L40 18v-2zm0 4L60 0h2L40 22v-2zm0 4L64 0h2L40 26v-2zm0 4L68 0h2L40 30v-2zm0 4L72 0h2L40 34v-2zm0 4L76 0h2L40 38v-2zm0 4L80 0v2L42 40h-2zm4 0L80 4v2L46 40h-2zm4 0L80 8v2L50 40h-2zm4 0l28-28v2L54 40h-2zm4 0l24-24v2L58 40h-2zm4 0l20-20v2L62 40h-2zm4 0l16-16v2L66 40h-2zm4 0l12-12v2L70 40h-2zm4 0l8-8v2l-6 6h-2zm4 0l4-4v2l-2 2h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Selected card highlight */
+@keyframes selectedPulse {
+  0% { box-shadow: 0 0 0 0 rgba(184, 146, 42, 0.3); }
+  70% { box-shadow: 0 0 0 6px rgba(184, 146, 42, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(184, 146, 42, 0); }
+}
+
+.card-selected-flash {
+  animation: selectedPulse 0.6s ease-out;
+}

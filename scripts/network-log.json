@@ -1,0 +1,820 @@
+[
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/suche!OpenForm&subf=ex",
+    "time": 1778616793249
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JSValidation.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/Messages.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap.min.css",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-theme.min.css",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery-3.3.1.slim.min.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap.min.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/dataTables.bootstrap.min.css",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery.dataTables.min.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/dataTables.bootstrap.min.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/moment.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/sorting/datetime-moment.js",
+    "time": 1778616793417
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-datepicker3.css",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.min.js",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.de.min.js",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/jasny-bootstrap.min.css",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jasny-bootstrap.min.js",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/bootstrap_for_edikte.css",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/dojo.js",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/back.js",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_XMLHTTP?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ediktelog.nsf/OpenLogJavascript?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchLib?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchUtilities?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Categories?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/JS_AnwSearchLib?OpenJavaScriptLibrary",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/edikte_screen.css",
+    "time": 1778616793418
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/justiz_edikte_2010.gif",
+    "time": 1778616793418
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/suche!OpenForm&subf=ex",
+    "bodyPreview": "<!DOCTYPE html><html>\n<head>\n<meta http-equiv=\"Content-Language\" content=\"de-at\">\n<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n<script\t \tsrc=\"/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary\"\tlanguage=\"JavaScript\"\t\ttype=\"text/javascript\"\t></script>\n<script \tsrc=\"/edikte/reposit.nsf/JSValidation.js\" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\ttype=\"text/",
+    "time": 1778616793430
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/dataTables.bootstrap.min.css",
+    "bodyPreview": "table.dataTable{clear:both;margin-top:6px !important;margin-bottom:6px !important;max-width:none !important;border-collapse:separate !important}table.dataTable td,table.dataTable th{-webkit-box-sizing:content-box;box-sizing:content-box}table.dataTable td.dataTables_empty,table.dataTable th.dataTables_empty{text-align:center}table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap}div.dataTables_wrapper div.dataTables_length label{font-weight:normal;text-align:left;white-space:nowra",
+    "time": 1778616793527
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-theme.min.css",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n *//*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n */.btn-default,.btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger{text-shadow:0 -1px 0 rgba(0,0,0,0.2);-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 0 rgba(255,255",
+    "time": 1778616793535
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/bootstrap_for_edikte.css",
+    "bodyPreview": "/*.bootstrap-padding {\r\n\tpadding-bottom: 40px;\r\n\tpadding-top: 115px;\t\r\n}*/\r\n\r\n.navbar-default {\r\n\tbackground-color: #fff;\r\n\tbackground-image: none;\t\r\n}\r\n\r\n.navbar-fixed-top {\r\n\tmin-height: 105px;\r\n}\r\n\r\n.navbar-fixed-top .navbar-brand {\r\n\theight: 105px;\r\n}\r\n\r\n.navbar-fixed-bottom {\r\n\tmin-height: 30px;\r\n}\r\n\r\n.navbar-fixed-bottom li > a { \r\n\tpadding: 5px;\r\n}\r\n\r\n.navbar-toggle {\r\n\tborder-color: #ddd;\r\n}\r\n\r\n.navbar-toggle .icon-bar {\r\n\tbackground-color: #888;\r\n}\r\n\r\n.navbar-text {\r\n\tmargin: 15px;\r\n}\r\n",
+    "time": 1778616793545
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-datepicker3.css",
+    "bodyPreview": "/*!\n * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n.datepicker {\n  border-radius: 4px;\n  direction: ltr;\n}\n.datepicker-inline {\n  width: 220px;\n}\n.datepicker-rtl {\n  direction: rtl;\n}\n.datepicker-rtl.dropdown-menu {\n  left: auto;\n}\n.datepicker-rtl table tr td span {\n  float: right;\n}\n.datepicker-dropdown {\n  top: 0;\n  left: 0;\n  padding: 4px;\n}\n.datepicker-drop",
+    "time": 1778616793553
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/edikte_screen.css",
+    "bodyPreview": ".hide_screen_only,.show_print_only,.hide {\r\n\tdisplay: none;\r\n}\r\n\r\n.show_screen_only,.hide_print_only,.show {\r\n\tdisplay: block;\r\n}\r\n\r\n.show_screenreader_only {\r\n\tposition: absolute;\r\n\tleft: -1000px;\r\n\ttop: -1000px;\r\n\twidth: 0px;\r\n\theight: 0px;\r\n\toverflow: hidden;\r\n\tdisplay: inline;\r\n}\r\n\r\ndiv#activityindicator {\r\n\tposition: absolute;\r\n\theight: 60px;\r\n\twidth: 60px;\r\n\ttop: 50%;\r\n\tleft: 50%;\r\n\tmargin-top: -30px;\r\n\tmargin-left: -30px;\r\n\tbackground-color: #666666;\r\n\tz-index: +100;\r\n\tdisplay: none;\r\n}\r\n",
+    "time": 1778616793554
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/jasny-bootstrap.min.css",
+    "bodyPreview": "/*!\n * Jasny Bootstrap v3.1.3 (http://jasny.github.io/bootstrap)\n * Copyright 2012-2014 Arnold Daniels\n * Licensed under Apache-2.0 (https://github.com/jasny/bootstrap/blob/master/LICENSE)\n */\n\n.container-smooth{max-width:1170px}@media (min-width:1px){.container-smooth{width:auto}}.btn-labeled{padding-top:0;padding-bottom:0}.btn-label{position:relative;background:0 0;background:rgba(0,0,0,.15);display:inline-block;padding:6px 12px;left:-12px;border-radius:3px 0 0 3px}.btn-label.btn-label-right{l",
+    "time": 1778616793558
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap.min.css",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n *//*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n *//*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgro",
+    "time": 1778616793566
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary",
+    "bodyPreview": "/** \r\n* @fileoverview Allgemeine Funktionen f\\u00FCr die Ediktsdatei des\r\n* Bundesministeriums f\\u00FCr Justiz\r\n* @link http://www.edikte.justiz.gv.at\r\n*\r\n* @author Susanne Mauritz BRZ/IBM support.edikte@justiz.gv.at\r\n* @author Martin Leyrer\r\n* @version 1.1 \r\n*/\r\n\r\n/* Funktionen \r\nfunction setFocus(fieldname)\r\nfunction getBL(gbnr)\r\nfunction calcprufzeichen(but,suff)\r\nfunction calwin1(link,w,h,l,t)\r\nfunction showId(id,doc) {\r\nfunction hideId(id,doc) {\r\nfunction toggleDisplay(id,doc, onoff) {\r\nfun",
+    "time": 1778616793568
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/Messages.js",
+    "bodyPreview": "// Messages\nvar msgUnd = \" und \"\nvar msgZwischen = \" zwischen \"\nvar msgMin = \"Minimum: \"\nvar msgMax = \"Maximum: \"\nvar msgMinLength = \"Mindestlänge: \"\nvar msgMaxLength = \"Maximallänge: \"\nvar msgMinMaxLength = \"Länge zwischen \"\nvar msgregFN = \"besteht aus einer maximal sechsstelligen Zahl und einem gültigen Buchstaben (Prüfzeichen).\"\nvar msgregParagraph = \"darf nur Ziffern und maximal einen Buchstaben am Ende enthalten (keine Sonderzeichen und Leerzeichen). Beispiel: 123a\"\nvar msgDrop = \"Bitte wäh",
+    "time": 1778616793569
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JSValidation.js",
+    "bodyPreview": "/** \n* @fileoverview JavaScript Validierung für die Ediktsdatei des\n* Bundesministeriums für Justiz\n* @link http://www.edikte.justiz.gv.at\n*\n* @author Susanne Mauritz BRZ/IBM support.edikte@justiz.gv.at\n* @author Martin Leyrer BRZ support.edikte@justiz.gv.at\n* @version 1.2\n*/\n/* 2008-03-12 Validierung für Tabbed Formulare ergänzt\n\t 2008-05-29\tEscapeReservedWords hinzugefügt\n\t 2008-06-23\tEscapeReservedWords aktualisiert\n\t 2008-07-02\tRegEx in EscapeReservedWords korrigiert\n\t 2008-09-17 Blurfield e",
+    "time": 1778616793576
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/dataTables.bootstrap.min.js",
+    "bodyPreview": "/*!\n DataTables Bootstrap 3 integration\n ©2011-2015 SpryMedia Ltd - datatables.net/license\n*/\nvar $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.findInternal=function(a,b,c){a instanceof String&&(a=String(a));for(var e=a.length,d=0;d<e;d++){var k=a[d];if(b.call(c,k,d,a))return{i:d,v:k}}return{i:-1,v:void 0}};$jscomp.ASSUME_ES5=!1;$jscomp.ASSUME_NO_NATIVE_MAP=!1;$jscomp.ASSUME_NO_NATIVE_SET=!1;$jscomp.SIMPLE_FROUND_POLYFILL=!1;\n$jscomp.defineProperty=$jscomp.ASSUME_ES5||\"function\"==typeof Object.de",
+    "time": 1778616793584
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/sorting/datetime-moment.js",
+    "bodyPreview": "/**\n * This plug-in for DataTables represents the ultimate option in extensibility\n * for sorting date / time strings correctly. It uses\n * [Moment.js](http://momentjs.com) to create automatic type detection and\n * sorting plug-ins for DataTables based on a given format. This way, DataTables\n * will automatically detect your temporal information and sort it correctly.\n *\n * For usage instructions, please see the DataTables blog\n * post that [introduces it](//datatables.net/blog/2014-12-18).\n *\n ",
+    "time": 1778616793588
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.min.js",
+    "bodyPreview": "/*!\n * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n!function(a){\"function\"==typeof define&&define.amd?define([\"jquery\"],a):a(\"object\"==typeof exports?require(\"jquery\"):jQuery)}(function(a,b){function c(){return new Date(Date.UTC.apply(Date,arguments))}function d(){var a=new Date;return c(a.getFullYear(),a.getMonth(),a.getDate())}function e(a,b){return a.getUTCF",
+    "time": 1778616793602
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.de.min.js",
+    "bodyPreview": "!function(a){a.fn.datepicker.dates.de={days:[\"Sonntag\",\"Montag\",\"Dienstag\",\"Mittwoch\",\"Donnerstag\",\"Freitag\",\"Samstag\"],daysShort:[\"Son\",\"Mon\",\"Die\",\"Mit\",\"Don\",\"Fre\",\"Sam\"],daysMin:[\"So\",\"Mo\",\"Di\",\"Mi\",\"Do\",\"Fr\",\"Sa\"],months:[\"Januar\",\"Februar\",\"März\",\"April\",\"Mai\",\"Juni\",\"Juli\",\"August\",\"September\",\"Oktober\",\"November\",\"Dezember\"],monthsShort:[\"Jan\",\"Feb\",\"Mär\",\"Apr\",\"Mai\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Okt\",\"Nov\",\"Dez\"],today:\"Heute\",monthsTitle:\"Monate\",clear:\"Löschen\",weekStart:1,format:\"dd.mm.yy",
+    "time": 1778616793603
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap.min.js",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n */\n\n/*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2020 Twitter, Inc.\n * Licensed under the MIT license\n */\n\nif(\"undefined\"==typeof jQuery)throw new Error(\"Bootstrap's JavaScript requires jQuery\");+function(t){\"use strict\";var e=t.fn.jquery.split(\" \")[0].split(\".\");if(e[0]<2&&e[1]<9||1==e[0]&&9==e[1]&&e[2]<1||e[0]>3)throw new Error(\"Bootstrap's JavaScript requires jQuery version",
+    "time": 1778616793618
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jasny-bootstrap.min.js",
+    "bodyPreview": "/*!\n * Jasny Bootstrap v3.1.3 (http://jasny.github.io/bootstrap)\n * Copyright 2012-2014 Arnold Daniels\n * Licensed under Apache-2.0 (https://github.com/jasny/bootstrap/blob/master/LICENSE)\n */\nif(\"undefined\"==typeof jQuery)throw new Error(\"Jasny Bootstrap's JavaScript requires jQuery\");+function(a){\"use strict\";function b(){var a=document.createElement(\"bootstrap\"),b={WebkitTransition:\"webkitTransitionEnd\",MozTransition:\"transitionend\",OTransition:\"oTransitionEnd otransitionend\",transition:\"tran",
+    "time": 1778616793620
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_XMLHTTP?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen f\\u00FCr den Zugriff auf Notes-Daten via AJAX. Wird von allen Edikstdatei-Anwendungen benutzt,\r\n * die AJAX einsetzten.\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 200711   LeMa    Lint'ed, comments<br>\r\n * 200802   LeMa    HTML_SEARCH_DELIM, & und | Operatoren, & Unterst\\u00FCtzung\r\n * 200802   MaSu    DOCLINKKENNUNG variabel, Unterst\\u00FCtzung f\\u00FCr Mehrfachtreffer (Gegenst\\u00E4nde)\r\n *                  posid zur Identifiz",
+    "time": 1778616793638
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/back.js",
+    "bodyPreview": "/*\r\n\tCopyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.\r\n\tAvailable via Academic Free License >= 2.1 OR the modified BSD license.\r\n\tsee: http://dojotoolkit.org/license for details\r\n*/\r\n\r\n\r\nif(!dojo._hasResource[\"dojo.back\"]){\r\ndojo._hasResource[\"dojo.back\"]=true;\r\ndojo.provide(\"dojo.back\");\r\n(function(){\r\nvar _1=dojo.back;\r\nfunction getHash(){\r\nvar h=window.location.hash;\r\nif(h.charAt(0)==\"#\"){\r\nh=h.substring(1);\r\n}\r\nreturn dojo.isMozilla?h:decodeURIComponent(h);\r\n};\r\nfunction set",
+    "time": 1778616793638
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery.dataTables.min.js",
+    "bodyPreview": "/*!\n   Copyright 2008-2019 SpryMedia Ltd.\n\n This source file is free software, available under the following license:\n   MIT license - http://datatables.net/license\n\n This source file is distributed in the hope that it will be useful, but\n WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.\n\n For details please refer to: http://www.datatables.net\n DataTables 1.10.20\n ©2008-2019 SpryMedia Ltd - datatab",
+    "time": 1778616793651
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery-3.3.1.slim.min.js",
+    "bodyPreview": "/*! jQuery v3.3.1 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-effects,-effects/Tween,-effects/animatedSelector | (c) JS Foundation and other contributors | jquery.org/license */\n!function(e,t){\"use strict\";\"object\"==typeof module&&\"object\"==typeof module.exports?module.exports=e.document?t(e,!0):function(e){if(!e.document)throw new Error(\"jQuery requires a window with a document\");retur",
+    "time": 1778616793657
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ediktelog.nsf/OpenLogJavascript?OpenJavaScriptLibrary",
+    "bodyPreview": "/*\t * =======================================================\r\t * <HEADER>\r\t * NAME:\tOpenLogFunctions script library\r\t * VERSION:\t20070320a\r\t * AUTHOR(S):\tJulian Robichaux ( http://www.nsftools.com )\r\t * ORIGINAL SOURCE:\tThe OpenLog database, available as an\r\t * open-source project at http://www.OpenNTF.org\r\t * HISTORY:\r\t * 20070320a:\tinitial version\r\t * \r\t * DISCLAIMER:\r\t * This code is provided \"as-is\", and should be used at your own risk. \r\t * The authors make no express or implied warranty a",
+    "time": 1778616793660
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Categories?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen zum F\\u00FCllen der Kategoriefelder Kat1 und Kat2 (Haupt- und Unterkategorie)\r\n * <br>&nbsp;<br>\r\n * Voraussetzungen: Kategoriefelder m\\u00FCssen Kat1 und Kat2 hei\\u00DFen\r\n * 23.6.2008: optional nur Werte oder Text/Value bei Optionsfeldern Kat1 u. Kat2\r\n *\r\n * @author Susanne Mauritz, 2007\r\n * @version 1.0\r\n */\r\n\r\nvar allKat;\r\n\r\n/**\r\n * Optionen in Kat1 Feld setzen<br>\r\n * Liest Feld PKat aus und f\\u00FCllt das Feld Kat1\r\n *\r\n",
+    "time": 1778616793666
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchLib?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen, um die Eingaben zu \\u00FCberpr\\u00FCfen und die Abfrage direkt via JavaScript abzuschicken. Enth\\u00E4lt auch \r\n * die JavaScript Hilfsfunktionen f\\u00FCr den Aufruf des Kalenders, f\\u00FCr den \"bis=ab\" Knopf und die gegenseitige\r\n * Ausschlie\\u00DFung der Orte\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 20080212 MaSu\t\tHTML_SEARCH_DELIM\r\n *\r\n * @author LeMa (Martin Leyrer), 2007\r\n * @author MaSu (Susanne Mauritz, 2009\r\n * @version",
+    "time": 1778616793667
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/JS_AnwSearchLib?OpenJavaScriptLibrary",
+    "bodyPreview": "var SUBFV_BAUSTEIN_DEFAULT = \"NUL\"; // Fr\\u00FCher: \"Ganzer Text\"\r\n\r\n$(document).ready(function(){\r\n\t//Kalender\r\n\tvar options={\r\n\t\tformat: \"dd.mm.yyyy\",\r\n\t\tweekStart: 1,\r\n\t\ttodayBtn: \"linked\",\r\n\t\torientation: \"auto\",\r\n\t\tlanguage: \"de\",\r\n\t\tcalendarWeeks: true,\r\n\t\ttodayHighlight: true,\r\n\t\tdaysOfWeekHighlighted: \"0,6\",\r\n\t\tassumeNearbyYear: 1,\r\n\t\t//endDate: \"today\",\r\n\t    autoclose: true\r\n\t};\r\n\t\r\n\tvar date_input_VVDat1=$('div[id=\"VVDat1Div\"]');\r\n\tvar date_input_VVDat2=$('div[id=\"VVDat2Div\"]');\r\n\r\n\td",
+    "time": 1778616793671
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/dojo.js",
+    "bodyPreview": "/*\n\tCopyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.\n\tAvailable via Academic Free License >= 2.1 OR the modified BSD license.\n\tsee: http://dojotoolkit.org/license for details\n*/\n\n/*\n\tThis is a compiled version of Dojo, built for deployment and not for\n\tdevelopment. To get an editable version, please visit:\n\n\t\thttp://dojotoolkit.org\n\n\tfor documentation and information on getting the source.\n*/\n\n(function(){var _1=null;if((_1||(typeof djConfig!=\"undefined\"&&djConfig.scopeMap))&&(t",
+    "time": 1778616793679
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/justiz_edikte_2010.gif",
+    "bodyPreview": "GIF89a�\u0000A\u0000�\u0000\u0000\u0001\u0001\u0001���!!!�4'JJJ���```~~~�rg����cY���**)���������㺸�������{���zzz������������������\u0013\u0013\u0013����zq��൵����===����#\u0013ppp���䛔�+\u001b����j]������000�����噘�������������PPP������YYY�þ���RRR]]]vvv���蒋�����۹�����������\u001d\u001d\u001d\u0016\u0016\u0016�������������������?1������⌆�YL�J<��������谰���������󦦦����XL����\u001e\fVVV���DDD�������������RE����������������F9666���������:;:���� \u000eB?A�A6�0!�;..//�����῿�@@@��倀����������������������������������������������������������������������������AAA������������???�����������������������������銌�",
+    "time": 1778616793679
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchUtilities?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Diverse Javascript-Funktionen, die in div. Anwendungen verwendet werden.\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 200809   LeMa    erstellt<br>\r\n *\r\n * @author LeMa (Martin Leyrer), 2008\r\n * @author MaSu (Susanne Mauritz), 2008\r\n * @version 1.0\r\n */\r\n\r\n\r\n/**\r\n * F\\u00FCllt den \\u00FCbergebenen String mit der \\u00FCbergebenen Anzahl von \r\n * f\\u00FChrenden Nullen auf, falls der String k\\u00FCrzer als die \\u00FCbergebene Anzahl ist.\r\n * \r\n * @par",
+    "time": 1778616793686
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/resources/iframe_history.html",
+    "time": 1778616793702
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/fonts/glyphicons-halflings-regular.woff2",
+    "time": 1778616793725
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/moment.js",
+    "bodyPreview": "//! moment.js\n\n;(function (global, factory) {\n    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :\n    typeof define === 'function' && define.amd ? define(factory) :\n    global.moment = factory()\n}(this, (function () { 'use strict';\n\n    var hookCallback;\n\n    function hooks () {\n        return hookCallback.apply(null, arguments);\n    }\n\n    // This is done to register the method called with moment()\n    // without creating circular dependencies.\n    fu",
+    "time": 1778616793726
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/resources/iframe_history.html",
+    "bodyPreview": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\r\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\r\n<head>\r\n\t<title></title>\r\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></meta>\r\n\t<script type=\"text/javascript\">\r\n\t// <!--\r\n\tvar noInit = false;\r\n\t\r\n\tfunction defineParams(sparams){\r\n\t\tif(sparams){\r\n\t\t\tvar ss = (sparams.indexOf(\"&amp;\") >= 0) ? \"&amp;\" : \"&\";\r\n\t\t\tsparams = sparams",
+    "time": 1778616793744
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/fonts/glyphicons-halflings-regular.woff2",
+    "bodyPreview": "wOF2\u0000\u0001\u0000\u0000\u0000\u0000Fl\u0000\u000f\u0000\u0000\u0000\u0000�\\\u0000\u0000F\t\u0000\u0001\u0002M\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000?FFTM\u001c\u001a \u0006`\u0000�r\b\u0004\u0011\b\n��$��e\u00016\u0002$\u0003�t\u000b�0\u0000\u0004 \u0005�\"\u0007�Q?webf\u0006\u001be�5옏��@��?��\b\n��� \u001b�t������������,3+\u000f2q\r�F\u0016�YO\u001b�\u0004&>��b�m�5�Z��H$��Y�\u0019��{�H\tjd�\u000bՉ\f��%��٧y\"�\u0004\u0003���+�@��]��e��{���v��Nc�)\u000e�n���?~?萤h�\u0000��_�&i\u001f���\u001dѝ\u0005���?�>��^K �v�-\u001bcۍ1��\u0012�2K��y��,'n��\u0000\u0007(�3Ewi�B\u0005\u0017��&��\u000b��T�lh�0M\u001a���҆d�Y�r�ﲬ�nti�]�yur�������\u0013VXsj\u000e����gMn\u0019�әH�W����\b r2�>iT`V7��R(����\u001a��+�o6�'c��B���\u0006�4��ι����㿚�T\t]a[Qd<3wq8,���rTI\u0016�8�\u0012\u001c�0>E�?�*E�痦�#��7'�����S\t\f\u000boc�ʷ�_�7&#*�+)����+4a\u0001�A6�c��y�٣�f(b\u0019F�����$;",
+    "time": 1778616793751
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/suchedi?SearchView&subf=eex&SearchOrder=4&SearchMax=4999&retfields=~BL=0&ftquery=&query=%28%5BBL%5D%3D%280%29%29",
+    "time": 1778616794803
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary",
+    "time": 1778616794871
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JSValidation.js",
+    "time": 1778616794871
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/Messages.js",
+    "time": 1778616794871
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap.min.css",
+    "time": 1778616794871
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-theme.min.css",
+    "time": 1778616794873
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery-3.3.1.slim.min.js",
+    "time": 1778616794873
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
+    "time": 1778616794873
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap.min.js",
+    "time": 1778616794873
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/dataTables.bootstrap.min.css",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery.dataTables.min.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/dataTables.bootstrap.min.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/moment.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/sorting/datetime-moment.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-datepicker3.css",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.min.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.de.min.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/jasny-bootstrap.min.css",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jasny-bootstrap.min.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/bootstrap_for_edikte.css",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/dojo.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/back.js",
+    "time": 1778616794874
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_XMLHTTP?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ediktelog.nsf/OpenLogJavascript?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchLib?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchUtilities?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Categories?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/JS_AnwSearchLib?OpenJavaScriptLibrary",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/edikte_screen.css",
+    "time": 1778616794875
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/justiz_edikte_2010.gif",
+    "time": 1778616794875
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary",
+    "bodyPreview": "/** \r\n* @fileoverview Allgemeine Funktionen f\\u00FCr die Ediktsdatei des\r\n* Bundesministeriums f\\u00FCr Justiz\r\n* @link http://www.edikte.justiz.gv.at\r\n*\r\n* @author Susanne Mauritz BRZ/IBM support.edikte@justiz.gv.at\r\n* @author Martin Leyrer\r\n* @version 1.1 \r\n*/\r\n\r\n/* Funktionen \r\nfunction setFocus(fieldname)\r\nfunction getBL(gbnr)\r\nfunction calcprufzeichen(but,suff)\r\nfunction calwin1(link,w,h,l,t)\r\nfunction showId(id,doc) {\r\nfunction hideId(id,doc) {\r\nfunction toggleDisplay(id,doc, onoff) {\r\nfun",
+    "time": 1778616794876
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap.min.css",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n *//*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n *//*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgro",
+    "time": 1778616794877
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-theme.min.css",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n *//*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n */.btn-default,.btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger{text-shadow:0 -1px 0 rgba(0,0,0,0.2);-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 0 rgba(255,255",
+    "time": 1778616794878
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery-3.3.1.slim.min.js",
+    "bodyPreview": "/*! jQuery v3.3.1 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-effects,-effects/Tween,-effects/animatedSelector | (c) JS Foundation and other contributors | jquery.org/license */\n!function(e,t){\"use strict\";\"object\"==typeof module&&\"object\"==typeof module.exports?module.exports=e.document?t(e,!0):function(e){if(!e.document)throw new Error(\"jQuery requires a window with a document\");retur",
+    "time": 1778616794878
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap.min.js",
+    "bodyPreview": "/*!\n * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)\n */\n\n/*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2020 Twitter, Inc.\n * Licensed under the MIT license\n */\n\nif(\"undefined\"==typeof jQuery)throw new Error(\"Bootstrap's JavaScript requires jQuery\");+function(t){\"use strict\";var e=t.fn.jquery.split(\" \")[0].split(\".\");if(e[0]<2&&e[1]<9||1==e[0]&&9==e[1]&&e[2]<1||e[0]>3)throw new Error(\"Bootstrap's JavaScript requires jQuery version",
+    "time": 1778616794878
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/dataTables.bootstrap.min.css",
+    "bodyPreview": "table.dataTable{clear:both;margin-top:6px !important;margin-bottom:6px !important;max-width:none !important;border-collapse:separate !important}table.dataTable td,table.dataTable th{-webkit-box-sizing:content-box;box-sizing:content-box}table.dataTable td.dataTables_empty,table.dataTable th.dataTables_empty{text-align:center}table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap}div.dataTables_wrapper div.dataTables_length label{font-weight:normal;text-align:left;white-space:nowra",
+    "time": 1778616794878
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jquery.dataTables.min.js",
+    "bodyPreview": "/*!\n   Copyright 2008-2019 SpryMedia Ltd.\n\n This source file is free software, available under the following license:\n   MIT license - http://datatables.net/license\n\n This source file is distributed in the hope that it will be useful, but\n WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.\n\n For details please refer to: http://www.datatables.net\n DataTables 1.10.20\n ©2008-2019 SpryMedia Ltd - datatab",
+    "time": 1778616794879
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/dataTables.bootstrap.min.js",
+    "bodyPreview": "/*!\n DataTables Bootstrap 3 integration\n ©2011-2015 SpryMedia Ltd - datatables.net/license\n*/\nvar $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.findInternal=function(a,b,c){a instanceof String&&(a=String(a));for(var e=a.length,d=0;d<e;d++){var k=a[d];if(b.call(c,k,d,a))return{i:d,v:k}}return{i:-1,v:void 0}};$jscomp.ASSUME_ES5=!1;$jscomp.ASSUME_NO_NATIVE_MAP=!1;$jscomp.ASSUME_NO_NATIVE_SET=!1;$jscomp.SIMPLE_FROUND_POLYFILL=!1;\n$jscomp.defineProperty=$jscomp.ASSUME_ES5||\"function\"==typeof Object.de",
+    "time": 1778616794879
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/moment.js",
+    "bodyPreview": "//! moment.js\n\n;(function (global, factory) {\n    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :\n    typeof define === 'function' && define.amd ? define(factory) :\n    global.moment = factory()\n}(this, (function () { 'use strict';\n\n    var hookCallback;\n\n    function hooks () {\n        return hookCallback.apply(null, arguments);\n    }\n\n    // This is done to register the method called with moment()\n    // without creating circular dependencies.\n    fu",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/sorting/datetime-moment.js",
+    "bodyPreview": "/**\n * This plug-in for DataTables represents the ultimate option in extensibility\n * for sorting date / time strings correctly. It uses\n * [Moment.js](http://momentjs.com) to create automatic type detection and\n * sorting plug-ins for DataTables based on a given format. This way, DataTables\n * will automatically detect your temporal information and sort it correctly.\n *\n * For usage instructions, please see the DataTables blog\n * post that [introduces it](//datatables.net/blog/2014-12-18).\n *\n ",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/bootstrap-datepicker3.css",
+    "bodyPreview": "/*!\n * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n.datepicker {\n  border-radius: 4px;\n  direction: ltr;\n}\n.datepicker-inline {\n  width: 220px;\n}\n.datepicker-rtl {\n  direction: rtl;\n}\n.datepicker-rtl.dropdown-menu {\n  left: auto;\n}\n.datepicker-rtl table tr td span {\n  float: right;\n}\n.datepicker-dropdown {\n  top: 0;\n  left: 0;\n  padding: 4px;\n}\n.datepicker-drop",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.min.js",
+    "bodyPreview": "/*!\n * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n!function(a){\"function\"==typeof define&&define.amd?define([\"jquery\"],a):a(\"object\"==typeof exports?require(\"jquery\"):jQuery)}(function(a,b){function c(){return new Date(Date.UTC.apply(Date,arguments))}function d(){var a=new Date;return c(a.getFullYear(),a.getMonth(),a.getDate())}function e(a,b){return a.getUTCF",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/bootstrap-datepicker.de.min.js",
+    "bodyPreview": "!function(a){a.fn.datepicker.dates.de={days:[\"Sonntag\",\"Montag\",\"Dienstag\",\"Mittwoch\",\"Donnerstag\",\"Freitag\",\"Samstag\"],daysShort:[\"Son\",\"Mon\",\"Die\",\"Mit\",\"Don\",\"Fre\",\"Sam\"],daysMin:[\"So\",\"Mo\",\"Di\",\"Mi\",\"Do\",\"Fr\",\"Sa\"],months:[\"Januar\",\"Februar\",\"März\",\"April\",\"Mai\",\"Juni\",\"Juli\",\"August\",\"September\",\"Oktober\",\"November\",\"Dezember\"],monthsShort:[\"Jan\",\"Feb\",\"Mär\",\"Apr\",\"Mai\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Okt\",\"Nov\",\"Dez\"],today:\"Heute\",monthsTitle:\"Monate\",clear:\"Löschen\",weekStart:1,format:\"dd.mm.yy",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/css/jasny-bootstrap.min.css",
+    "bodyPreview": "/*!\n * Jasny Bootstrap v3.1.3 (http://jasny.github.io/bootstrap)\n * Copyright 2012-2014 Arnold Daniels\n * Licensed under Apache-2.0 (https://github.com/jasny/bootstrap/blob/master/LICENSE)\n */\n\n.container-smooth{max-width:1170px}@media (min-width:1px){.container-smooth{width:auto}}.btn-labeled{padding-top:0;padding-bottom:0}.btn-label{position:relative;background:0 0;background:rgba(0,0,0,.15);display:inline-block;padding:6px 12px;left:-12px;border-radius:3px 0 0 3px}.btn-label.btn-label-right{l",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/js/jasny-bootstrap.min.js",
+    "bodyPreview": "/*!\n * Jasny Bootstrap v3.1.3 (http://jasny.github.io/bootstrap)\n * Copyright 2012-2014 Arnold Daniels\n * Licensed under Apache-2.0 (https://github.com/jasny/bootstrap/blob/master/LICENSE)\n */\nif(\"undefined\"==typeof jQuery)throw new Error(\"Jasny Bootstrap's JavaScript requires jQuery\");+function(a){\"use strict\";function b(){var a=document.createElement(\"bootstrap\"),b={WebkitTransition:\"webkitTransitionEnd\",MozTransition:\"transitionend\",OTransition:\"oTransitionEnd otransitionend\",transition:\"tran",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/bootstrap_for_edikte.css",
+    "bodyPreview": "/*.bootstrap-padding {\r\n\tpadding-bottom: 40px;\r\n\tpadding-top: 115px;\t\r\n}*/\r\n\r\n.navbar-default {\r\n\tbackground-color: #fff;\r\n\tbackground-image: none;\t\r\n}\r\n\r\n.navbar-fixed-top {\r\n\tmin-height: 105px;\r\n}\r\n\r\n.navbar-fixed-top .navbar-brand {\r\n\theight: 105px;\r\n}\r\n\r\n.navbar-fixed-bottom {\r\n\tmin-height: 30px;\r\n}\r\n\r\n.navbar-fixed-bottom li > a { \r\n\tpadding: 5px;\r\n}\r\n\r\n.navbar-toggle {\r\n\tborder-color: #ddd;\r\n}\r\n\r\n.navbar-toggle .icon-bar {\r\n\tbackground-color: #888;\r\n}\r\n\r\n.navbar-text {\r\n\tmargin: 15px;\r\n}\r\n",
+    "time": 1778616794880
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/dojo.js",
+    "bodyPreview": "/*\n\tCopyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.\n\tAvailable via Academic Free License >= 2.1 OR the modified BSD license.\n\tsee: http://dojotoolkit.org/license for details\n*/\n\n/*\n\tThis is a compiled version of Dojo, built for deployment and not for\n\tdevelopment. To get an editable version, please visit:\n\n\t\thttp://dojotoolkit.org\n\n\tfor documentation and information on getting the source.\n*/\n\n(function(){var _1=null;if((_1||(typeof djConfig!=\"undefined\"&&djConfig.scopeMap))&&(t",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/back.js",
+    "bodyPreview": "/*\r\n\tCopyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.\r\n\tAvailable via Academic Free License >= 2.1 OR the modified BSD license.\r\n\tsee: http://dojotoolkit.org/license for details\r\n*/\r\n\r\n\r\nif(!dojo._hasResource[\"dojo.back\"]){\r\ndojo._hasResource[\"dojo.back\"]=true;\r\ndojo.provide(\"dojo.back\");\r\n(function(){\r\nvar _1=dojo.back;\r\nfunction getHash(){\r\nvar h=window.location.hash;\r\nif(h.charAt(0)==\"#\"){\r\nh=h.substring(1);\r\n}\r\nreturn dojo.isMozilla?h:decodeURIComponent(h);\r\n};\r\nfunction set",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_XMLHTTP?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen f\\u00FCr den Zugriff auf Notes-Daten via AJAX. Wird von allen Edikstdatei-Anwendungen benutzt,\r\n * die AJAX einsetzten.\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 200711   LeMa    Lint'ed, comments<br>\r\n * 200802   LeMa    HTML_SEARCH_DELIM, & und | Operatoren, & Unterst\\u00FCtzung\r\n * 200802   MaSu    DOCLINKKENNUNG variabel, Unterst\\u00FCtzung f\\u00FCr Mehrfachtreffer (Gegenst\\u00E4nde)\r\n *                  posid zur Identifiz",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ediktelog.nsf/OpenLogJavascript?OpenJavaScriptLibrary",
+    "bodyPreview": "/*\t * =======================================================\r\t * <HEADER>\r\t * NAME:\tOpenLogFunctions script library\r\t * VERSION:\t20070320a\r\t * AUTHOR(S):\tJulian Robichaux ( http://www.nsftools.com )\r\t * ORIGINAL SOURCE:\tThe OpenLog database, available as an\r\t * open-source project at http://www.OpenNTF.org\r\t * HISTORY:\r\t * 20070320a:\tinitial version\r\t * \r\t * DISCLAIMER:\r\t * This code is provided \"as-is\", and should be used at your own risk. \r\t * The authors make no express or implied warranty a",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchLib?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen, um die Eingaben zu \\u00FCberpr\\u00FCfen und die Abfrage direkt via JavaScript abzuschicken. Enth\\u00E4lt auch \r\n * die JavaScript Hilfsfunktionen f\\u00FCr den Aufruf des Kalenders, f\\u00FCr den \"bis=ab\" Knopf und die gegenseitige\r\n * Ausschlie\\u00DFung der Orte\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 20080212 MaSu\t\tHTML_SEARCH_DELIM\r\n *\r\n * @author LeMa (Martin Leyrer), 2007\r\n * @author MaSu (Susanne Mauritz, 2009\r\n * @version",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_SearchUtilities?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Diverse Javascript-Funktionen, die in div. Anwendungen verwendet werden.\r\n * <br>&nbsp;<br>\r\n * Changes:<br>\r\n * 200809   LeMa    erstellt<br>\r\n *\r\n * @author LeMa (Martin Leyrer), 2008\r\n * @author MaSu (Susanne Mauritz), 2008\r\n * @version 1.0\r\n */\r\n\r\n\r\n/**\r\n * F\\u00FCllt den \\u00FCbergebenen String mit der \\u00FCbergebenen Anzahl von \r\n * f\\u00FChrenden Nullen auf, falls der String k\\u00FCrzer als die \\u00FCbergebene Anzahl ist.\r\n * \r\n * @par",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JS_Categories?OpenJavaScriptLibrary",
+    "bodyPreview": "/*jsl:option explicit*/\r\n\r\n/**\r\n * @fileoverview\r\n * Hilfsfunktionen zum F\\u00FCllen der Kategoriefelder Kat1 und Kat2 (Haupt- und Unterkategorie)\r\n * <br>&nbsp;<br>\r\n * Voraussetzungen: Kategoriefelder m\\u00FCssen Kat1 und Kat2 hei\\u00DFen\r\n * 23.6.2008: optional nur Werte oder Text/Value bei Optionsfeldern Kat1 u. Kat2\r\n *\r\n * @author Susanne Mauritz, 2007\r\n * @version 1.0\r\n */\r\n\r\nvar allKat;\r\n\r\n/**\r\n * Optionen in Kat1 Feld setzen<br>\r\n * Liest Feld PKat aus und f\\u00FCllt das Feld Kat1\r\n *\r\n",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/JS_AnwSearchLib?OpenJavaScriptLibrary",
+    "bodyPreview": "var SUBFV_BAUSTEIN_DEFAULT = \"NUL\"; // Fr\\u00FCher: \"Ganzer Text\"\r\n\r\n$(document).ready(function(){\r\n\t//Kalender\r\n\tvar options={\r\n\t\tformat: \"dd.mm.yyyy\",\r\n\t\tweekStart: 1,\r\n\t\ttodayBtn: \"linked\",\r\n\t\torientation: \"auto\",\r\n\t\tlanguage: \"de\",\r\n\t\tcalendarWeeks: true,\r\n\t\ttodayHighlight: true,\r\n\t\tdaysOfWeekHighlighted: \"0,6\",\r\n\t\tassumeNearbyYear: 1,\r\n\t\t//endDate: \"today\",\r\n\t    autoclose: true\r\n\t};\r\n\t\r\n\tvar date_input_VVDat1=$('div[id=\"VVDat1Div\"]');\r\n\tvar date_input_VVDat2=$('div[id=\"VVDat2Div\"]');\r\n\r\n\td",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/edikte_screen.css",
+    "bodyPreview": ".hide_screen_only,.show_print_only,.hide {\r\n\tdisplay: none;\r\n}\r\n\r\n.show_screen_only,.hide_print_only,.show {\r\n\tdisplay: block;\r\n}\r\n\r\n.show_screenreader_only {\r\n\tposition: absolute;\r\n\tleft: -1000px;\r\n\ttop: -1000px;\r\n\twidth: 0px;\r\n\theight: 0px;\r\n\toverflow: hidden;\r\n\tdisplay: inline;\r\n}\r\n\r\ndiv#activityindicator {\r\n\tposition: absolute;\r\n\theight: 60px;\r\n\twidth: 60px;\r\n\ttop: 50%;\r\n\tleft: 50%;\r\n\tmargin-top: -30px;\r\n\tmargin-left: -30px;\r\n\tbackground-color: #666666;\r\n\tz-index: +100;\r\n\tdisplay: none;\r\n}\r\n",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/justiz_edikte_2010.gif",
+    "bodyPreview": "GIF89a�\u0000A\u0000�\u0000\u0000\u0001\u0001\u0001���!!!�4'JJJ���```~~~�rg����cY���**)���������㺸�������{���zzz������������������\u0013\u0013\u0013����zq��൵����===����#\u0013ppp���䛔�+\u001b����j]������000�����噘�������������PPP������YYY�þ���RRR]]]vvv���蒋�����۹�����������\u001d\u001d\u001d\u0016\u0016\u0016�������������������?1������⌆�YL�J<��������谰���������󦦦����XL����\u001e\fVVV���DDD�������������RE����������������F9666���������:;:���� \u000eB?A�A6�0!�;..//�����῿�@@@��倀����������������������������������������������������������������������������AAA������������???�����������������������������銌�",
+    "time": 1778616794881
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/Messages.js",
+    "bodyPreview": "// Messages\nvar msgUnd = \" und \"\nvar msgZwischen = \" zwischen \"\nvar msgMin = \"Minimum: \"\nvar msgMax = \"Maximum: \"\nvar msgMinLength = \"Mindestlänge: \"\nvar msgMaxLength = \"Maximallänge: \"\nvar msgMinMaxLength = \"Länge zwischen \"\nvar msgregFN = \"besteht aus einer maximal sechsstelligen Zahl und einem gültigen Buchstaben (Prüfzeichen).\"\nvar msgregParagraph = \"darf nur Ziffern und maximal einen Buchstaben am Ende enthalten (keine Sonderzeichen und Leerzeichen). Beispiel: 123a\"\nvar msgDrop = \"Bitte wäh",
+    "time": 1778616794890
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/suchedi?SearchView&subf=eex&SearchOrder=4&SearchMax=4999&retfields=~BL=0&ftquery=&query=%28%5BBL%5D%3D%280%29%29",
+    "bodyPreview": "<!DOCTYPE html><html>\n<head>\n<meta name=\"robots\" content=\"noindex\">\n<meta http-equiv=\"Content-Language\" content=\"de-at\">\n<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n<script\t \tsrc=\"/edikte/reposit.nsf/JS_Global?OpenJavaScriptLibrary\"\tlanguage=\"JavaScript\"\t\ttype=\"text/javascript\"\t></script>\n<script \tsrc=\"/edikte/reposit.nsf/JSValidat",
+    "time": 1778616794917
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/fonts/glyphicons-halflings-regular.woff2",
+    "time": 1778616794936
+  },
+  {
+    "type": "REQUEST",
+    "method": "GET",
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/resources/iframe_history.html",
+    "time": 1778616794937
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/JSValidation.js",
+    "bodyPreview": "/** \n* @fileoverview JavaScript Validierung für die Ediktsdatei des\n* Bundesministeriums für Justiz\n* @link http://www.edikte.justiz.gv.at\n*\n* @author Susanne Mauritz BRZ/IBM support.edikte@justiz.gv.at\n* @author Martin Leyrer BRZ support.edikte@justiz.gv.at\n* @version 1.2\n*/\n/* 2008-03-12 Validierung für Tabbed Formulare ergänzt\n\t 2008-05-29\tEscapeReservedWords hinzugefügt\n\t 2008-06-23\tEscapeReservedWords aktualisiert\n\t 2008-07-02\tRegEx in EscapeReservedWords korrigiert\n\t 2008-09-17 Blurfield e",
+    "time": 1778616794939
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/reposit.nsf/fonts/glyphicons-halflings-regular.woff2",
+    "bodyPreview": "",
+    "time": 1778616794948
+  },
+  {
+    "type": "RESPONSE",
+    "status": 200,
+    "url": "https://edikte.justiz.gv.at/edikte/dojo.nsf$files/dojo/resources/iframe_history.html",
+    "bodyPreview": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\r\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\r\n<head>\r\n\t<title></title>\r\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></meta>\r\n\t<script type=\"text/javascript\">\r\n\t// <!--\r\n\tvar noInit = false;\r\n\t\r\n\tfunction defineParams(sparams){\r\n\t\tif(sparams){\r\n\t\t\tvar ss = (sparams.indexOf(\"&amp;\") >= 0) ? \"&amp;\" : \"&\";\r\n\t\t\tsparams = sparams",
+    "time": 1778616794978
+  }
+]

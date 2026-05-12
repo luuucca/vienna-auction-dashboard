@@ -1,0 +1,84 @@
+import type { Auction } from '../types/auction'
+
+export function formatCurrency(value: number): string {
+  if (value >= 1_000_000) {
+    const mio = value / 1_000_000
+    return `€ ${mio % 1 === 0 ? mio.toFixed(0) : mio.toFixed(2).replace('.', ',')} Mio.`
+  }
+  return `€ ${value.toLocaleString('de-AT')}`
+}
+
+export function formatPriceLabel(value: number): string {
+  if (value >= 1_000_000) {
+    const mio = value / 1_000_000
+    return `${mio % 1 === 0 ? mio.toFixed(0) : mio.toFixed(1).replace('.', ',')}M`
+  }
+  if (value >= 1_000) {
+    return `${Math.round(value / 1_000)}k`
+  }
+  return `€${value}`
+}
+
+export function formatDate(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00')
+  return date.toLocaleDateString('de-AT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+}
+
+export function formatArea(area: number): string {
+  return `${area.toFixed(2).replace('.', ',')} m²`
+}
+
+export function formatPerSqm(value: number): string {
+  return `€ ${Math.round(value).toLocaleString('de-AT')}/m²`
+}
+
+export function formatPercent(value: number): string {
+  return `${(value * 100).toFixed(1)} %`
+}
+
+export function bidRatio(auction: Auction): number {
+  return auction.minimumBid / auction.estimatedValue
+}
+
+export function daysUntilAuction(dateStr: string): number {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const auction = new Date(dateStr + 'T00:00:00')
+  return Math.round((auction.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+}
+
+export const RISK_TAG_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  已出租: { bg: '#EFF6FF', text: '#1E40AF', border: '#BFDBFE' },
+  空置: { bg: '#F9FAFB', text: '#374151', border: '#D1D5DB' },
+  Baurecht: { bg: '#FEF3C7', text: '#78350F', border: '#FDE68A' },
+  商业用途: { bg: '#F5F3FF', text: '#5B21B6', border: '#DDD6FE' },
+  需复核负担: { bg: '#FEF2F2', text: '#991B1B', border: '#FECACA' },
+  能耗待确认: { bg: '#FFFBEB', text: '#92400E', border: '#FCD34D' },
+  能源证书待确认: { bg: '#FFFBEB', text: '#78350F', border: '#FCD34D' },
+  需进一步确认: { bg: '#FFF7ED', text: '#9A3412', border: '#FDBA74' },
+  法律负担复杂: { bg: '#FFF1F2', text: '#9F1239', border: '#FDA4AF' },
+  分割产权: { bg: '#F0FDF4', text: '#14532D', border: '#86EFAC' },
+  历史建筑: { bg: '#F0F9FF', text: '#0C4A6E', border: '#7DD3FC' },
+}
+
+export function getRiskTagStyle(tag: string): { bg: string; text: string; border: string } {
+  return RISK_TAG_STYLES[tag] ?? { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' }
+}
+
+export const CATEGORY_LABELS: Record<string, string> = {
+  Eigentumswohnung: '公寓',
+  Wohnungseigentumsobjekt: '区分所有',
+  Einfamilienhaus: '独栋住宅',
+  Mehrfamilienhaus: '多户住宅',
+  Mietshaus: '出租楼',
+  'gewerbliche Liegenschaft': '商业物业',
+  Sonstiges: '其他',
+}
+
+export function getCategoryLabel(cat: string): string {
+  return CATEGORY_LABELS[cat] ?? cat
+}
