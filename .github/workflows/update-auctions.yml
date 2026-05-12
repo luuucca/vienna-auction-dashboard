@@ -1,17 +1,10 @@
 name: 每日更新法拍数据
 
 on:
-  # 每天北京时间 08:00（UTC 00:00）自动运行
   schedule:
-    - cron: '0 0 * * *'
-
-  # 允许手动触发
-  workflow_dispatch:
-    inputs:
-      days_back:
-        description: '抓取过去多少天的数据（默认 90）'
-        required: false
-        default: '90'
+    # 每天北京时间 09:00（UTC 01:00）自动运行
+    - cron: '0 1 * * *'
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   update:
@@ -19,26 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write   # 需要写入权限以提交更新后的 JSON
+      contents: write
 
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 安装 Python 3.11
-        uses: actions/setup-python@v5
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
+          node-version: '20'
 
-      - name: 安装 Python 依赖
-        run: |
-          pip install playwright beautifulsoup4
-          playwright install chromium --with-deps
+      - name: 安装依赖
+        run: npm ci --omit=dev
 
-      - name: 运行数据更新脚本
-        env:
-          DAYS_BACK: ${{ github.event.inputs.days_back || '90' }}
-        run: python scripts/update-auctions.py
+      - name: 运行抓取脚本
+        run: node scripts/fetch-auctions.mjs
 
       - name: 检查文件是否有变更
         id: diff
@@ -55,15 +44,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/data/auctions.json
-          git commit -m "chore(data): 自动更新法拍数据 $(date -u +'%Y-%m-%d')"
+          git commit -m "data: 自动更新法拍数据 $(date -u +'%Y-%m-%d')"
           git push
 
-      - name: 无更新跳过
+      - name: 数据无变化
         if: steps.diff.outputs.changed == 'false'
-        run: echo "数据无变化，跳过提交"
-
-      - name: 触发 Vercel 重新部署（可选）
-        if: steps.diff.outputs.changed == 'true' && env.VERCEL_DEPLOY_HOOK != ''
-        env:
-          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
-        run: curl -X POST "$VERCEL_DEPLOY_HOOK"
+        run: echo "没有新数据，跳过提交"
