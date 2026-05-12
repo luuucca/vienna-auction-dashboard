@@ -4,10 +4,26 @@ import L from 'leaflet'
 import type { Auction } from '../types/auction'
 import { formatPriceLabel, formatCurrency, generateTitle } from '../utils/formatters'
 
-function createPriceIcon(label: string, isSelected: boolean, isPast: boolean): L.DivIcon {
-  const bg = isSelected ? '#B8922A' : isPast ? '#6E685F' : '#1D3A2A'
-  const textColor = isSelected ? '#FFFFFF' : '#D4A843'
-  const border = '#D4A843'
+const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  Eigentumswohnung:         { bg: '#1A4A7A', text: '#A8D4FF', border: '#5B9BD5' },
+  Wohnungseigentumsobjekt:  { bg: '#1A4A7A', text: '#A8D4FF', border: '#5B9BD5' },
+  Einfamilienhaus:          { bg: '#1D3A2A', text: '#7EC8A0', border: '#3D8A60' },
+  Mehrfamilienhaus:         { bg: '#2A4A3A', text: '#A8E6C8', border: '#4DAA80' },
+  Mietshaus:                { bg: '#5C3A00', text: '#FFD080', border: '#C87800' },
+  'gewerbliche Liegenschaft':{ bg: '#4A1A6A', text: '#D4A8FF', border: '#8A5BBD' },
+  Sonstiges:                { bg: '#4A4A4A', text: '#D4D4D4', border: '#888888' },
+}
+
+function getCategoryColor(category: string) {
+  const primary = category.split(',')[0].trim()
+  return CATEGORY_COLORS[primary] ?? CATEGORY_COLORS['Sonstiges']
+}
+
+function createPriceIcon(label: string, isSelected: boolean, isPast: boolean, category: string): L.DivIcon {
+  const cat = getCategoryColor(category)
+  const bg = isSelected ? '#B8922A' : isPast ? '#6E685F' : cat.bg
+  const textColor = isSelected ? '#FFFFFF' : isPast ? '#C8C4BC' : cat.text
+  const border = isSelected ? '#D4A843' : isPast ? '#9A9590' : cat.border
   const opacity = isPast ? '0.7' : '1'
   const scale = isSelected ? 'scale(1.15)' : 'scale(1)'
   const zIndex = isSelected ? 9999 : 1000
@@ -15,11 +31,12 @@ function createPriceIcon(label: string, isSelected: boolean, isPast: boolean): L
   return L.divIcon({
     className: '',
     html: `
-      <div style="transform:${scale};transition:transform 0.2s ease;z-index:${zIndex};position:relative;opacity:${opacity}">
+      <div style="transform:${scale};transition:transform 0.2s ease;z-index:${zIndex};position:relative;opacity:${opacity};display:inline-block">
         <div style="
           background:${bg};color:${textColor};border:1.5px solid ${border};border-radius:5px;
           padding:3px 9px;font-size:11px;font-weight:700;white-space:nowrap;
           font-family:Inter,system-ui,sans-serif;letter-spacing:0.03em;line-height:1.4;
+          text-align:center;
           ${isSelected ? 'box-shadow:0 0 0 3px rgba(184,146,42,0.25),0 3px 8px rgba(0,0,0,0.4);' : 'box-shadow:0 2px 6px rgba(0,0,0,0.35);'}
         ">${label}</div>
         <div style="
@@ -171,7 +188,7 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
             const isSelected = auction.id === selectedId
             const isPast = auction.auctionDate < today
             const label = formatPriceLabel(auction.minimumBid)
-            const icon = createPriceIcon(label, isSelected, isPast)
+            const icon = createPriceIcon(label, isSelected, isPast, auction.category)
 
             return (
               <Marker
