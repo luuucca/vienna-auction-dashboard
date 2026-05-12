@@ -2,7 +2,7 @@ import React, { useEffect, useRef, Component, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap, ZoomControl } from 'react-leaflet'
 import L from 'leaflet'
 import type { Auction } from '../types/auction'
-import { formatPriceLabel, formatCurrency } from '../utils/formatters'
+import { formatPriceLabel, formatCurrency, generateTitle } from '../utils/formatters'
 
 function createPriceIcon(label: string, isSelected: boolean, isPast: boolean): L.DivIcon {
   const bg = isSelected ? '#B8922A' : isPast ? '#6E685F' : '#1D3A2A'
@@ -201,7 +201,7 @@ function MapTooltip({ auction }: { auction: Auction }) {
   return (
     <div className="p-3 min-w-[220px] max-w-[280px]">
       <div className="text-xs font-semibold text-forest-700 font-serif leading-tight mb-1">
-        {auction.title}
+        {generateTitle(auction)}
       </div>
       <div className="text-xs text-warm-600 mb-2 leading-tight">{auction.address}</div>
       <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">

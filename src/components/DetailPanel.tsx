@@ -21,6 +21,7 @@ import {
   bidRatio,
   getRiskTagStyle,
   getCategoryLabel,
+  generateTitle,
 } from '../utils/formatters'
 
 const GEOCODE_LABELS: Record<string, string> = {
@@ -53,7 +54,7 @@ export function DetailPanel({ auction, onClose }: Props) {
             <span className="text-xs text-warm-400 font-mono">{auction.caseNumber}</span>
           </div>
           <h2 className="font-serif font-semibold text-forest-700 text-base leading-tight">
-            {auction.title}
+            {generateTitle(auction)}
           </h2>
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-warm-400 flex-shrink-0" />

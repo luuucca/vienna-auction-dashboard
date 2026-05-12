@@ -18,6 +18,7 @@ import {
   bidRatio,
   getRiskTagStyle,
   getCategoryLabel,
+  generateTitle,
 } from '../utils/formatters'
 
 interface Props {
@@ -127,7 +128,7 @@ export function AuctionCard({ auction, isSelected, onClick }: Props) {
       <div className="px-4 pt-3 pb-3">
         {/* Title */}
         <h3 className="font-serif font-semibold text-forest-700 text-sm leading-tight mb-1">
-          {auction.title}
+          {generateTitle(auction)}
         </h3>
 
         {/* Address */}

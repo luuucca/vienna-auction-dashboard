@@ -82,3 +82,14 @@ export const CATEGORY_LABELS: Record<string, string> = {
 export function getCategoryLabel(cat: string): string {
   return CATEGORY_LABELS[cat] ?? cat
 }
+
+export function generateTitle(auction: Auction): string {
+  // Extract district number from postal code: "1190 Wien ..." → "19区"
+  const match = auction.address.match(/^1(\d)(\d)0\s/)
+  const district = match ? `${parseInt(match[1] + match[2])}区` : ''
+
+  const type = CATEGORY_LABELS[auction.category] ?? auction.category
+  const area = auction.area > 0 ? ` ${Math.round(auction.area)}㎡` : ''
+
+  return [district, type, area].filter(Boolean).join(' ')
+}
