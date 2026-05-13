@@ -1,5 +1,5 @@
 import React from 'react'
-import { Building2, TrendingUp, BarChart3, MapPin } from 'lucide-react'
+import { Building2, TrendingUp, BarChart3 } from 'lucide-react'
 import type { Auction } from '../types/auction'
 import { formatCurrency, formatPercent, bidRatio } from '../utils/formatters'
 
@@ -22,8 +22,6 @@ export function StatsCards({ auctions, filteredCount }: Props) {
     auctions.length > 0
       ? auctions.reduce((s, a) => s + bidRatio(a), 0) / auctions.length
       : 0
-  const geoCount = auctions.filter((a) => a.geocodeSource !== 'approximate').length
-
   const cards: StatCard[] = [
     {
       icon: <Building2 size={18} />,
@@ -45,13 +43,6 @@ export function StatsCards({ auctions, filteredCount }: Props) {
       value: formatPercent(avgRatio),
       sub: '低于 50% 为折价拍卖',
       accent: avgRatio < 0.5 ? '#B8922A' : '#1D3A2A',
-    },
-    {
-      icon: <MapPin size={18} />,
-      label: '精确落点数量',
-      value: String(geoCount),
-      sub: `共 ${auctions.length} 处（演示版均为近似坐标）`,
-      accent: '#1D3A2A',
     },
   ]
 
