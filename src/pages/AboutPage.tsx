@@ -25,13 +25,7 @@ export default function AboutPage() {
           style={{ background: 'rgba(254,44,85,0.06)', border: '1px solid rgba(254,44,85,0.2)' }}
         >
           <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-              <rect width="100" height="100" fill="#FF2442" rx="22"/>
-              <rect x="28" y="28" width="44" height="30" rx="4" fill="none" stroke="white" strokeWidth="6"/>
-              <line x1="50" y1="28" x2="50" y2="58" stroke="white" strokeWidth="6"/>
-              <line x1="28" y1="42" x2="72" y2="42" stroke="white" strokeWidth="5"/>
-              <circle cx="50" cy="75" r="6" fill="white"/>
-            </svg>
+            <img src="/xiaohongshu-logo.png" alt="小红书" className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>小红书</p>
@@ -55,17 +49,7 @@ export default function AboutPage() {
           style={{ background: 'rgba(7,193,96,0.06)', border: '1px solid rgba(7,193,96,0.2)' }}
         >
           <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-              <rect width="100" height="100" fill="#07C160" rx="22"/>
-              <ellipse cx="42" cy="44" rx="24" ry="18" fill="white"/>
-              <circle cx="34" cy="44" r="3.5" fill="#07C160"/>
-              <circle cx="43" cy="44" r="3.5" fill="#07C160"/>
-              <circle cx="52" cy="44" r="3.5" fill="#07C160"/>
-              <ellipse cx="62" cy="58" rx="17" ry="13" fill="rgba(255,255,255,0.85)"/>
-              <circle cx="56" cy="58" r="2.8" fill="#07C160"/>
-              <circle cx="63" cy="58" r="2.8" fill="#07C160"/>
-              <circle cx="70" cy="58" r="2.8" fill="#07C160"/>
-            </svg>
+            <img src="/wechat-logo.png" alt="微信" className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>微信</p>
