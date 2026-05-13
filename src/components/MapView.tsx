@@ -177,12 +177,7 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
   }, [validAuctions])
 
   function toggleCluster(key: string) {
-    setExpandedClusters(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
+    setExpandedClusters(prev => prev.has(key) ? new Set() : new Set([key]))
   }
 
   return (
