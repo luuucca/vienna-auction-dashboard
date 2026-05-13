@@ -463,6 +463,90 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ════════════ FOR OWNERS (Sell / Rent) ════════════ */}
+      <section className="py-20 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+        <BGPattern variant="grid" mask="fade-edges" size={48} fill="rgba(212,175,55,0.05)" />
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6 }}
+            className="rounded-3xl p-8 sm:p-12 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(255,255,255,0.02) 100%)',
+              border: '1px solid rgba(212,175,55,0.22)',
+            }}
+          >
+            <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 70%)' }} />
+
+            <div className="relative grid lg:grid-cols-5 gap-8 items-center">
+              <div className="lg:col-span-3">
+                <p className="text-[11px] tracking-[0.25em] uppercase mb-3" style={{ color: 'rgba(212,175,55,0.85)' }}>
+                  For Property Owners · 业主委托
+                </p>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+                  您的房产，<br className="sm:hidden" />我们的中文渠道
+                </h2>
+                <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  在维也纳或奥地利拥有房产并计划<strong className="text-white">出售或出租</strong>？
+                  我们提供专业市场评估、定价建议、房源包装、中文客户推广、看房安排，以及交易和过户全程协助。
+                </p>
+
+                {/* Bullets */}
+                <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mb-7 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {[
+                    '免费市场评估',
+                    '专业摄影 / 视频',
+                    '小红书 + 微信推广',
+                    '陪同看房与谈判',
+                    '中文合同解读',
+                    '过户与税务协助',
+                  ].map(b => (
+                    <li key={b} className="flex items-center gap-2">
+                      <Check size={14} style={{ color: '#d4af37', flexShrink: 0 }} />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/list-property?mode=sale"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all"
+                    style={{ background: '#d4af37', color: '#141414' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}>
+                    我要出售房产 <ArrowRight size={15} />
+                  </Link>
+                  <Link to="/list-property?mode=rent"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all"
+                    style={{ background: 'transparent', color: '#d4af37', border: '1px solid rgba(212,175,55,0.5)' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,175,55,0.1)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.8)' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}>
+                    我要出租房产 <ArrowRight size={15} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Visual stat block */}
+              <div className="lg:col-span-2 grid grid-cols-2 gap-3">
+                {[
+                  { num: '24h', label: '快速响应' },
+                  { num: '100%', label: '中文服务' },
+                  { num: '0', label: '前期费用' },
+                  { num: '一站', label: '全流程' },
+                ].map(s => (
+                  <div key={s.label} className="rounded-2xl p-5 text-center"
+                    style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <p className="font-serif text-2xl sm:text-3xl font-bold mb-1" style={{ color: '#d4af37' }}>{s.num}</p>
+                    <p className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.5)' }}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ════════════ CONTACT FORM ════════════ */}
       <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
         <BGPattern variant="dots" mask="fade-edges" size={30} fill="rgba(212,175,55,0.07)" />

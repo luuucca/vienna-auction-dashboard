@@ -5,6 +5,7 @@ import { CookieBanner } from './components/CookieBanner'
 import HomePage from './pages/HomePage'
 import ListingsPage from './pages/ListingsPage'
 import ListingDetailPage from './pages/ListingDetailPage'
+import ListPropertyPage from './pages/ListPropertyPage'
 import AuctionPage from './pages/AuctionPage'
 import AboutPage from './pages/AboutPage'
 import ImpressumPage from './pages/ImpressumPage'
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/"            element={<><NavBar /><HomePage /></>} />
         <Route path="/listings"      element={<><NavBar /><ListingsPage /></>} />
         <Route path="/listings/:id"  element={<><NavBar /><ListingDetailPage /></>} />
+        <Route path="/list-property" element={<><NavBar /><ListPropertyPage /></>} />
         <Route path="/about"       element={<><NavBar /><AboutPage /></>} />
         <Route path="/impressum"   element={<><NavBar /><ImpressumPage /></>} />
         <Route path="/datenschutz" element={<><NavBar /><DatenschutzPage /></>} />

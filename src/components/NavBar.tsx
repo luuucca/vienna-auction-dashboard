@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { to: '/',         label: '首页' },
-  { to: '/listings', label: '房源列表' },
-  { to: '/auction',  label: '法拍房信息汇总' },
-  { to: '/about',    label: '联系我们' },
+  { to: '/',              label: '首页' },
+  { to: '/listings',      label: '房源列表' },
+  { to: '/auction',       label: '法拍房信息汇总' },
+  { to: '/list-property', label: '业主委托' },
+  { to: '/about',         label: '联系我们' },
 ]
 
 export function NavBar() {
