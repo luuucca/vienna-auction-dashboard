@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, ArrowRight, QrCode, ExternalLink } from 'lucide-react'
+import { Mail, Phone, ArrowRight, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export default function AboutPage() {
@@ -105,45 +105,42 @@ export default function AboutPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="rounded-2xl p-6"
+          className="rounded-2xl p-5 flex items-center gap-5"
           style={{ background: 'rgba(7,193,96,0.06)', border: '1px solid rgba(7,193,96,0.2)' }}
         >
-          <div className="flex items-center gap-5">
-            {/* WeChat icon */}
-            <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-                <rect width="100" height="100" fill="#07C160" rx="22"/>
-                {/* Larger bubble */}
-                <ellipse cx="42" cy="44" rx="24" ry="18" fill="white"/>
-                <circle cx="34" cy="44" r="3.5" fill="#07C160"/>
-                <circle cx="43" cy="44" r="3.5" fill="#07C160"/>
-                <circle cx="52" cy="44" r="3.5" fill="#07C160"/>
-                {/* Smaller bubble */}
-                <ellipse cx="62" cy="58" rx="17" ry="13" fill="rgba(255,255,255,0.85)"/>
-                <circle cx="56" cy="58" r="2.8" fill="#07C160"/>
-                <circle cx="63" cy="58" r="2.8" fill="#07C160"/>
-                <circle cx="70" cy="58" r="2.8" fill="#07C160"/>
-              </svg>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>微信</p>
-              <p className="text-base font-semibold text-white">扫码添加微信</p>
-            </div>
+          {/* WeChat icon */}
+          <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+              <rect width="100" height="100" fill="#07C160" rx="22"/>
+              <ellipse cx="42" cy="44" rx="24" ry="18" fill="white"/>
+              <circle cx="34" cy="44" r="3.5" fill="#07C160"/>
+              <circle cx="43" cy="44" r="3.5" fill="#07C160"/>
+              <circle cx="52" cy="44" r="3.5" fill="#07C160"/>
+              <ellipse cx="62" cy="58" rx="17" ry="13" fill="rgba(255,255,255,0.85)"/>
+              <circle cx="56" cy="58" r="2.8" fill="#07C160"/>
+              <circle cx="63" cy="58" r="2.8" fill="#07C160"/>
+              <circle cx="70" cy="58" r="2.8" fill="#07C160"/>
+            </svg>
           </div>
 
-          {/* QR placeholder */}
-          <div className="mt-6 flex justify-center">
-            <div className="relative rounded-2xl overflow-hidden flex flex-col items-center justify-center gap-3"
-              style={{
-                width: 180, height: 180,
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px dashed rgba(212,175,55,0.3)',
-              }}>
-              <QrCode size={48} style={{ color: 'rgba(212,175,55,0.35)' }} />
-              <p className="text-[11px] text-center px-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                微信二维码<br />即将上线
-              </p>
-            </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>微信</p>
+            <p className="text-sm font-semibold text-white mb-0.5">扫码添加微信</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>长按或扫描二维码</p>
+          </div>
+
+          {/* QR code */}
+          <div className="flex-shrink-0 rounded-xl overflow-hidden"
+            style={{ width: 80, height: 80, background: 'white', padding: 4 }}>
+            <img src="/wechat-qr.png" alt="微信二维码"
+              className="w-full h-full object-contain"
+              onError={e => {
+                const el = e.currentTarget
+                el.style.display = 'none'
+                const parent = el.parentElement!
+                parent.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:12px;border:1px dashed rgba(255,255,255,0.15)"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'28\' height=\'28\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'rgba(255,255,255,0.2)\' stroke-width=\'2\'><rect x=\'3\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'14\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'3\' y=\'14\' width=\'7\' height=\'7\'/><path d=\'M14 14h3v3M17 14v3h3M14 17h3\'/></svg></div>'
+              }}
+            />
           </div>
         </motion.div>
 
