@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Scale, RefreshCw, Clock, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
+import { RefreshCw, Clock, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 import type { RefreshState } from '../hooks/useAuctions'
 
 interface HeaderProps {
@@ -22,33 +22,63 @@ export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloa
   }
 
   return (
-    <header className="relative flex-shrink-0 bg-forest-700 overflow-hidden">
-      <div className="header-pattern absolute inset-0 pointer-events-none" />
+    <header className="relative flex-shrink-0 overflow-hidden" style={{ background: '#0E0E18' }}>
+      <div className="header-pattern absolute inset-0 pointer-events-none opacity-60" />
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(135deg, rgba(29,58,42,0.95) 0%, rgba(13,28,20,0.98) 100%)' }}
+        style={{ background: 'linear-gradient(135deg, rgba(28,28,42,0.92) 0%, rgba(10,10,20,0.98) 100%)' }}
       />
-      <div className="relative h-0.5 bg-gradient-to-r from-transparent via-gold-400 to-transparent" />
+      {/* Top gold accent line */}
+      <div className="relative h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent opacity-80" />
 
       <div className="relative px-4 py-3 sm:px-6 sm:py-4 lg:px-10 lg:py-5">
 
-        {/* Top row: icon + title */}
+        {/* Brand row: avatar + name */}
         <div className="flex items-center gap-3 mb-2">
-          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gold-500 bg-opacity-20 border border-gold-400 border-opacity-40 flex items-center justify-center">
-            <Scale size={16} className="text-gold-400" />
+          {/* Avatar */}
+          <div
+            className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden"
+            style={{ boxShadow: '0 0 0 2px rgba(212,168,67,0.55), 0 0 0 4px rgba(212,168,67,0.12), 0 4px 12px rgba(0,0,0,0.5)' }}
+          >
+            <img
+              src="/avatar.png"
+              alt="奥匈置业研究所"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const el = e.currentTarget
+                el.style.display = 'none'
+                const parent = el.parentElement!
+                parent.style.background = 'rgba(212,168,67,0.15)'
+                parent.style.display = 'flex'
+                parent.style.alignItems = 'center'
+                parent.style.justifyContent = 'center'
+                parent.innerHTML = '<span style="color:#D4A843;font-size:18px">🏛️</span>'
+              }}
+            />
           </div>
+
+          {/* Brand text */}
           <div className="min-w-0">
-            <div className="text-xs font-medium tracking-widest uppercase text-gold-400 opacity-80">
+            <div className="text-[10px] font-medium tracking-[0.2em] uppercase text-gold-400 opacity-70 mb-0.5">
               Ediktsdatei · Wien
             </div>
-            <h1 className="font-serif text-base sm:text-xl font-semibold text-cream-100 leading-tight tracking-tight">
-              维也纳法拍房空间尽调看板
+            <h1 className="font-serif text-lg sm:text-2xl font-bold text-cream-100 leading-tight tracking-tight"
+              style={{ textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
+              奥匈置业研究所
             </h1>
+            <div className="text-[10px] text-warm-400 opacity-50 mt-0.5 hidden sm:block tracking-wide">
+              维也纳法拍房 · 空间尽调看板
+            </div>
           </div>
         </div>
 
+        {/* Mobile subtitle */}
+        <div className="text-[10px] text-warm-400 opacity-40 mb-2 sm:hidden tracking-wide">
+          维也纳法拍房 · 空间尽调看板
+        </div>
+
         {/* Status row */}
-        <div className="flex items-center gap-2 text-xs text-warm-400 opacity-70 mb-2.5">
+        <div className="flex items-center gap-2 text-xs text-warm-400 opacity-60 mb-2.5">
           <Clock size={11} />
           <span>数据更新：{fmtTime(lastModified)}</span>
           <span className="opacity-50">·</span>
