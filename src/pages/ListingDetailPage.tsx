@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, MapPin, Maximize2, Home, Calendar, Building, Mail, Phone, ChevronLeft, ChevronRight, Loader2, ExternalLink } from 'lucide-react'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+// Custom gold pin icon
+const goldPinIcon = L.divIcon({
+  className: 'custom-gold-pin',
+  html: `<div style="
+    width: 36px; height: 36px;
+    background: #d4af37;
+    border: 3px solid #141414;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 0 2px rgba(212,175,55,0.35);
+    position: relative;
+  "><div style="
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+    width: 10px; height: 10px;
+    background: #141414;
+    border-radius: 50%;
+  "></div></div>`,
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],
+})
 
 interface Listing {
   id: string
@@ -201,13 +227,53 @@ export default function ListingDetailPage() {
           {data.description && (
             <div className="rounded-2xl p-5 sm:p-6"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>房源详情（德文原文）</h3>
+              <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>房源详情</h3>
               <div className="prose prose-sm prose-invert max-w-none listing-desc"
                 style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, lineHeight: 1.7 }}
                 dangerouslySetInnerHTML={{ __html: data.description }} />
-              <p className="mt-5 text-xs italic" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                需要中文咨询？请联系下方顾问。
-              </p>
+            </div>
+          )}
+
+          {/* Map */}
+          {data.location.lat > 0 && data.location.lng > 0 && (
+            <div className="rounded-2xl overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              <div className="p-5 pb-3">
+                <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>地理位置</h3>
+                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}
+                </p>
+              </div>
+              <div className="relative" style={{ height: 380 }}>
+                <MapContainer
+                  center={[data.location.lat, data.location.lng]}
+                  zoom={15}
+                  scrollWheelZoom={false}
+                  style={{ height: '100%', width: '100%', background: '#1a1a1a' }}
+                  attributionControl={false}
+                >
+                  <TileLayer
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution=""
+                  />
+                  <Marker position={[data.location.lat, data.location.lng]} icon={goldPinIcon}>
+                    <Popup className="custom-popup">
+                      <div style={{ color: '#141414', fontWeight: 600, fontSize: 12 }}>{data.title}</div>
+                      <div style={{ color: '#555', fontSize: 11, marginTop: 2 }}>
+                        {data.address.plz} {data.address.city}
+                      </div>
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+                <div className="absolute bottom-2 right-2 z-[400] flex gap-2">
+                  <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-colors"
+                    style={{ background: 'rgba(20,20,20,0.85)', color: '#d4af37', backdropFilter: 'blur(6px)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    Google 地图 <ExternalLink size={10} />
+                  </a>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -264,15 +330,6 @@ export default function ListingDetailPage() {
             </div>
           )}
 
-          {data.location.lat > 0 && data.location.lng > 0 && (
-            <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
-              target="_blank" rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-2xl p-4 text-sm transition-colors"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)' }}>
-              <span className="flex items-center gap-2"><MapPin size={13} style={{ color: '#d4af37' }} /> 在地图上查看</span>
-              <ExternalLink size={12} />
-            </a>
-          )}
         </aside>
       </div>
     </div>
