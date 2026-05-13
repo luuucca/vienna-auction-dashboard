@@ -1,0 +1,601 @@
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import {
+  MapPin, ArrowRight, Gavel, Building2, MessageCircle,
+  TrendingUp, Shield, Globe, ChevronRight, Check,
+  Home, Maximize2,
+} from 'lucide-react'
+
+/* ─────────────────────────────────────────────
+   BG Pattern
+───────────────────────────────────────────── */
+function BGPattern({
+  variant = 'dots',
+  mask = 'none',
+  size = 28,
+  fill = 'rgba(255,255,255,0.04)',
+}: {
+  variant?: 'dots' | 'grid'
+  mask?: 'fade-edges' | 'none'
+  size?: number
+  fill?: string
+}) {
+  const img =
+    variant === 'dots'
+      ? `radial-gradient(${fill} 1px, transparent 1px)`
+      : `linear-gradient(to right,${fill} 1px,transparent 1px),linear-gradient(to bottom,${fill} 1px,transparent 1px)`
+  const maskVal =
+    mask === 'fade-edges'
+      ? 'radial-gradient(ellipse at center,#000 30%,transparent 80%)'
+      : 'none'
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0 pointer-events-none z-0"
+      style={{ backgroundImage: img, backgroundSize: `${size}px ${size}px`, WebkitMaskImage: maskVal, maskImage: maskVal }}
+    />
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Featured property card (glassmorphism)
+───────────────────────────────────────────── */
+interface PropCard {
+  image: string; title: string; location: string
+  price: string; area: string; rooms: string; tag: string
+}
+function PropertyCard({ image, title, location, price, area, rooms, tag }: PropCard) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4, borderColor: 'rgba(212,175,55,0.45)' }}
+      className="group relative overflow-hidden rounded-2xl transition-all duration-400"
+      style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(18px)', border: '1px solid rgba(212,175,55,0.18)' }}
+    >
+      <div className="relative h-56 overflow-hidden">
+        <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(to top,#141414 0%,transparent 55%)' }} />
+        <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        <span className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full text-[11px] font-bold" style={{ background: '#d4af37', color: '#141414' }}>
+          {tag}
+        </span>
+      </div>
+      <div className="p-5">
+        <h3 className="font-bold text-white text-sm mb-1 line-clamp-1">{title}</h3>
+        <div className="flex items-center gap-1 text-[11px] mb-3" style={{ color: 'rgba(255,255,255,0.38)' }}>
+          <MapPin size={10} />{location}
+        </div>
+        <div className="flex items-center gap-3 text-[11px] mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          <span className="flex items-center gap-1"><Maximize2 size={10} />{area}</span>
+          <span className="w-px h-3 bg-white/10" />
+          <span className="flex items-center gap-1"><Home size={10} />{rooms}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-bold" style={{ color: '#d4af37' }}>{price}</span>
+          <button
+            className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
+            style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.2)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
+          >
+            查看详情
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Data
+───────────────────────────────────────────── */
+const FEATURED: PropCard[] = [
+  {
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+    title: '19区别墅式公寓', location: '1190 Wien, Döbling',
+    price: '€ 850.000', area: '120 m²', rooms: '4 间', tag: '精选推荐',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+    title: '1区历史建筑改造', location: '1010 Wien, Innere Stadt',
+    price: '€ 1.200.000', area: '95 m²', rooms: '3 间', tag: '投资优选',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
+    title: '22区新建住宅', location: '1220 Wien, Donaustadt',
+    price: '€ 420.000', area: '78 m²', rooms: '3 间', tag: '首次购房',
+  },
+]
+
+/* ─────────────────────────────────────────────
+   Page
+───────────────────────────────────────────── */
+export default function HomePage() {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const [formSent, setFormSent] = useState(false)
+
+  useEffect(() => {
+    const mv = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY })
+    window.addEventListener('mousemove', mv)
+    return () => window.removeEventListener('mousemove', mv)
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-[#141414] text-white overflow-x-hidden">
+
+      {/* ════════════ HERO ════════════ */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(212,175,55,0.09)" />
+
+        {/* Mouse glow */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: `radial-gradient(700px circle at ${mouse.x}px ${mouse.y}px,rgba(212,175,55,0.07),transparent 40%)` }} />
+
+        {/* Ambient orbs */}
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle,rgba(212,175,55,0.05) 0%,transparent 70%)', filter: 'blur(50px)' }} />
+        <div className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle,rgba(80,100,200,0.04) 0%,transparent 70%)', filter: 'blur(40px)' }} />
+
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-20 text-center">
+
+          {/* Badge */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}
+            className="flex justify-center mb-7">
+            <div className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium"
+              style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: '#d4af37' }}>
+              <Building2 size={13} />
+              维也纳房产经纪人
+            </div>
+          </motion.div>
+
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="font-bold tracking-tight mb-5"
+            style={{ fontSize: 'clamp(44px, 8vw, 96px)', lineHeight: 1.04,
+              background: 'linear-gradient(135deg,#ffffff 30%,#d4af37 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          >
+            奥匈置业研究所
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.22 }}
+            className="text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.46)' }}
+          >
+            专注维也纳房产投资、自住、选址避坑<br className="hidden sm:block" />
+            华人专属中文支持，一条龙服务
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.36 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center"
+          >
+            <Link to="/listings"
+              className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-base transition-colors duration-200"
+              style={{ background: '#d4af37', color: '#141414' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+            >
+              浏览精选房源
+              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+            <Link to="/auction"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200"
+              style={{ border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.72)', background: 'rgba(255,255,255,0.04)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
+            >
+              <Gavel size={15} />
+              法拍房信息汇总
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════ FEATURED LISTINGS ════════════ */}
+      <section className="py-24 relative overflow-hidden" style={{ background: '#0f0f0f' }}>
+        <BGPattern variant="grid" mask="fade-edges" size={40} fill="rgba(212,175,55,0.04)" />
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
+          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.55 }} className="mb-10">
+            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>精选房源</p>
+            <div className="flex items-end justify-between">
+              <h2 className="text-4xl sm:text-5xl font-bold text-white">近期推荐</h2>
+              <Link to="/listings"
+                className="hidden sm:flex items-center gap-1 text-sm transition-colors"
+                style={{ color: 'rgba(255,255,255,0.38)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.38)')}
+              >
+                查看全部 <ChevronRight size={13} />
+              </Link>
+            </div>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURED.map((p, i) => (
+              <motion.div key={i} transition={{ delay: i * 0.07 }}>
+                <PropertyCard {...p} />
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-7 sm:hidden text-center">
+            <Link to="/listings" className="inline-flex items-center gap-1 text-sm" style={{ color: 'rgba(212,175,55,0.75)' }}>
+              查看全部房源 <ChevronRight size={13} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════ 独家工具 — 法拍房 ════════════ */}
+      <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
+        <BGPattern variant="dots" mask="fade-edges" size={28} fill="rgba(212,175,55,0.06)" />
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
+          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.55 }} className="text-center mb-12">
+            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>独家工具</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-3">法拍房信息汇总</h2>
+            <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              自主研发系统，实时抓取 Ediktsdatei 数据，地图可视化全维也纳 60+ 在拍房源
+            </p>
+          </motion.div>
+
+          {/* Big feature card */}
+          <motion.div
+            initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-3xl overflow-hidden"
+            style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)' }}
+          >
+            {/* Map preview placeholder */}
+            <div className="relative h-64 overflow-hidden"
+              style={{ background: '#0f0f0f' }}>
+              <BGPattern variant="dots" size={20} fill="rgba(212,175,55,0.08)" />
+              {/* Fake map pins */}
+              {[
+                { top: '30%', left: '25%' }, { top: '45%', left: '50%' },
+                { top: '25%', left: '65%' }, { top: '60%', left: '35%' },
+                { top: '55%', left: '70%' }, { top: '20%', left: '42%' },
+              ].map((pos, i) => (
+                <div key={i} className="absolute w-3 h-3 rounded-full animate-pulse"
+                  style={{ top: pos.top, left: pos.left, background: '#d4af37',
+                    boxShadow: '0 0 8px rgba(212,175,55,0.7)', animationDelay: `${i * 0.4}s` }} />
+              ))}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-bold text-center px-4" style={{ color: 'rgba(212,175,55,0.18)', fontSize: 'clamp(22px,4vw,42px)', letterSpacing: '0.06em' }}>维也纳实时法拍信息汇总</span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 h-20"
+                style={{ background: 'linear-gradient(to top,rgba(20,20,20,0.95),transparent)' }} />
+            </div>
+
+            {/* Stats + CTA */}
+            <div className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { v: '60+', l: '在拍房源' }, { v: '50%', l: '最低起拍' },
+                  { v: '1–23区', l: '全维也纳' }, { v: '免费', l: '无需注册' },
+                ].map(({ v, l }) => (
+                  <div key={l}>
+                    <div className="text-lg font-bold" style={{ color: '#d4af37' }}>{v}</div>
+                    <div className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+              <Link to="/auction"
+                className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-colors"
+                style={{ background: '#d4af37', color: '#141414' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+              >
+                <Gavel size={14} />
+                进入看板
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════ WHY VIENNA ════════════ */}
+      <section className="py-20 relative overflow-hidden" style={{ background: '#0f0f0f' }}>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="text-center mb-10">
+            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>市场洞察</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">为什么选择维也纳？</h2>
+          </motion.div>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { icon: <TrendingUp size={17} />, title: '价格仍具优势', desc: '对比伦敦、巴黎、慕尼黑，维也纳每平方米单价显著偏低，中长期增值潜力突出。' },
+              { icon: <Shield size={17} />, title: '法律框架透明', desc: '奥地利产权保护健全，购房程序规范；非EU买家须额外审批，各州政策有所不同。' },
+              { icon: <Globe size={17} />, title: '欧盟核心城市', desc: '申根区核心，生活质量连续多年全球第一，是华人移居欧洲的热门目的地之一。' },
+            ].map(({ icon, title, desc }, i) => (
+              <motion.div key={title}
+                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="flex gap-4 p-5 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+              >
+                <div className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full mt-0.5"
+                  style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37' }}>
+                  {icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white text-sm mb-1">{title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════ CONTACT FORM ════════════ */}
+      <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
+        <BGPattern variant="dots" mask="fade-edges" size={30} fill="rgba(212,175,55,0.07)" />
+        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-10">
+          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="text-center mb-10">
+            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>联系我们</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-3">开始您的置业之旅</h2>
+            <p className="text-base" style={{ color: 'rgba(255,255,255,0.4)' }}>我们将在 24 小时内与您联系</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-3xl p-7 sm:p-10"
+            style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)', border: '1px solid rgba(212,175,55,0.18)' }}
+          >
+            {formSent ? (
+              <div className="text-center py-10">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                  style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <Check size={28} style={{ color: '#d4af37' }} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">发送成功！</h3>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.42)' }}>我们会尽快与您联系</p>
+              </div>
+            ) : (
+              <form className="space-y-4" onSubmit={e => { e.preventDefault(); setFormSent(true) }}>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[
+                    { label: '姓名', type: 'text', placeholder: '请输入您的姓名' },
+                    { label: '电话 / 微信', type: 'tel', placeholder: '请输入联系方式' },
+                  ].map(({ label, type, placeholder }) => (
+                    <div key={label}>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</label>
+                      <input type={type} placeholder={placeholder} required
+                        className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                        onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
+                        onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>邮箱</label>
+                  <input type="email" placeholder="请输入您的邮箱" required
+                    className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                    onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
+                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>留言</label>
+                  <textarea rows={4} placeholder="请告诉我们您的置业需求，例如区域、预算、自住还是投资等" required
+                    className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors resize-none"
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                    onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
+                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                  />
+                </div>
+                <motion.button type="submit"
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-3.5 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-colors"
+                  style={{ background: '#d4af37', color: '#141414' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+                >
+                  提交咨询
+                  <ArrowRight size={16} />
+                </motion.button>
+                <p className="text-center text-xs pt-1" style={{ color: 'rgba(255,255,255,0.22)' }}>
+                  或在小红书搜索「奥匈置业研究所 | CH」直接私信
+                </p>
+              </form>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════ PARTNERS MARQUEE ════════════ */}
+      <section style={{ background: '#0a0a0a', borderTop: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', padding: '52px 0' }}>
+        <style>{`
+          @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+          }
+          .marquee-track {
+            display: flex;
+            align-items: center;
+            width: max-content;
+            animation: marqueeScroll 36s linear infinite;
+          }
+          .marquee-track:hover { animation-play-state: paused; }
+          .p-logo {
+            color: rgba(255,255,255,0.38);
+            transition: color 0.3s ease;
+            cursor: default;
+            user-select: none;
+            flex-shrink: 0;
+            text-transform: uppercase;
+          }
+          .p-logo:hover { color: rgba(255,255,255,0.82); }
+        `}</style>
+
+        <p className="text-center text-[11px] tracking-[0.28em] mb-10"
+          style={{ color: 'rgba(255,255,255,0.22)' }}>
+          合作伙伴
+        </p>
+
+        <div style={{
+          maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+        }}>
+          <div className="marquee-track">
+            {[0, 1].map(copy => (
+              <div key={copy} className="flex items-center" style={{ gap: '0 68px', paddingRight: '68px' }}>
+
+                {/* YELLOWBIRD — Montserrat 800, tight tracking */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Montserrat","Arial Black",sans-serif', fontWeight: 800, fontSize: '20px', letterSpacing: '0.05em' }}>
+                  YELLOWBIRD
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* GLORIT — Arial Black, very wide tracking */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Arial","Helvetica",sans-serif', fontWeight: 900, fontSize: '19px', letterSpacing: '0.22em' }}>
+                  GLORIT
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* VALERTO — Helvetica Neue medium, moderate tracking */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 500, fontSize: '18px', letterSpacing: '0.14em' }}>
+                  VALERTO
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* STOLZ — Arial Narrow condensed, very wide tracking */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Arial Narrow","Arial",sans-serif', fontWeight: 700, fontSize: '23px', letterSpacing: '0.38em' }}>
+                  STOLZ
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* LAGEEINS — geometric sans, bold, tight */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 700, fontSize: '19px', letterSpacing: '0.08em' }}>
+                  LAGEEINS
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* LANDAA — medium weight, spaced */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 600, fontSize: '19px', letterSpacing: '0.24em' }}>
+                  LANDAA
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* PRIMA — italic serif, bold */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Georgia","Times New Roman",serif', fontWeight: 700, fontSize: '21px', letterSpacing: '0.16em', fontStyle: 'italic' }}>
+                  PRIMA
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* KORN12 — light weight + bold number */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 300, fontSize: '21px', letterSpacing: '0.07em' }}>
+                  KORN12
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* WINEGG — semibold, elegant tracking */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 600, fontSize: '20px', letterSpacing: '0.18em' }}>
+                  WINEGG
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* HARING — Arial Black heavy, wide */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Arial Black","Arial",sans-serif', fontWeight: 900, fontSize: '19px', letterSpacing: '0.2em' }}>
+                  HARING
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* BOOMLIVING — extrabold, compact */}
+                <span className="p-logo"
+                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 800, fontSize: '18px', letterSpacing: '0.05em' }}>
+                  BOOMLIVING
+                </span>
+
+                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════ FOOTER ════════════ */}
+      <footer className="py-8 px-4 sm:px-6 lg:px-10" style={{ borderTop: '1px solid rgba(212,175,55,0.1)', background: '#0a0a0a' }}>
+        <div className="max-w-6xl mx-auto">
+          {/* Top row */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+            <div className="font-bold text-sm text-white">奥匈置业研究所</div>
+            <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.22)' }}>
+              © 2025 Yellowbird Immobilienmakler GmbH · Wien, Austria
+            </p>
+            <Link to="/about" className="text-xs transition-colors" style={{ color: 'rgba(255,255,255,0.3)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}>
+              联系我们 →
+            </Link>
+          </div>
+          {/* Legal links row */}
+          <div className="flex items-center justify-center gap-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            {[
+              { to: '/impressum',   label: 'Impressum' },
+              { to: '/datenschutz', label: '隐私政策 / Datenschutz' },
+            ].map(({ to, label }) => (
+              <Link key={to} to={to}
+                className="text-[11px] transition-colors"
+                style={{ color: 'rgba(255,255,255,0.25)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}>
+                {label}
+              </Link>
+            ))}
+            <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.12)' }}>
+              · 数据来源：Ediktsdatei.justiz.gv.at
+            </span>
+          </div>
+          {/* Justimmo attribution */}
+          <div className="flex justify-center pt-3">
+            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.55)' }}>
+              © Justimmo / Immobilienmaklersoftware
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
