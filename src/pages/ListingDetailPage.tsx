@@ -91,7 +91,7 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
 
   if (!images.length) {
     return (
-      <div className="relative w-full" style={{ aspectRatio: '21/9', background: '#0a0a0a' }}>
+      <div className="relative w-full max-w-6xl mx-auto" style={{ aspectRatio: '16/10', background: '#0a0a0a' }}>
         <div className="absolute inset-0 flex items-center justify-center text-white/20">无图片</div>
       </div>
     )
@@ -99,7 +99,7 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
 
   return (
     <>
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '21/9', background: '#0a0a0a' }}>
+      <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-2xl" style={{ aspectRatio: '16/10', background: '#0a0a0a' }}>
         <AnimatePresence initial={false} mode="popLayout" custom={direction}>
           <motion.img
             key={idx}
@@ -111,7 +111,8 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
             exit={{ opacity: 0, scale: 1.05, x: direction > 0 ? -80 : 80 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => setLightbox(true)}
-            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
+            className="absolute inset-0 w-full h-full object-contain cursor-zoom-in"
+            style={{ background: '#0a0a0a' }}
             draggable={false}
           />
         </AnimatePresence>
@@ -144,8 +145,8 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 -mt-4 relative z-10">
-          <div className="flex gap-2 overflow-x-auto pb-1 thumb-strip">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 mt-3">
+          <div className="flex gap-2 overflow-x-auto pb-2 thumb-strip">
             {images.slice(0, 30).map((img, i) => (
               <motion.button
                 key={i}
@@ -329,7 +330,7 @@ export default function ListingDetailPage() {
       {/* Hero Gallery */}
       <motion.div ref={heroRef}
         style={{ y: heroY, opacity: heroOpacity }}
-        className="mt-3"
+        className="mt-4 px-4 sm:px-6 lg:px-10"
       >
         <HeroGallery images={data.images} title={data.title} />
       </motion.div>
