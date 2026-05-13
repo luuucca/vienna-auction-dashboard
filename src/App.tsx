@@ -4,6 +4,7 @@ import { NavBar } from './components/NavBar'
 import { CookieBanner } from './components/CookieBanner'
 import HomePage from './pages/HomePage'
 import ListingsPage from './pages/ListingsPage'
+import ListingDetailPage from './pages/ListingDetailPage'
 import AuctionPage from './pages/AuctionPage'
 import AboutPage from './pages/AboutPage'
 import ImpressumPage from './pages/ImpressumPage'
@@ -18,7 +19,8 @@ export default function App() {
 
         {/* Standard pages */}
         <Route path="/"            element={<><NavBar /><HomePage /></>} />
-        <Route path="/listings"    element={<><NavBar /><ListingsPage /></>} />
+        <Route path="/listings"      element={<><NavBar /><ListingsPage /></>} />
+        <Route path="/listings/:id"  element={<><NavBar /><ListingDetailPage /></>} />
         <Route path="/about"       element={<><NavBar /><AboutPage /></>} />
         <Route path="/impressum"   element={<><NavBar /><ImpressumPage /></>} />
         <Route path="/datenschutz" element={<><NavBar /><DatenschutzPage /></>} />
