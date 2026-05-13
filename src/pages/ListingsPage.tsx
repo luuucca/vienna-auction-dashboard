@@ -56,6 +56,7 @@ const RENT_PRICE_RANGES = [
   { label: '> €3,000/月', min: 3000, max: Infinity },
 ]
 const ROOM_OPTIONS = ['全部', '1间', '2间', '3间', '4间+']
+const TYPE_OPTIONS = ['全部类型', '公寓', '别墅', '联排', '出租楼', '商铺', '车库']
 
 function FilterSelect({
   value, onChange, options,
@@ -178,6 +179,7 @@ export default function ListingsPage() {
   const [priceIdx, setPriceIdx] = useState(0)
   const [district, setDistrict] = useState('全部区域')
   const [rooms, setRooms] = useState('全部')
+  const [propType, setPropType] = useState('全部类型')
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   useEffect(() => {
@@ -222,14 +224,15 @@ export default function ListingsPage() {
         if (rooms.endsWith('+')) { if (l.rooms < n) return false }
         else if (l.rooms !== n) return false
       }
+      if (propType !== '全部类型' && (l as any).typeName !== propType) return false
       return true
     })
-  }, [listings, mode, priceIdx, district, rooms])
+  }, [listings, mode, priceIdx, district, rooms, propType])
 
   function resetFilters() {
-    setPriceIdx(0); setDistrict('全部区域'); setRooms('全部')
+    setPriceIdx(0); setDistrict('全部区域'); setRooms('全部'); setPropType('全部类型')
   }
-  const hasFilters = priceIdx !== 0 || district !== '全部区域' || rooms !== '全部'
+  const hasFilters = priceIdx !== 0 || district !== '全部区域' || rooms !== '全部' || propType !== '全部类型'
 
   return (
     <div className="min-h-screen bg-[#141414] text-white pt-16">
@@ -280,7 +283,11 @@ export default function ListingsPage() {
             )}
           </div>
 
-          <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${!filtersOpen ? 'hidden sm:grid' : 'grid'}`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ${!filtersOpen ? 'hidden sm:grid' : 'grid'}`}>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>类型</label>
+              <FilterSelect value={propType} onChange={setPropType} options={TYPE_OPTIONS} />
+            </div>
             <div>
               <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>总价</label>
               <FilterSelect
