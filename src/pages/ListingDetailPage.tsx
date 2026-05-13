@@ -301,35 +301,6 @@ export default function ListingDetailPage() {
             咨询此房源
           </Link>
 
-          {data.contact && (data.contact.name || data.contact.email || data.contact.phone) && (
-            <div className="rounded-2xl p-5"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <p className="text-[10px] uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>顾问</p>
-              {data.contact.name && (
-                <p className="text-sm font-semibold text-white mb-1">{data.contact.name}</p>
-              )}
-              {data.contact.company && (
-                <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>{data.contact.company}</p>
-              )}
-              {data.contact.phone && (
-                <a href={`tel:${data.contact.phone.replace(/\s/g, '')}`}
-                  className="flex items-center gap-2 text-sm py-1.5 transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.75)' }}>
-                  <Phone size={13} style={{ color: '#d4af37' }} />
-                  {data.contact.phone}
-                </a>
-              )}
-              {data.contact.email && (
-                <a href={`mailto:${data.contact.email}`}
-                  className="flex items-center gap-2 text-sm py-1.5 transition-colors break-all"
-                  style={{ color: 'rgba(255,255,255,0.75)' }}>
-                  <Mail size={13} style={{ color: '#d4af37' }} />
-                  {data.contact.email}
-                </a>
-              )}
-            </div>
-          )}
-
         </aside>
       </div>
     </div>
