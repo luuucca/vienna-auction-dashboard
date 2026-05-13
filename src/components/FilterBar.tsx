@@ -80,27 +80,6 @@ export function FilterBar({ filters, onChange, resultCount }: Props) {
           />
         </div>
 
-        {/* Sort */}
-        <div className="relative">
-          <select
-            value={filters.sortBy}
-            onChange={(e) => onChange({ ...filters, sortBy: e.target.value as SortOption })}
-            className="appearance-none pl-3 pr-8 py-1.5 text-sm bg-cream-50 border border-cream-300 rounded-md
-                       text-warm-700 focus:outline-none focus:border-forest-600 focus:ring-1
-                       focus:ring-forest-600 focus:ring-opacity-30 transition-colors cursor-pointer"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          <SlidersHorizontal
-            size={13}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-warm-400 pointer-events-none"
-          />
-        </div>
-
         {/* Clear filters */}
         {hasActiveFilter && (
           <button
@@ -113,10 +92,30 @@ export function FilterBar({ filters, onChange, resultCount }: Props) {
           </button>
         )}
 
-        {/* Result count */}
-        <div className="ml-auto text-xs text-warm-400 flex-shrink-0">
-          显示{' '}
-          <span className="font-semibold text-forest-700">{resultCount}</span> 条记录
+        {/* Sort + Result count — right side */}
+        <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+          <div className="relative">
+            <select
+              value={filters.sortBy}
+              onChange={(e) => onChange({ ...filters, sortBy: e.target.value as SortOption })}
+              className="appearance-none pl-3 pr-8 py-1.5 text-sm bg-cream-50 border border-cream-300 rounded-md
+                         text-warm-700 focus:outline-none focus:border-forest-600 focus:ring-1
+                         focus:ring-forest-600 focus:ring-opacity-30 transition-colors cursor-pointer"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <SlidersHorizontal
+              size={13}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-warm-400 pointer-events-none"
+            />
+          </div>
+          <span className="text-xs text-warm-400">
+            显示 <span className="font-semibold text-forest-700">{resultCount}</span> 条
+          </span>
         </div>
       </div>
     </div>

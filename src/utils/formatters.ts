@@ -99,6 +99,42 @@ function inferTypeFromSummary(summary: string): string {
   return '其他'
 }
 
+export function generateCnSummary(auction: Auction): string {
+  const parts: string[] = []
+
+  const catLabel = getCategoryLabel(auction.category)
+  const areaStr = auction.area > 0 ? `${Math.round(auction.area)} ㎡` : ''
+  const psmStr = auction.pricePerSqm > 0
+    ? `均价 €${Math.round(auction.pricePerSqm).toLocaleString('de-AT')}/㎡`
+    : ''
+
+  if (areaStr && psmStr) parts.push(`${catLabel} · ${areaStr} · ${psmStr}`)
+  else if (areaStr) parts.push(`${catLabel} · ${areaStr}`)
+  else parts.push(catLabel)
+
+  const ratio = auction.estimatedValue > 0
+    ? Math.round((auction.minimumBid / auction.estimatedValue) * 100)
+    : 0
+  if (ratio > 0) parts.push(`起拍价为估值 ${ratio}%`)
+
+  if (auction.summary) {
+    const s = auction.summary.toLowerCase()
+    const hints: string[] = []
+    if (/dachgeschoss/.test(s)) hints.push('顶层')
+    if (/nicht fertig|unfertig|rohbau/.test(s)) hints.push('未竣工')
+    if (/garten|terrasse|loggia/.test(s)) hints.push('带花园/露台')
+    if (/renovier|saniert/.test(s)) hints.push('已翻新')
+    if (/leer|unvermiet/.test(s)) hints.push('空置')
+    if (/vermietet/.test(s)) hints.push('已出租')
+    if (/garage|stellplatz/.test(s)) hints.push('含车位')
+    if (/villa|herrschaftlich/.test(s)) hints.push('别墅')
+    if (/denkmal|historisch/.test(s)) hints.push('历史建筑')
+    if (hints.length) parts.push(hints.join('·'))
+  }
+
+  return parts.join('　|　')
+}
+
 export function generateTitle(auction: Auction): string {
   // Extract district number from postal code: "1190 Wien ..." → "19区"
   const match = auction.address.match(/^1(\d)(\d)0\s/)

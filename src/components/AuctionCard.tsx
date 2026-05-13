@@ -19,6 +19,7 @@ import {
   getRiskTagStyle,
   getCategoryLabel,
   generateTitle,
+  generateCnSummary,
 } from '../utils/formatters'
 
 interface Props {
@@ -169,15 +170,13 @@ export function AuctionCard({ auction, isSelected, onClick }: Props) {
         </div>
 
         {/* Summary */}
-        {auction.summary && (
-          <div className="mb-3 bg-cream-50 rounded-lg px-3 py-2 border border-cream-200">
-            <div className="flex items-center gap-1 mb-1">
-              <FileText size={11} className="text-warm-400" />
-              <span className="text-xs font-medium text-warm-500">专家摘要</span>
-            </div>
-            <p className="text-xs text-warm-600 leading-relaxed line-clamp-3">{auction.summary}</p>
+        <div className="mb-3 bg-cream-50 rounded-lg px-3 py-2 border border-cream-200">
+          <div className="flex items-center gap-1 mb-1">
+            <FileText size={11} className="text-warm-400" />
+            <span className="text-xs font-medium text-warm-500">物业概况</span>
           </div>
-        )}
+          <p className="text-xs text-warm-600 leading-relaxed">{generateCnSummary(auction)}</p>
+        </div>
 
         {/* Risk tags */}
         {(auction.riskTags ?? []).length > 0 && (
