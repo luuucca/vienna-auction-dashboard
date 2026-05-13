@@ -240,7 +240,7 @@ export default function ListingsPage() {
           <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>真实房源</p>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-1">维也纳精选房源</h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            实时同步自 Valerto 房源系统 · 共 <span className="text-white font-semibold">{listings.length}</span> 套
+            真实在售房源 · 共 <span className="text-white font-semibold">{listings.length}</span> 套
           </p>
         </div>
       </div>
