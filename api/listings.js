@@ -97,7 +97,7 @@ async function fetchNotionDatabase() {
     body: JSON.stringify({
       filter: {
         property: 'Status',
-        select: { does_not_equal: 'Draft' },
+        select: { equals: 'Active' },
       },
       page_size: 100,
     }),
