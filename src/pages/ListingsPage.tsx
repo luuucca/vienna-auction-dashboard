@@ -18,6 +18,7 @@ interface Listing {
   tag?: string
   forRent: boolean
   image: string
+  url?: string            // 真实房源链接，留空则跳转联系页
 }
 
 const ALL_LISTINGS: Listing[] = [
@@ -189,14 +190,25 @@ function ListingCard({ listing }: { listing: Listing }) {
           <span className="text-lg font-bold" style={{ color: '#d4af37' }}>
             {fmtPrice(listing.price, listing.forRent)}
           </span>
-          <Link to="/about"
-            className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
-            style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.22)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
-          >
-            咨询详情
-          </Link>
+          {listing.url ? (
+            <a href={listing.url} target="_blank" rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
+              style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.22)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
+            >
+              查看详情 →
+            </a>
+          ) : (
+            <Link to="/about"
+              className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
+              style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.22)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
+            >
+              咨询详情
+            </Link>
+          )}
         </div>
       </div>
     </motion.div>

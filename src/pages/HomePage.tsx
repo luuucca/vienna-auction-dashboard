@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -36,6 +36,124 @@ function BGPattern({
       style={{ backgroundImage: img, backgroundSize: `${size}px ${size}px`, WebkitMaskImage: maskVal, maskImage: maskVal }}
     />
   )
+}
+
+/* ─────────────────────────────────────────────
+   Animated city network canvas
+───────────────────────────────────────────── */
+function CityNetworkCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const animate = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const W = canvas.width
+    const H = canvas.height
+
+    // Nodes — fixed positions like Vienna districts
+    const nodes = [
+      { x: 0.18, y: 0.35 }, { x: 0.30, y: 0.55 }, { x: 0.42, y: 0.28 },
+      { x: 0.50, y: 0.50 }, { x: 0.58, y: 0.22 }, { x: 0.65, y: 0.65 },
+      { x: 0.72, y: 0.38 }, { x: 0.80, y: 0.58 }, { x: 0.25, y: 0.72 },
+      { x: 0.88, y: 0.32 }, { x: 0.55, y: 0.78 }, { x: 0.38, y: 0.45 },
+    ].map((n, i) => ({
+      x: n.x * W, y: n.y * H,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 2.5 + 2,
+      phase: i * 0.7,
+    }))
+
+    let frame = 0
+    let raf: number
+
+    function draw() {
+      if (!ctx || !canvas) return
+      ctx.clearRect(0, 0, W, H)
+
+      // Update node positions (gentle drift)
+      nodes.forEach(n => {
+        n.x += n.vx
+        n.y += n.vy
+        if (n.x < 20 || n.x > W - 20) n.vx *= -1
+        if (n.y < 20 || n.y > H - 20) n.vy *= -1
+      })
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x
+          const dy = nodes[i].y - nodes[j].y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < 200) {
+            const alpha = (1 - dist / 200) * 0.25
+            ctx.beginPath()
+            ctx.moveTo(nodes[i].x, nodes[i].y)
+            ctx.lineTo(nodes[j].x, nodes[j].y)
+            ctx.strokeStyle = `rgba(212,175,55,${alpha})`
+            ctx.lineWidth = 0.8
+            ctx.stroke()
+          }
+        }
+      }
+
+      // Draw nodes with pulse
+      nodes.forEach((n, i) => {
+        const pulse = Math.sin(frame * 0.04 + n.phase) * 0.5 + 0.5
+
+        // Outer glow ring
+        ctx.beginPath()
+        ctx.arc(n.x, n.y, n.r + 4 + pulse * 4, 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(212,175,55,${0.08 + pulse * 0.12})`
+        ctx.lineWidth = 1
+        ctx.stroke()
+
+        // Core dot
+        ctx.beginPath()
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(212,175,55,${0.6 + pulse * 0.4})`
+        ctx.shadowColor = '#d4af37'
+        ctx.shadowBlur = 8 + pulse * 8
+        ctx.fill()
+        ctx.shadowBlur = 0
+      })
+
+      // Watermark text
+      ctx.font = `bold clamp(24px, 4vw, 52px) Helvetica`
+      ctx.font = `bold ${Math.round(H * 0.18)}px Helvetica`
+      ctx.fillStyle = 'rgba(212,175,55,0.06)'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText('维也纳实时法拍信息汇总', W / 2, H / 2)
+
+      frame++
+      raf = requestAnimationFrame(draw)
+    }
+
+    draw()
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const resize = () => {
+      canvas.width = canvas.offsetWidth
+      canvas.height = canvas.offsetHeight
+    }
+    resize()
+    const stop = animate()
+    window.addEventListener('resize', resize)
+    return () => {
+      stop?.()
+      window.removeEventListener('resize', resize)
+    }
+  }, [animate])
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 }
 
 /* ─────────────────────────────────────────────
@@ -116,6 +234,23 @@ const FEATURED: PropCard[] = [
 export default function HomePage() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const [formSent, setFormSent] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setFormLoading(true)
+    const form = e.currentTarget
+    const data = new FormData(form)
+    try {
+      const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+      if (res.ok) { setFormSent(true) }
+    } catch (_) {}
+    setFormLoading(false)
+  }
 
   useEffect(() => {
     const mv = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY })
@@ -259,25 +394,11 @@ export default function HomePage() {
             className="rounded-3xl overflow-hidden"
             style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)' }}
           >
-            {/* Map preview placeholder */}
-            <div className="relative h-64 overflow-hidden"
-              style={{ background: '#0f0f0f' }}>
-              <BGPattern variant="dots" size={20} fill="rgba(212,175,55,0.08)" />
-              {/* Fake map pins */}
-              {[
-                { top: '30%', left: '25%' }, { top: '45%', left: '50%' },
-                { top: '25%', left: '65%' }, { top: '60%', left: '35%' },
-                { top: '55%', left: '70%' }, { top: '20%', left: '42%' },
-              ].map((pos, i) => (
-                <div key={i} className="absolute w-3 h-3 rounded-full animate-pulse"
-                  style={{ top: pos.top, left: pos.left, background: '#d4af37',
-                    boxShadow: '0 0 8px rgba(212,175,55,0.7)', animationDelay: `${i * 0.4}s` }} />
-              ))}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-bold text-center px-4" style={{ color: 'rgba(212,175,55,0.18)', fontSize: 'clamp(22px,4vw,42px)', letterSpacing: '0.06em' }}>维也纳实时法拍信息汇总</span>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 h-20"
-                style={{ background: 'linear-gradient(to top,rgba(20,20,20,0.95),transparent)' }} />
+            {/* Animated city network canvas */}
+            <div className="relative h-72 overflow-hidden" style={{ background: '#0a0a0a' }}>
+              <CityNetworkCanvas />
+              <div className="absolute bottom-0 left-0 right-0 h-16"
+                style={{ background: 'linear-gradient(to top,rgba(10,10,10,0.98),transparent)' }} />
             </div>
 
             {/* Stats + CTA */}
@@ -369,7 +490,7 @@ export default function HomePage() {
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.42)' }}>我们会尽快与您联系</p>
               </div>
             ) : (
-              <form className="space-y-4" onSubmit={e => { e.preventDefault(); setFormSent(true) }}>
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
                     { label: '姓名', type: 'text', placeholder: '请输入您的姓名' },
@@ -404,15 +525,14 @@ export default function HomePage() {
                     onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
                   />
                 </div>
-                <motion.button type="submit"
+                <motion.button type="submit" disabled={formLoading}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   className="w-full py-3.5 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-colors"
-                  style={{ background: '#d4af37', color: '#141414' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
-                  onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+                  style={{ background: formLoading ? 'rgba(212,175,55,0.6)' : '#d4af37', color: '#141414', cursor: formLoading ? 'not-allowed' : 'pointer' }}
+                  onMouseEnter={e => { if (!formLoading) e.currentTarget.style.background = '#e0bc4a' }}
+                  onMouseLeave={e => { if (!formLoading) e.currentTarget.style.background = '#d4af37' }}
                 >
-                  提交咨询
-                  <ArrowRight size={16} />
+                  {formLoading ? '发送中…' : <>提交咨询 <ArrowRight size={16} /></>}
                 </motion.button>
                 <p className="text-center text-xs pt-1" style={{ color: 'rgba(255,255,255,0.22)' }}>
                   或在小红书搜索「奥匈置业研究所 | CH」直接私信

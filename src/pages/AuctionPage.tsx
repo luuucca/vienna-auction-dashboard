@@ -13,6 +13,7 @@ import { bidRatio } from '../utils/formatters'
 export default function AuctionPage() {
   const { auctions, loading, error, lastModified, refresh, reloadData, triggerScrape } = useAuctions()
   const [selectedId, setSelectedId] = useState<string>('')
+  const [mobileTab, setMobileTab] = useState<'map' | 'list'>('map')
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     category: 'all',
@@ -52,6 +53,11 @@ export default function AuctionPage() {
     setSelectedId((prev) => (prev === id ? '' : id))
   }
 
+  function handleMapPinSelect(id: string) {
+    setSelectedId((prev) => (prev === id ? '' : id))
+    setMobileTab('list') // auto-switch to list tab on pin click
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col bg-cream-100" style={{ height: '100vh', paddingTop: '56px' }}>
@@ -85,19 +91,58 @@ export default function AuctionPage() {
   }
 
   return (
-    <div className="flex flex-col bg-cream-100 overflow-hidden" style={{ height: '100vh', paddingTop: '56px' }}>
+    <div className="flex flex-col bg-cream-100" style={{ height: '100vh', paddingTop: '56px' }}>
       <Header lastModified={lastModified} auctionCount={auctions.length} refresh={refresh} onRefresh={triggerScrape} onReloadData={reloadData} />
       <StatsCards auctions={auctions} filteredCount={filteredAuctions.length} />
       <FilterBar filters={filters} onChange={setFilters} resultCount={filteredAuctions.length} />
 
-      <div className="md:hidden">
-        <div className="h-[50vw] min-h-[240px] max-h-[360px] border-b border-cream-200">
-          <MapView auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
+      {/* Mobile: tab switcher */}
+      <div className="md:hidden flex flex-col flex-1 overflow-hidden">
+
+        {/* Tab bar */}
+        <div className="flex flex-shrink-0 border-b border-cream-200 bg-white">
+          {(['map', 'list'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setMobileTab(tab)}
+              className="flex-1 py-2.5 text-sm font-medium transition-colors"
+              style={{
+                color: mobileTab === tab ? '#1D3A2A' : '#9A8F85',
+                borderBottom: mobileTab === tab ? '2px solid #1D3A2A' : '2px solid transparent',
+              }}
+            >
+              {tab === 'map' ? '🗺 地图' : `📋 列表（${filteredAuctions.length}）`}
+            </button>
+          ))}
         </div>
-        {selectedAuction && <DetailPanel auction={selectedAuction} onClose={() => setSelectedId('')} />}
-        <AuctionList auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
+
+        {/* Map tab — Leaflet owns this, no scroll conflict */}
+        {mobileTab === 'map' && (
+          <div className="flex-1 overflow-hidden">
+            <MapView
+              auctions={filteredAuctions}
+              selectedId={selectedId}
+              onSelect={handleMapPinSelect}
+            />
+          </div>
+        )}
+
+        {/* List tab — fully scrollable, no Leaflet */}
+        {mobileTab === 'list' && (
+          <div className="flex-1 overflow-y-auto">
+            {selectedAuction && (
+              <DetailPanel auction={selectedAuction} onClose={() => setSelectedId('')} />
+            )}
+            <AuctionList
+              auctions={filteredAuctions}
+              selectedId={selectedId}
+              onSelect={handleSelect}
+            />
+          </div>
+        )}
       </div>
 
+      {/* Desktop: fixed height split view */}
       <div className="hidden md:flex flex-1 overflow-hidden">
         <div className="w-3/5 overflow-hidden border-r border-cream-200">
           <MapView auctions={filteredAuctions} selectedId={selectedId} onSelect={handleSelect} />
