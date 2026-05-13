@@ -17,18 +17,16 @@ export default function AboutPage() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-5">
 
-        {/* Xiaohongshu */}
+        {/* 1. 小红书 */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
           className="rounded-2xl p-6 flex items-center gap-5"
           style={{ background: 'rgba(254,44,85,0.06)', border: '1px solid rgba(254,44,85,0.2)' }}
         >
-          {/* Xiaohongshu icon */}
           <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
               <rect width="100" height="100" fill="#FF2442" rx="22"/>
-              {/* White "小红书" mark — simplified book + dot */}
               <rect x="28" y="28" width="44" height="30" rx="4" fill="none" stroke="white" strokeWidth="6"/>
               <line x1="50" y1="28" x2="50" y2="58" stroke="white" strokeWidth="6"/>
               <line x1="28" y1="42" x2="72" y2="42" stroke="white" strokeWidth="5"/>
@@ -49,66 +47,13 @@ export default function AboutPage() {
           </a>
         </motion.div>
 
-        {/* Email */}
+        {/* 2. 微信 */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="rounded-2xl p-6 flex items-center gap-5"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-        >
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            <Mail size={20} style={{ color: '#d4af37' }} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>邮件咨询</p>
-            <a
-              href="mailto:L.ZHANG@VALERTO.IMMO"
-              className="text-base font-semibold transition-colors"
-              style={{ color: '#d4af37' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#e0bc4a')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#d4af37')}
-            >
-              L.ZHANG@VALERTO.IMMO
-            </a>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>我们将在 24 小时内回复</p>
-          </div>
-        </motion.div>
-
-        {/* Phone */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="rounded-2xl p-6 flex items-center gap-5"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-        >
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            <Phone size={20} style={{ color: '#d4af37' }} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>电话</p>
-            <a
-              href="tel:+436705566666"
-              className="text-base font-semibold transition-colors"
-              style={{ color: 'rgba(255,255,255,0.9)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.9)')}
-            >
-              +43 670 5566666
-            </a>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>奥地利本地号码</p>
-          </div>
-        </motion.div>
-
-        {/* WeChat QR */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
           className="rounded-2xl p-5 flex items-center gap-5"
           style={{ background: 'rgba(7,193,96,0.06)', border: '1px solid rgba(7,193,96,0.2)' }}
         >
-          {/* WeChat icon */}
           <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
               <rect width="100" height="100" fill="#07C160" rx="22"/>
@@ -122,25 +67,66 @@ export default function AboutPage() {
               <circle cx="70" cy="58" r="2.8" fill="#07C160"/>
             </svg>
           </div>
-
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>微信</p>
             <p className="text-sm font-semibold text-white mb-0.5">扫码添加微信</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>长按或扫描二维码</p>
           </div>
-
-          {/* QR code */}
           <div className="flex-shrink-0 rounded-xl overflow-hidden"
             style={{ width: 80, height: 80, background: 'white', padding: 4 }}>
-            <img src="/wechat-qr.png" alt="微信二维码"
-              className="w-full h-full object-contain"
+            <img src="/wechat-qr.png" alt="微信二维码" className="w-full h-full object-contain"
               onError={e => {
-                const el = e.currentTarget
-                el.style.display = 'none'
-                const parent = el.parentElement!
-                parent.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:12px;border:1px dashed rgba(255,255,255,0.15)"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'28\' height=\'28\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'rgba(255,255,255,0.2)\' stroke-width=\'2\'><rect x=\'3\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'14\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'3\' y=\'14\' width=\'7\' height=\'7\'/><path d=\'M14 14h3v3M17 14v3h3M14 17h3\'/></svg></div>'
+                const el = e.currentTarget; el.style.display = 'none'
+                const p = el.parentElement!
+                p.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'28\' height=\'28\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'rgba(255,255,255,0.2)\' stroke-width=\'2\'><rect x=\'3\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'14\' y=\'3\' width=\'7\' height=\'7\'/><rect x=\'3\' y=\'14\' width=\'7\' height=\'7\'/></svg></div>'
               }}
             />
+          </div>
+        </motion.div>
+
+        {/* 3. 电话 */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="rounded-2xl p-6 flex items-center gap-5"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <Phone size={20} style={{ color: '#d4af37' }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>电话</p>
+            <a href="tel:+436705566666" className="text-base font-semibold transition-colors"
+              style={{ color: 'rgba(255,255,255,0.9)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.9)')}>
+              +43 670 5566666
+            </a>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>奥地利本地号码</p>
+          </div>
+        </motion.div>
+
+        {/* 4. 邮件 */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="rounded-2xl p-6 flex items-center gap-5"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <Mail size={20} style={{ color: '#d4af37' }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>邮件咨询</p>
+            <a href="mailto:L.ZHANG@VALERTO.IMMO" className="text-base font-semibold transition-colors"
+              style={{ color: '#d4af37' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#e0bc4a')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#d4af37')}>
+              L.ZHANG@VALERTO.IMMO
+            </a>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>我们将在 24 小时内回复</p>
           </div>
         </motion.div>
 
