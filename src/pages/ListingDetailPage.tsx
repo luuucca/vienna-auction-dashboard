@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft, MapPin, Maximize2, Home, Calendar, Building,
   ChevronLeft, ChevronRight, Loader2, ExternalLink, Heart, Share2,
@@ -236,11 +236,7 @@ export default function ListingDetailPage() {
   const [data, setData] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const heroRef = useRef<HTMLDivElement>(null)
 
-  const { scrollY } = useScroll()
-  const heroY = useTransform(scrollY, [0, 600], [0, 120])
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.6])
 
   useEffect(() => {
     if (!id) return
@@ -328,12 +324,9 @@ export default function ListingDetailPage() {
       </div>
 
       {/* Hero Gallery */}
-      <motion.div ref={heroRef}
-        style={{ y: heroY, opacity: heroOpacity }}
-        className="mt-4 px-4 sm:px-6 lg:px-10"
-      >
+      <div className="mt-4 px-4 sm:px-6 lg:px-10">
         <HeroGallery images={data.images} title={data.title} />
-      </motion.div>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-8 pb-16 grid lg:grid-cols-3 gap-8">
 
