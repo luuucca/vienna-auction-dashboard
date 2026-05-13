@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, Maximize2, Home, Calendar, Building, Mail, Phone, ChevronLeft, ChevronRight, Loader2, ExternalLink } from 'lucide-react'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import {
+  ArrowLeft, MapPin, Maximize2, Home, Calendar, Building,
+  ChevronLeft, ChevronRight, Loader2, ExternalLink, Heart, Share2,
+  Bed, Bath, TreePine, Layers, Sparkles
+} from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Custom gold pin icon
 const goldPinIcon = L.divIcon({
   className: 'custom-gold-pin',
   html: `<div style="
-    width: 36px; height: 36px;
-    background: #d4af37;
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #e8c552 0%, #d4af37 100%);
     border: 3px solid #141414;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 0 2px rgba(212,175,55,0.35);
-    position: relative;
+    box-shadow: 0 6px 18px rgba(212,175,55,0.45), 0 0 0 2px rgba(212,175,55,0.25);
+    animation: pulse-gold 2s infinite;
   "><div style="
-    position: absolute;
-    top: 50%; left: 50%;
+    position: absolute; top: 50%; left: 50%;
     transform: translate(-50%,-50%) rotate(45deg);
-    width: 10px; height: 10px;
-    background: #141414;
-    border-radius: 50%;
+    width: 12px; height: 12px;
+    background: #141414; border-radius: 50%;
   "></div></div>`,
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
 })
 
 interface Listing {
@@ -57,18 +59,187 @@ interface Listing {
   contact: { name: string; email: string; phone: string; company: string }
 }
 
-function fmtPrice(p: number, rent: boolean, onReq: boolean, currency: string) {
+function fmtPrice(p: number, rent: boolean, onReq: boolean) {
   if (onReq || !p) return '价格面议'
-  const formatted = p.toLocaleString('de-AT')
-  return rent ? `€ ${formatted}/月` : `€ ${formatted}`
+  const f = p.toLocaleString('de-AT')
+  return rent ? `€ ${f}/月` : `€ ${f}`
 }
 
+/* ─────────────────────────────────────────────
+   Hero Gallery
+───────────────────────────────────────────── */
+function HeroGallery({ images, title }: { images: string[]; title: string }) {
+  const [idx, setIdx] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const [lightbox, setLightbox] = useState(false)
+
+  const go = (delta: number) => {
+    setDirection(delta)
+    setIdx((i) => (i + delta + images.length) % images.length)
+  }
+
+  useEffect(() => {
+    if (!lightbox) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(false)
+      if (e.key === 'ArrowLeft') go(-1)
+      if (e.key === 'ArrowRight') go(1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightbox])
+
+  if (!images.length) {
+    return (
+      <div className="relative w-full" style={{ aspectRatio: '21/9', background: '#0a0a0a' }}>
+        <div className="absolute inset-0 flex items-center justify-center text-white/20">无图片</div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '21/9', background: '#0a0a0a' }}>
+        <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+          <motion.img
+            key={idx}
+            src={images[idx]}
+            alt={title}
+            custom={direction}
+            initial={{ opacity: 0, scale: 1.05, x: direction > 0 ? 80 : -80 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 1.05, x: direction > 0 ? -80 : 80 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            onClick={() => setLightbox(true)}
+            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
+            draggable={false}
+          />
+        </AnimatePresence>
+
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,0.35) 0%, transparent 25%, transparent 60%, rgba(20,20,20,0.95) 100%)' }} />
+
+        {images.length > 1 && (
+          <>
+            <button onClick={() => go(-1)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <ChevronLeft size={18} color="white" />
+            </button>
+            <button onClick={() => go(1)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <ChevronRight size={18} color="white" />
+            </button>
+
+            {/* Counter */}
+            <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full text-xs font-medium"
+              style={{ background: 'rgba(20,20,20,0.7)', backdropFilter: 'blur(10px)', color: 'rgba(255,255,255,0.9)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              {idx + 1} / {images.length}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnail strip */}
+      {images.length > 1 && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 -mt-4 relative z-10">
+          <div className="flex gap-2 overflow-x-auto pb-1 thumb-strip">
+            {images.slice(0, 30).map((img, i) => (
+              <motion.button
+                key={i}
+                onClick={() => { setDirection(i > idx ? 1 : -1); setIdx(i) }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.96 }}
+                className="flex-shrink-0 rounded-lg overflow-hidden"
+                style={{
+                  width: 88, height: 60,
+                  border: i === idx ? '2px solid #d4af37' : '2px solid rgba(255,255,255,0.08)',
+                  opacity: i === idx ? 1 : 0.55,
+                  transition: 'opacity 0.2s, border-color 0.2s',
+                  boxShadow: i === idx ? '0 4px 14px rgba(212,175,55,0.35)' : 'none',
+                }}>
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setLightbox(false)}
+            className="fixed inset-0 z-[9999] flex items-center justify-center cursor-zoom-out"
+            style={{ background: 'rgba(0,0,0,0.95)' }}>
+            <motion.img
+              key={idx}
+              src={images[idx]}
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-[92vw] max-h-[92vh] object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button onClick={(e) => { e.stopPropagation(); go(-1) }}
+              className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+              <ChevronLeft size={20} color="white" />
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); go(1) }}
+              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+              <ChevronRight size={20} color="white" />
+            </button>
+            <div className="absolute top-6 right-6 px-3 py-1.5 rounded-full text-sm font-medium"
+              style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
+              {idx + 1} / {images.length}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Stat Card
+───────────────────────────────────────────── */
+function StatCard({ icon, label, value, delay = 0 }: { icon: React.ReactNode; label: string; value: string; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -3, borderColor: 'rgba(212,175,55,0.35)' }}
+      className="rounded-2xl p-4 transition-colors"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] mb-2" style={{ color: 'rgba(212,175,55,0.75)' }}>
+        {icon}
+        {label}
+      </div>
+      <p className="text-xl font-serif font-semibold text-white tracking-tight">{value}</p>
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Main Page
+───────────────────────────────────────────── */
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [data, setData] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [imgIdx, setImgIdx] = useState(0)
+  const heroRef = useRef<HTMLDivElement>(null)
+
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 600], [0, 120])
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.6])
 
   useEffect(() => {
     if (!id) return
@@ -104,218 +275,250 @@ export default function ListingDetailPage() {
     )
   }
 
-  const cover = data.images[imgIdx] || data.coverImage
   const district = String(data.address.district || '').match(/Wien\s+(\d+)/i)
   const districtNum = district ? district[1] : ''
+  const districtName = data.address.district?.split(',')[1]?.trim() || ''
 
   return (
     <div className="min-h-screen bg-[#141414] text-white pt-16">
+      <style>{`
+        @keyframes pulse-gold {
+          0%, 100% { box-shadow: 0 6px 18px rgba(212,175,55,0.45), 0 0 0 2px rgba(212,175,55,0.25); }
+          50% { box-shadow: 0 8px 24px rgba(212,175,55,0.65), 0 0 0 8px rgba(212,175,55,0.08); }
+        }
+        .thumb-strip::-webkit-scrollbar { height: 6px; }
+        .thumb-strip::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 3px; }
+        .listing-desc h1, .listing-desc h2 { font-size: 18px; font-weight: 600; color: #d4af37; margin: 1.5em 0 0.6em; letter-spacing: -0.01em; }
+        .listing-desc h3, .listing-desc h4 { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.95); margin: 1.2em 0 0.5em; }
+        .listing-desc p { margin: 0.7em 0; }
+        .listing-desc ul { margin: 0.6em 0; padding-left: 1.2em; }
+        .listing-desc li { margin: 0.3em 0; list-style: disc; }
+        .listing-desc strong { color: rgba(255,255,255,0.95); font-weight: 600; }
+        .listing-desc hr { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1.5em 0; }
+        .listing-desc a { color: #d4af37; text-decoration: underline; text-underline-offset: 2px; }
+      `}</style>
 
-      {/* Back nav */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6">
+      {/* Top toolbar */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-5 pb-2 flex items-center justify-between">
         <Link to="/listings"
-          className="inline-flex items-center gap-1.5 text-sm transition-colors"
-          style={{ color: 'rgba(255,255,255,0.5)' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>
-          <ArrowLeft size={14} /> 返回列表
+          className="inline-flex items-center gap-1.5 text-sm transition-all px-3 py-1.5 rounded-xl"
+          style={{ color: 'rgba(255,255,255,0.55)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#d4af37'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)' }}>
+          <ArrowLeft size={13} /> 返回列表
         </Link>
-      </div>
-
-      {/* Gallery */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-4">
-        <div className="relative rounded-2xl overflow-hidden" style={{ background: '#0a0a0a', aspectRatio: '16/10' }}>
-          {cover ? (
-            <img src={cover} alt={data.title} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-white/20">无图片</div>
-          )}
-          {data.images.length > 1 && (
-            <>
-              <button onClick={() => setImgIdx((imgIdx - 1 + data.images.length) % data.images.length)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-                style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
-                <ChevronLeft size={18} />
-              </button>
-              <button onClick={() => setImgIdx((imgIdx + 1) % data.images.length)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-                style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
-                <ChevronRight size={18} />
-              </button>
-              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md text-xs"
-                style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)' }}>
-                {imgIdx + 1} / {data.images.length}
-              </div>
-            </>
-          )}
+        <div className="flex items-center gap-2">
+          <button className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,175,55,0.1)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
+            title="收藏">
+            <Heart size={14} style={{ color: 'rgba(255,255,255,0.6)' }} />
+          </button>
+          <button onClick={() => navigator.share && navigator.share({ url: window.location.href, title: data.title })}
+            className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,175,55,0.1)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
+            title="分享">
+            <Share2 size={14} style={{ color: 'rgba(255,255,255,0.6)' }} />
+          </button>
         </div>
-
-        {/* Thumbnails */}
-        {data.images.length > 1 && (
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'thin' }}>
-            {data.images.slice(0, 30).map((img, i) => (
-              <button key={i} onClick={() => setImgIdx(i)}
-                className="flex-shrink-0 rounded-lg overflow-hidden transition-all"
-                style={{
-                  width: 80, height: 56,
-                  border: i === imgIdx ? '2px solid #d4af37' : '2px solid transparent',
-                  opacity: i === imgIdx ? 1 : 0.55,
-                }}>
-                <img src={img} alt="" className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-8 grid lg:grid-cols-3 gap-6">
+      {/* Hero Gallery */}
+      <motion.div ref={heroRef}
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="mt-3"
+      >
+        <HeroGallery images={data.images} title={data.title} />
+      </motion.div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-8 pb-16 grid lg:grid-cols-3 gap-8">
 
         {/* Main column */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Title */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-xs" style={{ color: 'rgba(212,175,55,0.7)' }}>
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
-                style={{ background: data.forRent ? 'rgba(34,197,94,0.85)' : '#d4af37', color: '#141414' }}>
-                {data.forRent ? '出租' : '购买'}
+        <div className="lg:col-span-2 space-y-8">
+
+          {/* Title block */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase"
+                style={{ background: data.forRent ? 'rgba(34,197,94,0.18)' : 'rgba(212,175,55,0.18)', color: data.forRent ? '#22c55e' : '#d4af37', border: `1px solid ${data.forRent ? 'rgba(34,197,94,0.35)' : 'rgba(212,175,55,0.35)'}` }}>
+                {data.forRent ? '出租' : '出售'}
               </span>
-              <span>{data.typeName || data.type}</span>
-              {districtNum && <span>· {districtNum}区 {data.address.district.split(',')[1]?.trim() || ''}</span>}
+              <span className="text-xs" style={{ color: 'rgba(212,175,55,0.6)' }}>{data.typeName || data.type}</span>
+              {districtNum && (
+                <>
+                  <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{districtNum} 区 {districtName}</span>
+                </>
+              )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">{data.title}</h1>
-            <div className="flex items-center gap-1.5 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              <MapPin size={13} />
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+              {data.title}
+            </h1>
+            <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <MapPin size={14} style={{ color: '#d4af37' }} />
               <span>{data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}</span>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Key stats */}
+          {/* Stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {data.sqm > 0 && (
-              <Stat icon={<Maximize2 size={14} />} label="居住面积" value={`${Math.round(data.sqm)} m²`} />
+              <StatCard icon={<Maximize2 size={11} />} label="居住面积" value={`${Math.round(data.sqm)} m²`} delay={0.05} />
             )}
             {data.rooms > 0 && (
-              <Stat icon={<Home size={14} />} label="房间数" value={`${data.rooms} 间`} />
-            )}
-            {data.balconyTerraceSqm > 0 && (
-              <Stat icon={<Maximize2 size={14} />} label="阳台/露台" value={`${Math.round(data.balconyTerraceSqm)} m²`} />
-            )}
-            {data.buildYear > 0 && (
-              <Stat icon={<Calendar size={14} />} label="建造年份" value={String(data.buildYear)} />
-            )}
-            {data.floors > 0 && (
-              <Stat icon={<Building size={14} />} label="楼层数" value={`${data.floors} 层`} />
+              <StatCard icon={<Home size={11} />} label="房间数" value={`${data.rooms} 间`} delay={0.1} />
             )}
             {data.bedrooms > 0 && (
-              <Stat icon={<Home size={14} />} label="卧室" value={`${data.bedrooms}`} />
+              <StatCard icon={<Bed size={11} />} label="卧室" value={`${data.bedrooms}`} delay={0.15} />
             )}
             {data.bathrooms > 0 && (
-              <Stat icon={<Home size={14} />} label="浴室" value={`${data.bathrooms}`} />
+              <StatCard icon={<Bath size={11} />} label="浴室" value={`${data.bathrooms}`} delay={0.2} />
+            )}
+            {data.balconyTerraceSqm > 0 && (
+              <StatCard icon={<TreePine size={11} />} label="阳台/露台" value={`${Math.round(data.balconyTerraceSqm)} m²`} delay={0.25} />
+            )}
+            {data.buildYear > 0 && (
+              <StatCard icon={<Calendar size={11} />} label="建造年份" value={String(data.buildYear)} delay={0.3} />
+            )}
+            {data.floors > 0 && (
+              <StatCard icon={<Layers size={11} />} label="楼层数" value={`${data.floors} 层`} delay={0.35} />
+            )}
+            {data.plotSqm > 0 && (
+              <StatCard icon={<Building size={11} />} label="土地面积" value={`${Math.round(data.plotSqm)} m²`} delay={0.4} />
             )}
           </div>
 
           {/* Features */}
           {data.featuresText && (
-            <div className="rounded-2xl p-5"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <h3 className="text-sm font-semibold mb-2 uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>配置 / 设施</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{data.featuresText}</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl p-6"
+              style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(255,255,255,0.02) 100%)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles size={14} style={{ color: '#d4af37' }} />
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: '#d4af37' }}>配置与亮点</h3>
+              </div>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{data.featuresText}</p>
+            </motion.div>
           )}
 
           {/* Description */}
           {data.description && (
-            <div className="rounded-2xl p-5 sm:p-6"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>房源详情</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl p-6 sm:p-8"
+              style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] mb-5" style={{ color: '#d4af37' }}>房源详情</h3>
               <div className="prose prose-sm prose-invert max-w-none listing-desc"
-                style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, lineHeight: 1.7 }}
+                style={{ color: 'rgba(255,255,255,0.78)', fontSize: 14.5, lineHeight: 1.75 }}
                 dangerouslySetInnerHTML={{ __html: data.description }} />
-            </div>
+            </motion.div>
           )}
 
           {/* Map */}
           {data.location.lat > 0 && data.location.lng > 0 && (
-            <div className="rounded-2xl overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div className="p-5 pb-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'rgba(212,175,55,0.8)' }}>地理位置</h3>
-                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="p-6 pb-4">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] mb-1" style={{ color: '#d4af37' }}>地理位置</h3>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>
                   {data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}
                 </p>
               </div>
-              <div className="relative" style={{ height: 380 }}>
+              <div className="relative" style={{ height: 420 }}>
                 <MapContainer
                   center={[data.location.lat, data.location.lng]}
                   zoom={15}
                   scrollWheelZoom={false}
-                  style={{ height: '100%', width: '100%', background: '#1a1a1a' }}
+                  style={{ height: '100%', width: '100%', background: '#0e0e0e' }}
                   attributionControl={false}
                 >
-                  <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                    attribution=""
-                  />
+                  <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="" />
                   <Marker position={[data.location.lat, data.location.lng]} icon={goldPinIcon}>
                     <Popup className="custom-popup">
                       <div style={{ color: '#141414', fontWeight: 600, fontSize: 12 }}>{data.title}</div>
-                      <div style={{ color: '#555', fontSize: 11, marginTop: 2 }}>
-                        {data.address.plz} {data.address.city}
-                      </div>
+                      <div style={{ color: '#666', fontSize: 11, marginTop: 2 }}>{data.address.plz} {data.address.city}</div>
                     </Popup>
                   </Marker>
                 </MapContainer>
-                <div className="absolute bottom-2 right-2 z-[400] flex gap-2">
-                  <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
-                    target="_blank" rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-colors"
-                    style={{ background: 'rgba(20,20,20,0.85)', color: '#d4af37', backdropFilter: 'blur(6px)', border: '1px solid rgba(212,175,55,0.3)' }}>
-                    Google 地图 <ExternalLink size={10} />
-                  </a>
-                </div>
+                <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="absolute bottom-3 right-3 z-[400] px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all hover:scale-105"
+                  style={{ background: 'rgba(20,20,20,0.85)', color: '#d4af37', backdropFilter: 'blur(10px)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  Google 地图 <ExternalLink size={11} />
+                </a>
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
 
-        {/* Right column: price + contact */}
-        <aside className="space-y-4 lg:sticky lg:top-24 self-start">
-          <div className="rounded-2xl p-5"
-            style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(212,175,55,0.7)' }}>
-              {data.forRent ? '月租金' : '购买价'}
-            </p>
-            <p className="text-3xl font-bold" style={{ color: '#d4af37' }}>
-              {fmtPrice(data.price, data.forRent, data.priceOnRequest, data.currency)}
-            </p>
-            {data.objektnummer && (
-              <p className="text-[10px] mt-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                房源编号：{data.objektnummer}
+        {/* Sticky sidebar */}
+        <aside className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:sticky lg:top-24 space-y-4"
+          >
+            <div className="rounded-2xl p-6 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.03) 100%)',
+                border: '1px solid rgba(212,175,55,0.3)',
+              }}>
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full"
+                style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)' }} />
+
+              <p className="text-[10px] uppercase tracking-[0.2em] mb-2 relative z-10" style={{ color: 'rgba(212,175,55,0.85)' }}>
+                {data.forRent ? '月租金' : '出售价格'}
               </p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold mb-1 relative z-10" style={{ color: '#d4af37', letterSpacing: '-0.02em' }}>
+                {fmtPrice(data.price, data.forRent, data.priceOnRequest)}
+              </p>
+              {data.sqm > 0 && data.price > 0 && !data.priceOnRequest && !data.forRent && (
+                <p className="text-xs relative z-10" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  约 € {Math.round(data.price / data.sqm).toLocaleString()} / m²
+                </p>
+              )}
+            </div>
+
+            <Link to="/about"
+              className="group relative block w-full text-center py-4 rounded-xl text-sm font-semibold transition-all overflow-hidden"
+              style={{ background: '#d4af37', color: '#141414' }}
+              onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
+              onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
+            >
+              <span className="relative z-10">咨询此房源 →</span>
+            </Link>
+
+            {data.objektnummer && (
+              <div className="px-4 py-3 rounded-xl text-xs flex items-center justify-between"
+                style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)' }}>
+                <span>房源编号</span>
+                <span className="font-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>{data.objektnummer}</span>
+              </div>
             )}
-          </div>
-
-          <Link to="/about"
-            className="block w-full text-center py-3 rounded-xl text-sm font-semibold transition-colors"
-            style={{ background: '#d4af37', color: '#141414' }}>
-            咨询此房源
-          </Link>
-
+          </motion.div>
         </aside>
-      </div>
-    </div>
-  )
-}
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="rounded-xl p-3"
-      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-        {icon}
-        {label}
       </div>
-      <p className="text-base font-semibold text-white">{value}</p>
     </div>
   )
 }
