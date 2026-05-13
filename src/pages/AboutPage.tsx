@@ -147,10 +147,35 @@ export default function AboutPage() {
           </div>
         </motion.div>
 
-        {/* Auction CTA */}
+        {/* MONOLAW */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25 }}
+          className="rounded-2xl p-6 flex items-center gap-5"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center"
+            style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)' }}>
+            <span className="text-white font-black text-[11px] tracking-widest leading-none text-center">MONO<br/>LAW</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>法律支持</p>
+            <p className="text-base font-semibold text-white">MONOLAW</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>奥地利本地律师事务所，房产法律咨询</p>
+          </div>
+          <a href="https://www.monolaw.at/about-1" target="_blank" rel="noopener noreferrer"
+            className="flex-shrink-0 inline-flex items-center gap-1 text-xs font-medium transition-colors"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
+            前往 <ExternalLink size={11} />
+          </a>
+        </motion.div>
+
+        {/* Auction CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4"
           style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}
         >
