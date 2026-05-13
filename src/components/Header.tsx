@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { RefreshCw, Clock, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
+import React from 'react'
+import { RefreshCw, Clock } from 'lucide-react'
 import type { RefreshState } from '../hooks/useAuctions'
 
 interface HeaderProps {
@@ -11,8 +11,6 @@ interface HeaderProps {
 }
 
 export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloadData }: HeaderProps) {
-  const [logOpen, setLogOpen] = useState(false)
-
   const fmtTime = (d: Date | null) => {
     if (!d) return '—'
     return d.toLocaleString('zh-CN', {
@@ -67,14 +65,14 @@ export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloa
               奥匈置业研究所
             </h1>
             <div className="text-[10px] text-warm-400 opacity-50 mt-0.5 hidden sm:block tracking-wide">
-              维也纳法拍房 · 空间尽调看板
+              维也纳法拍房信息汇总
             </div>
           </div>
         </div>
 
         {/* Mobile subtitle */}
         <div className="text-[10px] text-warm-400 opacity-40 mb-2 sm:hidden tracking-wide">
-          维也纳法拍房 · 空间尽调看板
+          维也纳法拍房信息汇总
         </div>
 
         {/* Status row */}
@@ -85,7 +83,7 @@ export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloa
           <span>{auctionCount} 条在拍</span>
         </div>
 
-        {/* Buttons row — wraps on small screens */}
+        {/* Buttons row */}
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={onReloadData}
@@ -96,51 +94,8 @@ export function Header({ lastModified, auctionCount, refresh, onRefresh, onReloa
             <RefreshCw size={11} />
             刷新显示
           </button>
-
-          <button
-            onClick={refresh.running ? undefined : onRefresh}
-            disabled={refresh.running}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all
-              ${refresh.running
-                ? 'bg-gold-600 bg-opacity-20 text-gold-400 cursor-not-allowed'
-                : 'bg-gold-500 bg-opacity-20 text-gold-300 border border-gold-500 border-opacity-40 hover:bg-opacity-30 hover:text-gold-200'
-              }`}
-          >
-            {refresh.running
-              ? <Loader2 size={11} className="animate-spin" />
-              : <RefreshCw size={11} />
-            }
-            {refresh.running ? '抓取中…' : '从 Ediktsdatei 更新数据'}
-          </button>
         </div>
-
-        {/* Progress / last status */}
-        {(refresh.lastLine || refresh.error) && (
-          <div className="flex items-center gap-1.5 mt-2">
-            <span className={`text-xs truncate max-w-xs ${refresh.error ? 'text-red-400' : 'text-warm-400 opacity-70'}`}>
-              {refresh.error ?? refresh.lastLine}
-            </span>
-            {refresh.progress.length > 0 && (
-              <button
-                onClick={() => setLogOpen((o) => !o)}
-                className="text-warm-500 opacity-60 hover:opacity-100 flex-shrink-0"
-              >
-                {logOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-              </button>
-            )}
-          </div>
-        )}
       </div>
-
-      {/* Collapsible log panel */}
-      {logOpen && refresh.progress.length > 0 && (
-        <div className="relative bg-black bg-opacity-60 border-t border-gold-800 border-opacity-30 px-6 lg:px-10 py-3 max-h-40 overflow-y-auto">
-          <p className="text-xs text-warm-500 mb-2 font-medium">抓取日志</p>
-          {refresh.progress.map((line, i) => (
-            <div key={i} className="text-xs font-mono text-warm-400 opacity-70 leading-5">{line}</div>
-          ))}
-        </div>
-      )}
 
       <div className="relative h-px bg-gradient-to-r from-transparent via-gold-600 to-transparent opacity-30" />
     </header>
