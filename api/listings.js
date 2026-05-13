@@ -1,181 +1,139 @@
-import { XMLParser } from 'fast-xml-parser'
+const NOTION_API = 'https://api.notion.com/v1'
+const NOTION_VERSION = '2022-06-28'
 
-const parser = new XMLParser({
-  ignoreAttributes: false,
-  attributeNamePrefix: '@_',
-  parseTagValue: true,
-  trimValues: true,
-})
-
-function basicAuth() {
-  const user = process.env.JUSTIMMO_USER
-  const pass = process.env.JUSTIMMO_PASS
-  if (!user || !pass) return null
-  return 'Basic ' + Buffer.from(`${user}:${pass}`).toString('base64')
-}
-
-function pickField(obj, name) {
-  const fields = obj?.user_defined_simplefield
-  const arr = Array.isArray(fields) ? fields : fields ? [fields] : []
-  const found = arr.find(f => f?.['@_feldname'] === name)
-  if (!found) return null
-  return typeof found === 'object' ? found['#text'] ?? null : found
-}
-
-function extractImages(item) {
-  const anhaenge = item?.anhaenge?.anhang
-  const arr = Array.isArray(anhaenge) ? anhaenge : anhaenge ? [anhaenge] : []
-  return arr
-    .filter(a => {
-      const gruppe = a?.gruppe
-      const path = a?.daten?.pfad
-      if (!path) return false
-      if (!gruppe) return true
-      const g = String(gruppe).toUpperCase()
-      return g === 'BILD' || g === 'TITELBILD' || g.startsWith('BILD')
-    })
-    .map(a => String(a.daten.pfad))
-}
-
-function getPrice(preise, forRent) {
-  if (forRent) {
-    const v = preise?.nettokaltmiete || preise?.kaltmiete || preise?.warmmiete
-    if (v && typeof v === 'object') return Number(v['#text'] || 0)
-    return Number(v || 0)
-  }
-  const v = preise?.kaufpreis
-  if (v && typeof v === 'object') return Number(v['#text'] || 0)
-  return Number(v || 0)
-}
-
-function priceOnRequest(preise) {
-  const v = preise?.kaufpreis
-  if (v && typeof v === 'object' && v['@_auf_anfrage'] == 1) return true
-  return false
-}
-
-function parseLage(lageText) {
-  const text = String(lageText || '').replace(/&#13;/g, '').trim()
-  const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean)
-  if (lines.length >= 2) return { plzCity: lines[0], street: lines[1] }
-  if (lines.length === 1) return { plzCity: lines[0], street: '' }
-  return { plzCity: '', street: '' }
-}
-
-function normalize(item) {
-  const kat = item.objektkategorie || {}
-  const geo = item.geo || {}
-  const preise = item.preise || {}
-  const flaechen = item.flaechen || {}
-  const kontakt = item.kontaktperson || {}
-  const freitexte = item.freitexte || {}
-  const verwaltung = item.verwaltung_techn || {}
-  const zustand = item.zustand_angaben || {}
-  const images = extractImages(item)
-
-  const vermarkt = kat?.vermarktungsart || {}
-  const forRent = vermarkt?.['@_MIETE_PACHT'] == 1
-  const price = getPrice(preise, forRent)
-  const onRequest = priceOnRequest(preise)
-
-  const objektartObj = kat?.objektart || {}
-  const typeKey = Object.keys(objektartObj).find(k => !k.startsWith('@_')) || ''
-  const typeName = pickField(kat, 'objektart_name') || typeKey
-
-  const lat = Number(pickField(geo, 'geokoordinaten_breitengrad_exakt') || pickField(geo, 'geokoordinaten_breitengrad') || 0)
-  const lng = Number(pickField(geo, 'geokoordinaten_laengengrad_exakt') || pickField(geo, 'geokoordinaten_laengengrad') || 0)
-  const bezirk = pickField(geo, 'politischer_bezirk') || ''
-
-  const { plzCity, street } = parseLage(freitexte?.lage)
-
+function notionHeaders() {
   return {
-    id: String(verwaltung?.objektnr_intern || item.id || ''),
-    objektnummer: String(verwaltung?.objektnr_extern || ''),
-    title: String(freitexte?.objekttitel || '').trim(),
-    teaser: String(freitexte?.dreizeiler || '').trim(),
-    type: typeKey,
-    typeName: String(typeName),
-    forRent,
-    price,
-    priceOnRequest: onRequest,
-    currency: String(preise?.waehrung?.['@_iso_waehrung'] || 'EUR'),
-    rooms: Number(flaechen?.anzahl_zimmer || pickField(flaechen, 'anzahl_zimmer') || 0),
-    bedrooms: Number(flaechen?.anzahl_schlafzimmer || 0),
-    bathrooms: Number(flaechen?.anzahl_badezimmer || 0),
-    sqm: Number(flaechen?.wohnflaeche || flaechen?.nutzflaeche || 0),
-    plotSqm: Number(flaechen?.grundflaeche || 0),
-    balconyTerraceSqm: Number(flaechen?.balkon_terrasse_flaeche || 0),
-    floors: Number(geo?.anzahl_etagen || 0),
-    buildYear: Number(zustand?.baujahr || 0),
-    address: {
-      street,
-      plz: String(geo?.plz || ''),
-      city: String(geo?.ort || ''),
-      district: String(bezirk),
-      state: String(geo?.bundesland || ''),
-      raw: String(freitexte?.lage || '').replace(/&#13;/g, '').trim(),
+    Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+    'Notion-Version': NOTION_VERSION,
+    'Content-Type': 'application/json',
+  }
+}
+
+function getText(prop) {
+  if (!prop) return ''
+  if (prop.title) return prop.title.map(t => t.plain_text).join('')
+  if (prop.rich_text) return prop.rich_text.map(t => t.plain_text).join('')
+  return ''
+}
+function getNumber(prop) {
+  if (!prop) return 0
+  return Number(prop.number || 0)
+}
+function getSelect(prop) {
+  return prop?.select?.name || ''
+}
+function getCheckbox(prop) {
+  return !!prop?.checkbox
+}
+function getFiles(prop) {
+  if (!prop?.files) return []
+  return prop.files.map(f => f.file?.url || f.external?.url).filter(Boolean)
+}
+
+function normalize(page) {
+  const p = page.properties || {}
+  const photos = getFiles(p.Photos)
+  return {
+    id: page.id,
+    title: getText(p['名称']) || getText(p.Name) || '未命名房源',
+    status: getSelect(p.Status) || 'Active',
+    type: getSelect(p.Type) || 'Apartment',
+    typeName: getSelect(p.Type) || 'Apartment',
+    mode: getSelect(p.Mode) || 'Sale',
+    forRent: getSelect(p.Mode) === 'Rent',
+    price: getNumber(p.Price),
+    priceOnRequest: getNumber(p.Price) === 0,
+    currency: 'EUR',
+    district: getNumber(p.District),
+    districtName: getText(p.DistrictName),
+    street: getText(p.Street),
+    plz: getText(p.PLZ),
+    sqm: getNumber(p.Sqm),
+    rooms: getNumber(p.Rooms),
+    buildYear: getNumber(p.BuildYear),
+    location: {
+      lat: getNumber(p.Lat),
+      lng: getNumber(p.Lng),
     },
-    location: { lat, lng },
-    images,
-    coverImage: images[0] || null,
-    imageCount: images.length,
-    description: String(freitexte?.objektbeschreibung || '').trim(),
-    locationText: String(freitexte?.lage || '').trim(),
-    featuresText: String(freitexte?.ausstatt_beschr || '').trim(),
+    description: getText(p.Description),
+    photos,
+    coverImage: photos[0] || null,
+    imageCount: photos.length,
+    featured: getCheckbox(p.Featured),
+    address: {
+      street: getText(p.Street),
+      plz: getText(p.PLZ),
+      city: 'Wien',
+      district: getNumber(p.District) ? `Wien ${getNumber(p.District)}., ${getText(p.DistrictName)}` : '',
+      state: 'Wien',
+      raw: '',
+    },
+    // Compatibility with old fields
+    images: photos,
+    objektnummer: '',
+    teaser: '',
+    plotSqm: 0,
+    balconyTerraceSqm: 0,
+    bedrooms: 0,
+    bathrooms: 0,
+    floors: 0,
+    locationText: '',
+    featuresText: '',
     contact: {
-      name: [kontakt?.titel, kontakt?.vorname, kontakt?.name].filter(Boolean).join(' ').trim(),
-      email: String(kontakt?.email_direkt || ''),
-      phone: String(kontakt?.tel_zentrale || kontakt?.tel_durchwahl || ''),
-      company: String(kontakt?.firma || ''),
+      name: '奥匈置业研究所',
+      email: 'L.ZHANG@VALERTO.IMMO',
+      phone: '+43 670 5566666',
+      company: 'Valerto GmbH',
     },
   }
 }
 
-async function fetchDetail(id, auth) {
-  const r = await fetch(`https://api.justimmo.at/rest/v1/objekt/detail?objekt_id=${id}`, {
-    headers: { Authorization: auth },
+async function fetchNotionDatabase() {
+  const dbId = process.env.NOTION_DATABASE_ID
+  if (!dbId) throw new Error('Missing NOTION_DATABASE_ID')
+  const r = await fetch(`${NOTION_API}/databases/${dbId}/query`, {
+    method: 'POST',
+    headers: notionHeaders(),
+    body: JSON.stringify({
+      filter: {
+        property: 'Status',
+        select: { does_not_equal: 'Draft' },
+      },
+      page_size: 100,
+    }),
   })
+  if (!r.ok) {
+    const t = await r.text()
+    throw new Error(`Notion query error ${r.status}: ${t}`)
+  }
+  return r.json()
+}
+
+async function fetchNotionPage(id) {
+  const r = await fetch(`${NOTION_API}/pages/${id}`, { headers: notionHeaders() })
   if (!r.ok) return null
-  const xml = await r.text()
-  const data = parser.parse(xml)
-  const item = data?.justimmo?.immobilie
-  if (!item) return null
-  return normalize({ ...item, id })
+  return r.json()
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600')
+  res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=120')
 
-  const auth = basicAuth()
-  if (!auth) return res.status(500).json({ error: 'Missing credentials' })
+  if (!process.env.NOTION_TOKEN || !process.env.NOTION_DATABASE_ID) {
+    return res.status(500).json({ error: 'Missing Notion credentials' })
+  }
 
-  // Single listing detail mode: /api/listings?id=XXX
   const id = req.query?.id
   if (id) {
-    const detail = await fetchDetail(id, auth)
-    if (!detail) return res.status(404).json({ error: 'Not found' })
-    return res.status(200).json(detail)
+    const page = await fetchNotionPage(id)
+    if (!page) return res.status(404).json({ error: 'Not found' })
+    return res.status(200).json(normalize(page))
   }
 
   try {
-    const listRes = await fetch('https://api.justimmo.at/rest/v1/objekt/list?limit=50', {
-      headers: { Authorization: auth },
-    })
-    if (!listRes.ok) {
-      const t = await listRes.text()
-      return res.status(listRes.status).json({ error: 'Justimmo list error', detail: t })
-    }
-    const listXml = await listRes.text()
-    const listData = parser.parse(listXml)
-    const raw = listData?.justimmo?.immobilie
-    const arr = Array.isArray(raw) ? raw : raw ? [raw] : []
-    const ids = arr.map(i => String(i.id || '')).filter(Boolean)
-
-    const details = await Promise.all(ids.map(id => fetchDetail(id, auth).catch(() => null)))
-    const listings = details.filter(Boolean)
-
+    const data = await fetchNotionDatabase()
+    const listings = (data.results || []).map(normalize)
     res.status(200).json({ count: listings.length, listings })
   } catch (err) {
-    res.status(500).json({ error: String(err) })
+    res.status(500).json({ error: String(err.message || err) })
   }
 }
