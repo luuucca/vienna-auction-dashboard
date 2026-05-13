@@ -1,6 +1,29 @@
 [
   {
-    "id": "wien-1748e845be24",
+    "id": "wien-62af2c93a0d4",
+    "caseNumber": "26 E 27/24y",
+    "auctionDate": "2026-06-24",
+    "address": "1180 Wien Gersthofer Straße 10",
+    "district": "1180",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 470000,
+    "minimumBid": 235000,
+    "area": 112.64,
+    "pricePerSqm": 4172.59,
+    "deposit": 47000,
+    "latitude": 48.2328282,
+    "longitude": 16.3283879,
+    "geocodeSource": "official",
+    "ownershipType": "Geschäftslokal (Friseur) mit Zugang aus der Straße und Verbindung zum Stiegenhaus.\nLage im Erdgeschoß, \nGas-Etagenheizung, Warmwasser über Gas-Therme, Klimatisierung, Entlüftung über Hof (nicht genehm",
+    "summary": "Geschäftslokal (Friseur) mit Zugang aus der Straße und Verbindung zum Stiegenhaus.\nLage im Erdgeschoß, \nGas-Etagenheizung, Warmwasser über Gas-Therme, Klimatisierung, Entlüftung über Hof (nicht genehm",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/62af2c93a0d4c4e1c1258d1c00225860!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/47dee1d4eae3bbe3c1258d1c0022586c/$file/GA%201180%20Gersthofer%20Str%2010.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-a468679bdbbc",
     "caseNumber": "26 E 27/24y",
     "auctionDate": "2026-06-24",
     "address": "1180 Wien Gersthofer Straße 10",
@@ -16,14 +39,14 @@
     "longitude": 16.3283879,
     "geocodeSource": "official",
     "ownershipType": "Geschäftslokal (Bank) mit Zugang aus der Straße und Verbindung zum Stiegenhaus.\nLage im Erdgeschoß, \nWärmepumpe, Fußbodenheizung, Klimatisierung, Videoüberwachung und Alarmsysteme nach Anforderungen d",
-    "summary": "Geschäftslokal (Friseur) mit Zugang aus der Straße und Verbindung zum Stiegenhaus.\nLage im Erdgeschoß, \nGas-Etagenheizung, Warmwasser über Gas-Therme, Klimatisierung, Entlüftung über Hof (nicht genehm",
+    "summary": "Geschäftslokal (Bank) mit Zugang aus der Straße und Verbindung zum Stiegenhaus.\nLage im Erdgeschoß, \nWärmepumpe, Fußbodenheizung, Klimatisierung, Videoüberwachung und Alarmsysteme nach Anforderungen d",
     "riskTags": [],
     "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/a468679bdbbc73d1c1258d1c00225a5c!OpenDocument",
     "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/47dee1d4eae3bbe3c1258d1c0022586c/$file/GA%201180%20Gersthofer%20Str%2010.pdf",
     "shortReportUrl": ""
   },
   {
-    "id": "wien-79ffa3eeb8c2",
+    "id": "wien-9197ca527a59",
     "caseNumber": "74 E 46/24d",
     "auctionDate": "2026-05-21",
     "address": "1110 Wien Enkplatz 5-7 / Sedlitzkygasse 25 / Simmeringer Hauptstraße 68-74",
@@ -35,9 +58,9 @@
     "area": 92.55,
     "pricePerSqm": 2787.68,
     "deposit": 25800,
-    "latitude": 48.1756,
-    "longitude": 16.4208,
-    "geocodeSource": "approximate",
+    "latitude": 48.1758633,
+    "longitude": 16.4139967,
+    "geocodeSource": "official",
     "ownershipType": "B lfd. Nr. 336, 88/18260 Anteil – verbunden mit Wohnungseigentum an W 6 St IV\n– an der Liegenschaft EZ 166, Grundbuch 01107 Simmering, BG Innere Stadt \nWien, mit der Grundstücksnummer .304/1, mit der ",
     "summary": "B lfd. Nr. 336, 88/18260 Anteil – verbunden mit Wohnungseigentum an W 6 St IV\n– an der Liegenschaft EZ 166, Grundbuch 01107 Simmering, BG Innere Stadt \nWien, mit der Grundstücksnummer .304/1, mit der ",
     "riskTags": [],
@@ -46,7 +69,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-095a5cb7a237",
+    "id": "wien-df4fd16b903e",
     "caseNumber": "26 E 1/25a",
     "auctionDate": "2026-06-03",
     "address": "1180 Wien Gentzgasse 144",
@@ -69,7 +92,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-223bb351fef1",
+    "id": "wien-c12ad42969c7",
     "caseNumber": "35 E 51/24v",
     "auctionDate": "2026-05-18",
     "address": "1190 Wien Villenweg 46",
@@ -92,7 +115,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-727934fdad1f",
+    "id": "wien-c1a13b6266a8",
     "caseNumber": "74 E 67/24t",
     "auctionDate": "2026-05-20",
     "address": "1110 Wien Krausegasse 23/Mautner-Markhof-Gasse 62",
@@ -104,9 +127,9 @@
     "area": 434,
     "pricePerSqm": 2304.15,
     "deposit": 100000,
-    "latitude": 48.1756,
-    "longitude": 16.4208,
-    "geocodeSource": "approximate",
+    "latitude": 48.1744262,
+    "longitude": 16.4210837,
+    "geocodeSource": "official",
     "ownershipType": "Die ggst. Liegenschaft EZ 42, bestehend aus dem GST 2311, ist als Eckliegenschaft trapezähnlich ausgestaltet und verfügt an der Krausegasse über rd. 13 m und an der Mautner-Markhof-Gasse über rd. 17 m",
     "summary": "Die ggst. Liegenschaft EZ 42, bestehend aus dem GST 2311, ist als Eckliegenschaft trapezähnlich ausgestaltet und verfügt an der Krausegasse über rd. 13 m und an der Mautner-Markhof-Gasse über rd. 17 m",
     "riskTags": [],
@@ -115,7 +138,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-a0282a1f99c8",
+    "id": "wien-93f8142303a3",
     "caseNumber": "35 E 47/15t",
     "auctionDate": "2026-05-20",
     "address": "1190 Wien Pfarrwiesengasse 11",
@@ -138,7 +161,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-74d58e0670a9",
+    "id": "wien-4a0be93350d3",
     "caseNumber": "9 E 34/25p",
     "auctionDate": "2026-05-20",
     "address": "1230 Wien Anton-Heger-Platz 2",
@@ -161,7 +184,76 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-b992157651cc",
+    "id": "wien-f65c75f0f159",
+    "caseNumber": "74 E 124/25a",
+    "auctionDate": "2026-05-21",
+    "address": "1110 Wien Rappachgasse 9 / Mautner-Markhof-Gasse 61",
+    "district": "1110",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Einfamilienhaus",
+    "estimatedValue": 459000,
+    "minimumBid": 344250,
+    "area": 107.44,
+    "pricePerSqm": 4272.15,
+    "deposit": 45900,
+    "latitude": 48.1737122,
+    "longitude": 16.421512,
+    "geocodeSource": "official",
+    "ownershipType": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "summary": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/f65c75f0f159148fc1258dc600372e41!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/031bacde9766373cc1258dc600372e50/$file/GA%20Rappach%20Mautner.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-b9ce77e644cf",
+    "caseNumber": "74 E 124/25a",
+    "auctionDate": "2026-05-21",
+    "address": "1110 Wien Rappachgasse 9 / Mautner-Markhof-Gasse 61",
+    "district": "1110",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Einfamilienhaus",
+    "estimatedValue": 447000,
+    "minimumBid": 335250,
+    "area": 106.08,
+    "pricePerSqm": 4213.8,
+    "deposit": 44700,
+    "latitude": 48.1737122,
+    "longitude": 16.421512,
+    "geocodeSource": "official",
+    "ownershipType": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "summary": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/b9ce77e644cf028bc1258dc6003790f2!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/031bacde9766373cc1258dc600372e50/$file/GA%20Rappach%20Mautner.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-62f0dd869a00",
+    "caseNumber": "74 E 124/25a",
+    "auctionDate": "2026-05-21",
+    "address": "1110 Wien Rappachgasse 9 / Mautner-Markhof-Gasse 61",
+    "district": "1110",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Einfamilienhaus",
+    "estimatedValue": 267000,
+    "minimumBid": 200250,
+    "area": 104.04,
+    "pricePerSqm": 2566.32,
+    "deposit": 26700,
+    "latitude": 48.1737122,
+    "longitude": 16.421512,
+    "geocodeSource": "official",
+    "ownershipType": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "summary": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/62f0dd869a00ff82c1258dc60037c95d!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/031bacde9766373cc1258dc600372e50/$file/GA%20Rappach%20Mautner.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-d90c2435e851",
     "caseNumber": "74 E 124/25a",
     "auctionDate": "2026-05-21",
     "address": "1110 Wien Rappachgasse 9 / Mautner-Markhof-Gasse 61",
@@ -173,9 +265,9 @@
     "area": 104.04,
     "pricePerSqm": 4161.86,
     "deposit": 43300,
-    "latitude": 48.1756,
-    "longitude": 16.4208,
-    "geocodeSource": "approximate",
+    "latitude": 48.1737122,
+    "longitude": 16.421512,
+    "geocodeSource": "official",
     "ownershipType": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
     "summary": "Die Wohnhausanlage besteht aus vier Gebäudeteilen, die in Massivbauweise errichtet wurde. Die gegenständliche Einheit befindet sich in einem von zwei im Hof befindlichen Doppelhäusern. \nDie Einheit is",
     "riskTags": [],
@@ -184,7 +276,30 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-3957963e9a71",
+    "id": "wien-8f29d399b174",
+    "caseNumber": "24 E 10/26h",
+    "auctionDate": "2026-05-26",
+    "address": "1200 Wien Karajangasse 19",
+    "district": "1200",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 100000,
+    "minimumBid": 50000,
+    "area": 48.68,
+    "pricePerSqm": 2054.23,
+    "deposit": 10000,
+    "latitude": 48.2297708,
+    "longitude": 16.3748933,
+    "geocodeSource": "official",
+    "ownershipType": "siehe Gutachten",
+    "summary": "siehe Gutachten",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/8f29d399b1743024c1258dbe004debf1!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/5187758f7ece31b8c1258dbe004debf3/$file/GA%20Top%2016.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-d2d360bb7c7d",
     "caseNumber": "24 E 10/26h",
     "auctionDate": "2026-05-26",
     "address": "1200 Wien Karajangasse 19",
@@ -207,7 +322,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-69192b5402bd",
+    "id": "wien-6e1976fc8411",
     "caseNumber": "24 E 58/25s",
     "auctionDate": "2026-05-26",
     "address": "1020 Wien Feuerbachstraße 5 /Ilgplatz 4",
@@ -219,9 +334,9 @@
     "area": 1741.1,
     "pricePerSqm": 3029.69,
     "deposit": 527500,
-    "latitude": 48.2192,
-    "longitude": 16.3917,
-    "geocodeSource": "approximate",
+    "latitude": 48.2199161,
+    "longitude": 16.4047983,
+    "geocodeSource": "official",
     "ownershipType": "Zinshausliegenschaft mit einer Bestandnutzfläche von 1.741,10 m² . Lt. Vorschreibungsliste befinden sich im Gebäude insges. 38 Bestandobjekte, Der aktuell vereinnahmte, monatliche Nettoertrag liegt be",
     "summary": "Zinshausliegenschaft mit einer Bestandnutzfläche von 1.741,10 m² . Lt. Vorschreibungsliste befinden sich im Gebäude insges. 38 Bestandobjekte, Der aktuell vereinnahmte, monatliche Nettoertrag liegt be",
     "riskTags": [],
@@ -230,7 +345,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-d7593129628e",
+    "id": "wien-ca41d0947b2d",
     "caseNumber": "4 E 7/24m",
     "auctionDate": "2026-05-27",
     "address": "1130 Wien Auhofstraße 205/Aichbühelgasse 5",
@@ -242,9 +357,9 @@
     "area": 531,
     "pricePerSqm": 2824.86,
     "deposit": 150000,
-    "latitude": 48.1875,
-    "longitude": 16.3052,
-    "geocodeSource": "approximate",
+    "latitude": 48.1950404,
+    "longitude": 16.2597127,
+    "geocodeSource": "official",
     "ownershipType": "Die ggst. Eckliegenschaft EZ 21, bestehend aus dem GST 57, ist entlang der Auhofstraße relativ eben gelegen, im Bereich der Aichbühelgasse und Lilienberggasse in leichter Hanglage gelegen, polygonal k",
     "summary": "Die ggst. Eckliegenschaft EZ 21, bestehend aus dem GST 57, ist entlang der Auhofstraße relativ eben gelegen, im Bereich der Aichbühelgasse und Lilienberggasse in leichter Hanglage gelegen, polygonal k",
     "riskTags": [],
@@ -253,7 +368,30 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-13cd96da62ad",
+    "id": "wien-14ac5863e550",
+    "caseNumber": "22 E 65/25x",
+    "auctionDate": "2026-05-27",
+    "address": "1070 Wien Halbgasse 27",
+    "district": "1070",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 217000,
+    "minimumBid": 108500,
+    "area": 51.3,
+    "pricePerSqm": 4230.02,
+    "deposit": 21700,
+    "latitude": 48.205656,
+    "longitude": 16.3411416,
+    "geocodeSource": "official",
+    "ownershipType": "Getrennte Versteigerungen von zwei Objekten in Mehrparteienhaus aus Bj 1895 in 1070 Wien, Halbgasse 27; Straßentrakt mit Keller und 5 Geschoßen, Dachgeschoßausbau 1994 – 1997; Nebentrakt im Hof; durch",
+    "summary": "Getrennte Versteigerungen von zwei Objekten in Mehrparteienhaus aus Bj 1895 in 1070 Wien, Halbgasse 27; Straßentrakt mit Keller und 5 Geschoßen, Dachgeschoßausbau 1994 – 1997; Nebentrakt im Hof; durch",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/14ac5863e550f93fc1258dd400473bf0!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/c3c7cfd95c45f929c1258dd400473bfa/$file/GA_Halbg27_W7_L8kom.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-631d3d502318",
     "caseNumber": "22 E 65/25x",
     "auctionDate": "2026-05-27",
     "address": "1070 Wien Halbgasse 27",
@@ -276,7 +414,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-3cdea2e9024e",
+    "id": "wien-27a1760c697f",
     "caseNumber": "19 E 2373/25w",
     "auctionDate": "2026-05-28",
     "address": "1160 Wien Haberlgasse 58",
@@ -299,7 +437,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-83e2f3f5ea30",
+    "id": "wien-f233b3f6ad6f",
     "caseNumber": "20 E 17/25w",
     "auctionDate": "2026-05-28",
     "address": "1220 Wien Varnhagengasse 8",
@@ -322,7 +460,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-ad21369df49b",
+    "id": "wien-622d75f3f978",
     "caseNumber": "11 E 3226/22y",
     "auctionDate": "2026-05-29",
     "address": "1170 Wien Gschwandnergasse 33",
@@ -345,7 +483,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-14f565692b0a",
+    "id": "wien-f55554c99440",
     "caseNumber": "13 E 1656/25k",
     "auctionDate": "2026-05-29",
     "address": "1160 Wien Lienfeldergasse 3",
@@ -368,7 +506,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-7f3aa02fd570",
+    "id": "wien-d34339340ab8",
     "caseNumber": "24 E 37/24y",
     "auctionDate": "2026-06-01",
     "address": "1140 Wien Felbigergasse 107A",
@@ -391,7 +529,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-c6c13552be4f",
+    "id": "wien-c04c4a1dbf06",
     "caseNumber": "26 E 13/25s",
     "auctionDate": "2026-06-03",
     "address": "1180 Wien Theresiengasse 16",
@@ -414,7 +552,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-d06f1b153764",
+    "id": "wien-10eb24cdc4b2",
     "caseNumber": "68 E 27/25v",
     "auctionDate": "2026-06-09",
     "address": "1220 Wien Saikogasse 9/Eipeldauer Straße 38/Thonetgasse 33",
@@ -426,9 +564,9 @@
     "area": 110,
     "pricePerSqm": 1709.09,
     "deposit": 18800,
-    "latitude": 48.2251,
-    "longitude": 16.4408,
-    "geocodeSource": "approximate",
+    "latitude": 48.2551999,
+    "longitude": 16.4386564,
+    "geocodeSource": "official",
     "ownershipType": "Bewertungsgegenständlich sind 119/25437-Wohnungseigentumsanteile untrennbar verbunden mit Wohnungseigentum an Geschäftslokal St VI (B-lfd. Nr. 657).\nDie gegenständliche Liegenschaft liegt im 22. Wiene",
     "summary": "Bewertungsgegenständlich sind 119/25437-Wohnungseigentumsanteile untrennbar verbunden mit Wohnungseigentum an Geschäftslokal St VI (B-lfd. Nr. 657).\nDie gegenständliche Liegenschaft liegt im 22. Wiene",
     "riskTags": [],
@@ -437,7 +575,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-55229a99e8aa",
+    "id": "wien-c671e12ee773",
     "caseNumber": "68 E 31/24f",
     "auctionDate": "2026-06-09",
     "address": "1220 Wien Wagramer Straße 68",
@@ -460,7 +598,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-55b1c30075d5",
+    "id": "wien-f74653c57e83",
     "caseNumber": "14 E 50/26i",
     "auctionDate": "2026-06-09",
     "address": "1120 Wien Meidlinger Hauptstraße 46/ Pohlgasse 6/ Pohlgasse 2-4",
@@ -472,9 +610,9 @@
     "area": 346.2,
     "pricePerSqm": 2801.85,
     "deposit": 97000,
-    "latitude": 48.1835,
-    "longitude": 16.3285,
-    "geocodeSource": "approximate",
+    "latitude": 48.1782614,
+    "longitude": 16.3296578,
+    "geocodeSource": "official",
     "ownershipType": "Ermittlung des Verkehrswertes von 415/6182 Anteilen \nverbunden mit Wohnungseigentum an Ordination 2/3,\nunter besonderen Annahmen\nFür die bewertungsgegenständliche Ordination 2/3 wird der Verkehrswert ",
     "summary": "Ermittlung des Verkehrswertes von 415/6182 Anteilen \nverbunden mit Wohnungseigentum an Ordination 2/3,\nunter besonderen Annahmen\nFür die bewertungsgegenständliche Ordination 2/3 wird der Verkehrswert ",
     "riskTags": [],
@@ -483,7 +621,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-fe68e157834e",
+    "id": "wien-9843515131bb",
     "caseNumber": "50 E 30/25a",
     "auctionDate": "2026-06-10",
     "address": "1050 Wien Obere Amtshausgasse 38",
@@ -506,7 +644,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-d73de8d411ed",
+    "id": "wien-7b9d1464204e",
     "caseNumber": "74 E 44/25m",
     "auctionDate": "2026-06-10",
     "address": "1060 Wien Hofmühlgasse 7A",
@@ -529,7 +667,30 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-957fcaa861e0",
+    "id": "wien-7d5fc2e261d9",
+    "caseNumber": "74 E 108/25y",
+    "auctionDate": "2026-06-10",
+    "address": "1030 Wien Drorygasse  20/Kardinal-Nagl-Platz 16",
+    "district": "1030",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Eigentumswohnung",
+    "estimatedValue": 67000,
+    "minimumBid": 50250,
+    "area": 47.03,
+    "pricePerSqm": 1424.62,
+    "deposit": 6700,
+    "latitude": 48.1976472,
+    "longitude": 16.4025061,
+    "geocodeSource": "official",
+    "ownershipType": "B lfd. Nr. 51, 45/1890 Anteil – verbunden mit Wohnungseigentum an W 12 – an \nder Liegenschaft EZ 388, Grundbuch 01006 Landstraße, BG Innere Stadt Wien, \nmit den Grundstücksnummern 1754, 1760, mit der ",
+    "summary": "B lfd. Nr. 51, 45/1890 Anteil – verbunden mit Wohnungseigentum an W 12 – an \nder Liegenschaft EZ 388, Grundbuch 01006 Landstraße, BG Innere Stadt Wien, \nmit den Grundstücksnummern 1754, 1760, mit der ",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/7d5fc2e261d9cb2ac1258dd800612378!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/6756895d8b0d8f5bc1258dd800612380/$file/Gutachten%201030%20Wien%2C%20Drorygasse%2020.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-0aa7afb373eb",
     "caseNumber": "74 E 108/25y",
     "auctionDate": "2026-06-10",
     "address": "1030 Wien Drorygasse  20/Kardinal-Nagl-Platz 16",
@@ -541,18 +702,64 @@
     "area": 31.09,
     "pricePerSqm": 1383.08,
     "deposit": 4300,
-    "latitude": 48.1985,
-    "longitude": 16.3924,
-    "geocodeSource": "approximate",
+    "latitude": 48.1976472,
+    "longitude": 16.4025061,
+    "geocodeSource": "official",
     "ownershipType": "B lfd. Nr. 52, 30/1890 Anteil – verbunden mit Wohnungseigentum an W 13 – an \nder Liegenschaft EZ 388, Grundbuch 01006 Landstraße, BG Innere Stadt Wien, \nmit den Grundstücksnummern 1754, 1760, mit der ",
-    "summary": "B lfd. Nr. 51, 45/1890 Anteil – verbunden mit Wohnungseigentum an W 12 – an \nder Liegenschaft EZ 388, Grundbuch 01006 Landstraße, BG Innere Stadt Wien, \nmit den Grundstücksnummern 1754, 1760, mit der ",
+    "summary": "B lfd. Nr. 52, 30/1890 Anteil – verbunden mit Wohnungseigentum an W 13 – an \nder Liegenschaft EZ 388, Grundbuch 01006 Landstraße, BG Innere Stadt Wien, \nmit den Grundstücksnummern 1754, 1760, mit der ",
     "riskTags": [],
     "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/0aa7afb373eb39d8c1258dd800612508!OpenDocument",
     "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/6756895d8b0d8f5bc1258dd800612380/$file/Gutachten%201030%20Wien%2C%20Drorygasse%2020.pdf",
     "shortReportUrl": ""
   },
   {
-    "id": "wien-a10e391245e5",
+    "id": "wien-041b121a0150",
+    "caseNumber": "74 E 109/25w",
+    "auctionDate": "2026-06-10",
+    "address": "1030 Wien Bechardgasse 22 / Hansalgasse 7",
+    "district": "1030",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Eigentumswohnung",
+    "estimatedValue": 226000,
+    "minimumBid": 113000,
+    "area": 85.8,
+    "pricePerSqm": 2634.03,
+    "deposit": 22600,
+    "latitude": 48.2076103,
+    "longitude": 16.3889375,
+    "geocodeSource": "official",
+    "ownershipType": "Gegenstand der Bewertung ist das WE-Objekt W11. Die Wohnung weist einen durchschnittlichen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu weiteren Det",
+    "summary": "Gegenstand der Bewertung ist das WE-Objekt W11. Die Wohnung weist einen durchschnittlichen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu weiteren Det",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/041b121a01508749c1258dd8005e4136!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/b1016bbd5b81905fc1258dd8005e4138/$file/Gutachten%20Original%20W%2011%20(2025-12-22).pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-b06696747e0d",
+    "caseNumber": "74 E 109/25w",
+    "auctionDate": "2026-06-10",
+    "address": "1030 Wien Bechardgasse 22 / Hansalgasse 7",
+    "district": "1030",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Eigentumswohnung",
+    "estimatedValue": 122000,
+    "minimumBid": 61000,
+    "area": 55.73,
+    "pricePerSqm": 2189.13,
+    "deposit": 12200,
+    "latitude": 48.2076103,
+    "longitude": 16.3889375,
+    "geocodeSource": "official",
+    "ownershipType": "Gegenstand der Bewertung ist das WE-Objekt W12. Die Wohnung weist einen durchschnittlichen bis mäßigen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu ",
+    "summary": "Gegenstand der Bewertung ist das WE-Objekt W12. Die Wohnung weist einen durchschnittlichen bis mäßigen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu ",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/b06696747e0ddb35c1258dd8005e4930!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/f88a5250191dbb63c1258dd8005e4932/$file/Gutachten%20Original%20W%2012%20(2025-12-22).pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-3550dc7740ac",
     "caseNumber": "74 E 109/25w",
     "auctionDate": "2026-06-10",
     "address": "1030 Wien Bechardgasse 22 / Hansalgasse 7",
@@ -564,18 +771,18 @@
     "area": 101.23,
     "pricePerSqm": 2084.36,
     "deposit": 21100,
-    "latitude": 48.1985,
-    "longitude": 16.3924,
-    "geocodeSource": "approximate",
+    "latitude": 48.2076103,
+    "longitude": 16.3889375,
+    "geocodeSource": "official",
     "ownershipType": "Gegenstand der Bewertung ist das WE-Objekt W16. Die Wohnung weist einen durchschnittlichen bis mäßigen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu ",
-    "summary": "Gegenstand der Bewertung ist das WE-Objekt W11. Die Wohnung weist einen durchschnittlichen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu weiteren Det",
+    "summary": "Gegenstand der Bewertung ist das WE-Objekt W16. Die Wohnung weist einen durchschnittlichen bis mäßigen Bau- und Erhaltungszustand auf. Es liegt ein aufrechtes unbefristetes Bestandsverhältnis vor. Zu ",
     "riskTags": [],
     "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/3550dc7740ac876bc1258dd8005e4f22!OpenDocument",
     "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/2870694c0d7b50a5c1258dd8005e4f24/$file/Gutachten%20Original%20W%2016%20(2025-12-22).pdf",
     "shortReportUrl": ""
   },
   {
-    "id": "wien-0d729294c66c",
+    "id": "wien-39b260f94cd4",
     "caseNumber": "4 E 24/25p",
     "auctionDate": "2026-06-10",
     "address": "1130 Wien Hofwiesengasse 19",
@@ -598,7 +805,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-35635ff78b4b",
+    "id": "wien-fcb3e6813887",
     "caseNumber": "22 E 50/24i",
     "auctionDate": "2026-06-11",
     "address": "1090 Wien Glasergasse 7",
@@ -621,7 +828,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-4236443b4600",
+    "id": "wien-88b170abd402",
     "caseNumber": "10 E 68/21z",
     "auctionDate": "2026-06-11",
     "address": "1120 Wien Schönbrunner Straße 273",
@@ -644,7 +851,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-596e2b9cbdcc",
+    "id": "wien-21c37d8447d6",
     "caseNumber": "10 E 98/24s",
     "auctionDate": "2026-06-11",
     "address": "1120 Wien Oppelgasse 4",
@@ -667,7 +874,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-0950c311fec5",
+    "id": "wien-9c804d1d57cb",
     "caseNumber": "19 E 855/25k",
     "auctionDate": "2026-06-12",
     "address": "1160 Wien Grundsteingasse 64",
@@ -690,7 +897,53 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-9135bca72b6a",
+    "id": "wien-e08870041f97",
+    "caseNumber": "74 E 32/24w",
+    "auctionDate": "2026-06-17",
+    "address": "1060 Wien Amerlingstraße 7",
+    "district": "1060",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 301500,
+    "minimumBid": 150750,
+    "area": 360,
+    "pricePerSqm": 837.5,
+    "deposit": 30150,
+    "latitude": 48.1966498,
+    "longitude": 16.351117,
+    "geocodeSource": "official",
+    "ownershipType": "Die gegenständliche Einheit befindet sich im rückwärtigen Teil der Liegenschaft und ist über den Durchgang des Straßengebäudes in der Amerlingstraße durch den Innenhof zu begehen. Die Einheit ist ein ",
+    "summary": "Die gegenständliche Einheit befindet sich im rückwärtigen Teil der Liegenschaft und ist über den Durchgang des Straßengebäudes in der Amerlingstraße durch den Innenhof zu begehen. Die Einheit ist ein ",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/e08870041f9792f3c1258ddf003c685d!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/bc3c8ae7eaa7cc35c1258ddf003c6868/$file/GA%20Amerling.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-9acaeaed98f8",
+    "caseNumber": "74 E 32/24w",
+    "auctionDate": "2026-06-17",
+    "address": "1060 Wien Amerlingstraße 7",
+    "district": "1060",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 39500,
+    "minimumBid": 19750,
+    "area": 30,
+    "pricePerSqm": 1316.67,
+    "deposit": 3950,
+    "latitude": 48.1966498,
+    "longitude": 16.351117,
+    "geocodeSource": "official",
+    "ownershipType": "Die gegenständliche Einheit befindet sich im Erdgeschoß (Souterrain) und erstreckt sich zum Hochparterre (1.Stock). Der Zugang lt. Plan erfolgt über den straßenseitigen Durchgang im Souterrain. Die Fe",
+    "summary": "Die gegenständliche Einheit befindet sich im Erdgeschoß (Souterrain) und erstreckt sich zum Hochparterre (1.Stock). Der Zugang lt. Plan erfolgt über den straßenseitigen Durchgang im Souterrain. Die Fe",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/9acaeaed98f8b9b5c1258ddf003cae38!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/bc3c8ae7eaa7cc35c1258ddf003c6868/$file/GA%20Amerling.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-d849d17e06b1",
     "caseNumber": "74 E 32/24w",
     "auctionDate": "2026-06-17",
     "address": "1060 Wien Amerlingstraße 7",
@@ -706,14 +959,14 @@
     "longitude": 16.351117,
     "geocodeSource": "official",
     "ownershipType": "Die gegenständliche Einheit befindet sich im 4. Stock (5. Obergeschoß).\nDie Einheit ist eine Dachgeschoßwohnung, der Dachbodenflächen als\nZubehör zugeordnet wurden. \nWidmung: Wohnung und Dachboden\nZum",
-    "summary": "Die gegenständliche Einheit befindet sich im rückwärtigen Teil der Liegenschaft und ist über den Durchgang des Straßengebäudes in der Amerlingstraße durch den Innenhof zu begehen. Die Einheit ist ein ",
+    "summary": "Die gegenständliche Einheit befindet sich im 4. Stock (5. Obergeschoß).\nDie Einheit ist eine Dachgeschoßwohnung, der Dachbodenflächen als\nZubehör zugeordnet wurden. \nWidmung: Wohnung und Dachboden\nZum",
     "riskTags": [],
     "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/d849d17e06b19a49c1258ddf003ce45a!OpenDocument",
     "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/54ebfa85f52d961cc1258ddf003ce45c/$file/Stellungnahme.pdf",
     "shortReportUrl": ""
   },
   {
-    "id": "wien-c9d8e3331f79",
+    "id": "wien-bd593dfb4a4d",
     "caseNumber": "74 E 133/24y",
     "auctionDate": "2026-06-17",
     "address": "1010 Wien Seilerstätte 6 / Singerstraße 30",
@@ -725,9 +978,9 @@
     "area": 46,
     "pricePerSqm": 11521.74,
     "deposit": 53000,
-    "latitude": 48.2082,
-    "longitude": 16.3738,
-    "geocodeSource": "approximate",
+    "latitude": 48.2060659,
+    "longitude": 16.3763374,
+    "geocodeSource": "official",
     "ownershipType": "Vermietete Eigentumswohnung in einem augenscheinlich guten Erhaltungs- und Ausstattungszustand bestehend aus einem Zimmer, einem Kabinett, einer Küche, einem Badezimmer, einem WC und kleinem Vorraum. ",
     "summary": "Vermietete Eigentumswohnung in einem augenscheinlich guten Erhaltungs- und Ausstattungszustand bestehend aus einem Zimmer, einem Kabinett, einer Küche, einem Badezimmer, einem WC und kleinem Vorraum. ",
     "riskTags": [],
@@ -736,7 +989,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-44b488765c58",
+    "id": "wien-f44ad78a7817",
     "caseNumber": "89 E 24/24y",
     "auctionDate": "2026-06-18",
     "address": "1210 Wien Großbauerstraße 11",
@@ -759,7 +1012,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-0182adab435f",
+    "id": "wien-681c1cfc2213",
     "caseNumber": "13 E 1655/25p",
     "auctionDate": "2026-06-19",
     "address": "1160 Wien Lienfeldergasse 3",
@@ -782,7 +1035,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-0d6da0973968",
+    "id": "wien-8b2bb24cfffe",
     "caseNumber": "74 E 61/23h",
     "auctionDate": "2026-06-24",
     "address": "1060 Wien Otto-Bauer-Gasse 19",
@@ -805,7 +1058,53 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-8e288ddb50fb",
+    "id": "wien-eafd3e3a226b",
+    "caseNumber": "74 E 86/25p",
+    "auctionDate": "2026-06-24",
+    "address": "1030 Wien Marokkanergasse 21",
+    "district": "1030",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Wohnungseigentumsobjekt",
+    "estimatedValue": 285000,
+    "minimumBid": 28500,
+    "area": 74,
+    "pricePerSqm": 3851.35,
+    "deposit": 142500,
+    "latitude": 48.1976736,
+    "longitude": 16.3807366,
+    "geocodeSource": "official",
+    "ownershipType": "Die ggst. Liegenschaft EZ 1077 besteht aus dem GST 1026, ist eine relativ eben gelegene, polygonal ausgestaltete Mittelliegenschaft, die an der Marokkanergasse über eine Straßenfrontlänge von rd. 23 m",
+    "summary": "Die ggst. Liegenschaft EZ 1077 besteht aus dem GST 1026, ist eine relativ eben gelegene, polygonal ausgestaltete Mittelliegenschaft, die an der Marokkanergasse über eine Straßenfrontlänge von rd. 23 m",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/eafd3e3a226ba561c1258de2003bb803!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/6d06a480fd463d7ac1258de2003bb80c/$file/GA%201030%20Wien%2C%20Marokkanergasse%2021_final.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-eb4d03bde61e",
+    "caseNumber": "74 E 86/25p",
+    "auctionDate": "2026-06-24",
+    "address": "1030 Wien Marokkanergasse 21",
+    "district": "1030",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Eigentumswohnung",
+    "estimatedValue": 497000,
+    "minimumBid": 248500,
+    "area": 144,
+    "pricePerSqm": 3451.39,
+    "deposit": 49700,
+    "latitude": 48.1976736,
+    "longitude": 16.3807366,
+    "geocodeSource": "official",
+    "ownershipType": "Die ggst. Liegenschaft EZ 1077 besteht aus dem GST 1026, ist eine relativ eben gelegene, polygonal ausgestaltete Mittelliegenschaft, die an der Marokkanergasse über eine Straßenfrontlänge von rd. 23 m",
+    "summary": "Die ggst. Liegenschaft EZ 1077 besteht aus dem GST 1026, ist eine relativ eben gelegene, polygonal ausgestaltete Mittelliegenschaft, die an der Marokkanergasse über eine Straßenfrontlänge von rd. 23 m",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/eb4d03bde61ec5fac1258de2003bf2bd!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/6d06a480fd463d7ac1258de2003bb80c/$file/GA%201030%20Wien%2C%20Marokkanergasse%2021_final.pdf",
+    "shortReportUrl": ""
+  },
+  {
+    "id": "wien-cebdbd7e3253",
     "caseNumber": "74 E 86/25p",
     "auctionDate": "2026-06-24",
     "address": "1030 Wien Marokkanergasse 21",
@@ -828,7 +1127,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-bee5dbe57123",
+    "id": "wien-7bae26637858",
     "caseNumber": "35 E 39/25f",
     "auctionDate": "2026-06-24",
     "address": "1190 Wien Bellevuestraße 20",
@@ -851,7 +1150,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-66b6bfd25fbe",
+    "id": "wien-d78acb96533d",
     "caseNumber": "24 E 13/26z",
     "auctionDate": "2026-06-25",
     "address": "1200 Wien Brigittenauer Lände 160-162",
@@ -874,7 +1173,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-ece9ba869b2f",
+    "id": "wien-c089a7ed12ce",
     "caseNumber": "24 E 33/25i",
     "auctionDate": "2026-06-25",
     "address": "1200 Wien Romanogasse 16",
@@ -897,7 +1196,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-4575df861f5a",
+    "id": "wien-27bea66f7e74",
     "caseNumber": "24 E 66/25t",
     "auctionDate": "2026-06-25",
     "address": "1020 Wien Böcklinstraße 60",
@@ -920,7 +1219,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-fa336d1f05d1",
+    "id": "wien-96f0544d7a11",
     "caseNumber": "25 E 38/25g",
     "auctionDate": "2026-06-25",
     "address": "1200 Wien Romanogasse 11",
@@ -943,7 +1242,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-cbab4ddf3db2",
+    "id": "wien-507ced1ad886",
     "caseNumber": "19 E 2645/25w",
     "auctionDate": "2026-06-26",
     "address": "1160 Wien Lerchenfelder Gürtel 25",
@@ -966,7 +1265,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-4fb16d7999cb",
+    "id": "wien-278822ca51a8",
     "caseNumber": "89 E 25/24w",
     "auctionDate": "2026-06-26",
     "address": "1210 Wien Kormorangasse 9",
@@ -989,7 +1288,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-b458ef30e568",
+    "id": "wien-8ac5cf1dfbc5",
     "caseNumber": "89 E 25/25x",
     "auctionDate": "2026-06-26",
     "address": "1210 Wien Senderstraße 71",
@@ -1012,7 +1311,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-55e06fc887cd",
+    "id": "wien-1ee4a58d3125",
     "caseNumber": "9 E 65/24w",
     "auctionDate": "2026-07-03",
     "address": "1230 Wien Otto-Mauer-Gasse 10",
@@ -1035,7 +1334,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-8262f8848c7b",
+    "id": "wien-3723d5192156",
     "caseNumber": "68 E 39/25h",
     "auctionDate": "2026-07-07",
     "address": "1220 Wien Böckingstraße 13/Pilotengasse 118",
@@ -1047,9 +1346,9 @@
     "area": 1334,
     "pricePerSqm": 7.5,
     "deposit": 500,
-    "latitude": 48.2251,
-    "longitude": 16.4408,
-    "geocodeSource": "approximate",
+    "latitude": 48.2179795,
+    "longitude": 16.4950844,
+    "geocodeSource": "official",
     "ownershipType": "Bewertungsgegenständlich sind zwei Motorrad-Stellplätze.\nB-lfd. Nr. 46 - 2/1635-Anteile – Motorrad-Stellplatz in Garage M01\nB-lfd. Nr. 47 - 2/1635-Anteile – Motorrad-Stellplatz in Garage M02\nDie gegen",
     "summary": "Bewertungsgegenständlich sind zwei Motorrad-Stellplätze.\nB-lfd. Nr. 46 - 2/1635-Anteile – Motorrad-Stellplatz in Garage M01\nB-lfd. Nr. 47 - 2/1635-Anteile – Motorrad-Stellplatz in Garage M02\nDie gegen",
     "riskTags": [],
@@ -1058,7 +1357,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-497df4667b86",
+    "id": "wien-f9c993930c4e",
     "caseNumber": "25 E 57/25a",
     "auctionDate": "2026-07-16",
     "address": "1020 Wien Stadionallee ,Gruppe 7/Parzelle 26",
@@ -1081,7 +1380,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-5be02ecb964e",
+    "id": "wien-f3039988a849",
     "caseNumber": "25 E 76/25w",
     "auctionDate": "2026-07-16",
     "address": "1020 Wien Stadionallee ,Gruppe 7/Parzelle 27",
@@ -1104,7 +1403,7 @@
     "shortReportUrl": ""
   },
   {
-    "id": "wien-97a75e42479a",
+    "id": "wien-94edcaab1d42",
     "caseNumber": "24 E 31/25t",
     "auctionDate": "2026-07-23",
     "address": "1140 Wien Linzer Straße 356, Flötzersteig 241",

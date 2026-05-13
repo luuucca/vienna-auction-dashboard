@@ -140,9 +140,8 @@ function normalizeCategory(raw) {
   return 'Sonstiges';
 }
 
-function makeId(caseNumber, address) {
-  const raw = `${caseNumber}::${address}`.toLowerCase().trim();
-  return 'wien-' + crypto.createHash('md5').update(raw).digest('hex').slice(0, 12);
+function makeId(unid) {
+  return 'wien-' + unid.slice(0, 12);
 }
 
 // ── Parse search results page ─────────────────────────────────────────────────
@@ -274,14 +273,13 @@ function loadExisting() {
 }
 
 function upsert(existing, incoming) {
-  const idx = new Map(
-    existing.map((r, i) => [`${r.caseNumber}::${r.address}`.toLowerCase(), i])
-  );
+  // Use UNID-based id as the unique key (each unit/document has its own UNID)
+  const idx = new Map(existing.map((r, i) => [r.id, i]));
   let added = 0, updated = 0;
   const merged = [...existing];
 
   for (const rec of incoming) {
-    const key = `${rec.caseNumber}::${rec.address}`.toLowerCase();
+    const key = rec.id;
     if (idx.has(key)) {
       const i = idx.get(key);
       merged[i] = {
@@ -355,7 +353,7 @@ async function main() {
       const area = parsed.area;
 
       const record = {
-        id: makeId(parsed.caseNumber || entry.unid, parsed.address),
+        id: makeId(entry.unid),
         caseNumber: parsed.caseNumber,
         auctionDate: parsed.auctionDate,
         address: parsed.address,
