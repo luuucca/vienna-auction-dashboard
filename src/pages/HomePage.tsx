@@ -287,31 +287,37 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* Headline with elegant gold sheen sweep */}
+          {/* Headline with continuous slow gold caress */}
           <style>{`
-            @keyframes goldSheen {
-              0%, 38%   { background-position: 100% 50%; }
-              68%, 100% { background-position: 0%   50%; }
+            @keyframes goldCaress {
+              0%   { background-position: 160% 50%; }
+              100% { background-position: -60% 50%; }
             }
             .gold-shimmer-title {
               background: linear-gradient(
-                100deg,
+                105deg,
                 #d4af37 0%,
-                #d4af37 40%,
-                #f0e1a4 47%,
+                #d4af37 22%,
+                #d8b842 30%,
+                #e1c460 37%,
+                #ead582 44%,
+                #f3e4a2 48%,
                 #fff8d6 50%,
-                #f0e1a4 53%,
-                #d4af37 60%,
+                #f3e4a2 52%,
+                #ead582 56%,
+                #e1c460 63%,
+                #d8b842 70%,
+                #d4af37 78%,
                 #d4af37 100%
               );
-              background-size: 250% 100%;
+              background-size: 220% 100%;
               background-repeat: no-repeat;
               -webkit-background-clip: text;
               background-clip: text;
               -webkit-text-fill-color: transparent;
               color: transparent;
-              animation: goldSheen 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-              filter: drop-shadow(0 0 24px rgba(212,175,55,0.15));
+              animation: goldCaress 18s linear infinite;
+              filter: drop-shadow(0 0 18px rgba(212,175,55,0.12));
             }
           `}</style>
           <motion.h1
