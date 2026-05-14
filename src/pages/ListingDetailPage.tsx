@@ -71,7 +71,6 @@ function fmtPrice(p: number, rent: boolean, onReq: boolean) {
 function HeroGallery({ images, title }: { images: string[]; title: string }) {
   const [idx, setIdx] = useState(0)
   const [direction, setDirection] = useState(0)
-  const [lightbox, setLightbox] = useState(false)
 
   const go = (delta: number) => {
     setDirection(delta)
@@ -79,15 +78,13 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
   }
 
   useEffect(() => {
-    if (!lightbox) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(false)
       if (e.key === 'ArrowLeft') go(-1)
       if (e.key === 'ArrowRight') go(1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [lightbox])
+  }, [idx])
 
   // Preload neighboring images for instant nav
   useEffect(() => {
@@ -122,8 +119,7 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 1.02, x: direction > 0 ? -40 : 40 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            onClick={() => setLightbox(true)}
-            className="absolute inset-0 w-full h-full object-contain cursor-zoom-in"
+            className="absolute inset-0 w-full h-full object-cover"
             style={{ background: '#0a0a0a' }}
             draggable={false}
             loading="eager"
@@ -185,40 +181,6 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
         </div>
       )}
 
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setLightbox(false)}
-            className="fixed inset-0 z-[9999] flex items-center justify-center cursor-zoom-out"
-            style={{ background: 'rgba(0,0,0,0.95)' }}>
-            <motion.img
-              key={idx}
-              src={images[idx]}
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-[92vw] max-h-[92vh] object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <button onClick={(e) => { e.stopPropagation(); go(-1) }}
-              className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-              <ChevronLeft size={20} color="white" />
-            </button>
-            <button onClick={(e) => { e.stopPropagation(); go(1) }}
-              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-              <ChevronRight size={20} color="white" />
-            </button>
-            <div className="absolute top-6 right-6 px-3 py-1.5 rounded-full text-sm font-medium"
-              style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
-              {idx + 1} / {images.length}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   )
 }
