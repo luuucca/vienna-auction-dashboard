@@ -89,6 +89,18 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [lightbox])
 
+  // Preload neighboring images for instant nav
+  useEffect(() => {
+    const preload = (src: string) => {
+      const img = new Image()
+      img.src = src
+    }
+    const next = (idx + 1) % images.length
+    const prev = (idx - 1 + images.length) % images.length
+    if (images[next]) preload(images[next])
+    if (images[prev]) preload(images[prev])
+  }, [idx, images])
+
   if (!images.length) {
     return (
       <div className="relative w-full max-w-6xl mx-auto" style={{ aspectRatio: '16/10', background: '#0a0a0a' }}>
@@ -106,14 +118,18 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
             src={images[idx]}
             alt={title}
             custom={direction}
-            initial={{ opacity: 0, scale: 1.05, x: direction > 0 ? 80 : -80 }}
+            initial={{ opacity: 0, scale: 1.02, x: direction > 0 ? 40 : -40 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 1.05, x: direction > 0 ? -80 : 80 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, scale: 1.02, x: direction > 0 ? -40 : 40 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => setLightbox(true)}
             className="absolute inset-0 w-full h-full object-contain cursor-zoom-in"
             style={{ background: '#0a0a0a' }}
             draggable={false}
+            loading="eager"
+            decoding="async"
+            // @ts-ignore - fetchpriority is valid HTML attribute
+            fetchpriority="high"
           />
         </AnimatePresence>
 
@@ -161,7 +177,8 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
                   transition: 'opacity 0.2s, border-color 0.2s',
                   boxShadow: i === idx ? '0 4px 14px rgba(212,175,55,0.35)' : 'none',
                 }}>
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={img} alt="" className="w-full h-full object-cover"
+                  loading={i < 6 ? 'eager' : 'lazy'} decoding="async" />
               </motion.button>
             ))}
           </div>
