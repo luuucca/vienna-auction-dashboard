@@ -287,14 +287,39 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline with animated gold shimmer */}
+          <style>{`
+            @keyframes goldShimmer {
+              0% { background-position: -200% center; }
+              100% { background-position: 200% center; }
+            }
+            .gold-shimmer-title {
+              background: linear-gradient(
+                100deg,
+                #f5e8a8 0%,
+                #d4af37 18%,
+                #fff8d6 30%,
+                #ffffff 38%,
+                #fff8d6 46%,
+                #d4af37 60%,
+                #a8862a 75%,
+                #d4af37 88%,
+                #f5e8a8 100%
+              );
+              background-size: 300% auto;
+              -webkit-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+              color: transparent;
+              animation: goldShimmer 5.5s linear infinite;
+              filter: drop-shadow(0 0 28px rgba(212,175,55,0.18));
+            }
+          `}</style>
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="font-bold tracking-tight mb-5"
-            style={{ fontSize: 'clamp(44px, 8vw, 96px)', lineHeight: 1.04,
-              background: 'linear-gradient(135deg,#ffffff 30%,#d4af37 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            className="font-bold tracking-tight mb-5 gold-shimmer-title"
+            style={{ fontSize: 'clamp(44px, 8vw, 96px)', lineHeight: 1.04 }}
           >
             奥匈置业研究所
           </motion.h1>
