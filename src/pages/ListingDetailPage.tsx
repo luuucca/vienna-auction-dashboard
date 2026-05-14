@@ -141,67 +141,33 @@ function POILayer({ propLat, propLng }: { propLat: number; propLng: number }) {
   )
 }
 
-// ─── Geocode address → lat/lng (Nominatim) ────────────────────────────────────
-function useGeocode(street: string, plz: string) {
-  const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null)
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    if (!street) return
-    setLoading(true)
-    const q = `${street}, ${plz} Wien, Austria`
-    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`)
-      .then(r => r.json())
-      .then(data => {
-        if (data[0]) setPos({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) })
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [street, plz])
-  return { pos, loading }
-}
-
-// Updates map center when geocoded position arrives
-function MapCenterUpdater({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap()
-  useEffect(() => { map.setView([lat, lng], 16) }, [lat, lng])
-  return null
-}
-
-// ─── Detail map: geocodes address, shows POIs + route ────────────────────────
+// ─── Detail map: uses Notion stored coords directly (most reliable) ──────────
 function DetailMap({ street, plz, storedLat, storedLng, title, hasHouseNumber }:
   { street: string; plz: string; storedLat: number; storedLng: number; title: string; hasHouseNumber: boolean }) {
 
-  const { pos: geocoded, loading } = useGeocode(hasHouseNumber ? street : '', plz)
-
-  // Use geocoded position if available, otherwise fall back to stored
-  const lat = geocoded?.lat ?? storedLat
-  const lng = geocoded?.lng ?? storedLng
-
-  if (!lat || !lng) return (
-    <div className="flex items-center justify-center h-full text-white/20 text-sm">
-      {loading ? '定位中…' : '暂无位置'}
+  if (!storedLat || !storedLng) return (
+    <div className="flex items-center justify-center" style={{ height: 420, color: 'rgba(255,255,255,0.2)', fontSize: 14 }}>
+      暂无位置信息
     </div>
   )
 
   return (
     <div className="relative" style={{ height: 420 }}>
       <MapContainer
-        center={[storedLat || lat, storedLng || lng]}
-        zoom={15}
+        center={[storedLat, storedLng]}
+        zoom={16}
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%', background: '#0e0e0e' }}
         attributionControl={false}
       >
         <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="" />
-        {/* Auto-update center once geocoded */}
-        {geocoded && <MapCenterUpdater lat={geocoded.lat} lng={geocoded.lng} />}
-        <Marker position={[lat, lng]} icon={goldPinIcon}>
+        <Marker position={[storedLat, storedLng]} icon={goldPinIcon}>
           <Popup className="custom-popup">
             <div style={{ color: '#141414', fontWeight: 600, fontSize: 12 }}>{title}</div>
             <div style={{ color: '#666', fontSize: 11, marginTop: 2 }}>{plz} Wien · {street}</div>
           </Popup>
         </Marker>
-        {hasHouseNumber && <POILayer propLat={lat} propLng={lng} />}
+        {hasHouseNumber && <POILayer propLat={storedLat} propLng={storedLng} />}
       </MapContainer>
 
       {/* Legend */}
@@ -215,12 +181,6 @@ function DetailMap({ street, plz, storedLat, storedLng, title, hasHouseNumber }:
             style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
             🛒 超市
           </div>
-          {loading && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
-              style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              📍 定位中…
-            </div>
-          )}
         </div>
       )}
 
