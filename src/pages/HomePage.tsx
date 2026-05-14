@@ -407,7 +407,8 @@ export default function HomePage() {
             <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>独家工具</p>
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-3">法拍房信息汇总</h2>
             <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              自主研发系统，实时抓取 Ediktsdatei 数据，地图可视化全维也纳 60+ 在拍房源
+              自主研发系统，实时抓取 Ediktsdatei 数据<br />
+              地图可视化全维也纳 60+ 在拍房源
             </p>
           </motion.div>
 
