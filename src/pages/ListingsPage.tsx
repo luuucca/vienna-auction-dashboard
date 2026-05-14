@@ -58,6 +58,17 @@ const RENT_PRICE_RANGES = [
 const ROOM_OPTIONS = ['全部', '1间', '2间', '3间', '4间+']
 const TYPE_OPTIONS = ['全部类型', '公寓', '别墅', '联排', '出租楼', '商铺', '车库']
 
+const SORT_OPTIONS = [
+  { key: 'default',    label: '默认排序' },
+  { key: 'price-asc',  label: '价格从低到高' },
+  { key: 'price-desc', label: '价格从高到低' },
+  { key: 'sqm-desc',   label: '面积从大到小' },
+  { key: 'sqm-asc',    label: '面积从小到大' },
+  { key: 'rooms-desc', label: '房间数从多到少' },
+  { key: 'newest',     label: '最新房源' },
+] as const
+type SortKey = typeof SORT_OPTIONS[number]['key']
+
 function FilterSelect({
   value, onChange, options,
 }: { value: string; onChange: (v: string) => void; options: string[] }) {
@@ -180,6 +191,7 @@ export default function ListingsPage() {
   const [district, setDistrict] = useState('全部区域')
   const [rooms, setRooms] = useState('全部')
   const [propType, setPropType] = useState('全部类型')
+  const [sortBy, setSortBy] = useState<SortKey>('default')
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   useEffect(() => {
@@ -212,7 +224,7 @@ export default function ListingsPage() {
 
   const filtered = useMemo(() => {
     const { min, max } = priceRanges[priceIdx] ?? { min: 0, max: Infinity }
-    return listings.filter(l => {
+    const arr = listings.filter(l => {
       if (l.forRent !== (mode === 'rent')) return false
       if (!l.priceOnRequest && (l.price < min || l.price > max)) return false
       if (district !== '全部区域') {
@@ -227,7 +239,33 @@ export default function ListingsPage() {
       if (propType !== '全部类型' && (l as any).typeName !== propType) return false
       return true
     })
-  }, [listings, mode, priceIdx, district, rooms, propType])
+
+    if (sortBy === 'default') return arr
+    const sorted = [...arr]
+    switch (sortBy) {
+      case 'price-asc':
+        sorted.sort((a, b) => {
+          if (a.priceOnRequest && !b.priceOnRequest) return 1
+          if (!a.priceOnRequest && b.priceOnRequest) return -1
+          return (a.price || 0) - (b.price || 0)
+        }); break
+      case 'price-desc':
+        sorted.sort((a, b) => {
+          if (a.priceOnRequest && !b.priceOnRequest) return 1
+          if (!a.priceOnRequest && b.priceOnRequest) return -1
+          return (b.price || 0) - (a.price || 0)
+        }); break
+      case 'sqm-desc':
+        sorted.sort((a, b) => (b.sqm || 0) - (a.sqm || 0)); break
+      case 'sqm-asc':
+        sorted.sort((a, b) => (a.sqm || 0) - (b.sqm || 0)); break
+      case 'rooms-desc':
+        sorted.sort((a, b) => (b.rooms || 0) - (a.rooms || 0)); break
+      case 'newest':
+        sorted.sort((a, b) => (b.id || '').localeCompare(a.id || '')); break
+    }
+    return sorted
+  }, [listings, mode, priceIdx, district, rooms, propType, sortBy])
 
   function resetFilters() {
     setPriceIdx(0); setDistrict('全部区域'); setRooms('全部'); setPropType('全部类型')
@@ -316,11 +354,32 @@ export default function ListingsPage() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="flex items-center justify-between mb-5">
+        {/* Results header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
             找到 <span className="font-semibold text-white">{filtered.length}</span> 套{mode === 'buy' ? '购买' : '出租'}房源
           </p>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>排序</span>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value as SortKey)}
+                className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(212,175,55,0.25)',
+                  color: sortBy === 'default' ? 'rgba(255,255,255,0.6)' : '#d4af37',
+                }}
+              >
+                {SORT_OPTIONS.map(o => (
+                  <option key={o.key} value={o.key} style={{ background: '#1e1e1e', color: 'white' }}>{o.label}</option>
+                ))}
+              </select>
+              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                style={{ color: 'rgba(212,175,55,0.5)' }} />
+            </div>
+          </div>
         </div>
 
         {loading ? (
