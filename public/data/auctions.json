@@ -1447,5 +1447,28 @@
     "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/27d1516da2f7fc28c1258df6002000c3!OpenDocument",
     "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/964f7ec211bb6030c1258df6002000c5/$file/260449_SV-GA.pdf",
     "shortReportUrl": ""
+  },
+  {
+    "id": "wien-476871fc4cdf",
+    "caseNumber": "9 E 22/25y",
+    "auctionDate": "2026-07-13",
+    "address": "1230 Wien Rielgasse 22",
+    "district": "1230",
+    "title": "Gerichtliche Versteigerungen",
+    "category": "Einfamilienhaus",
+    "estimatedValue": 2220000,
+    "minimumBid": 1110000,
+    "area": 658.77,
+    "pricePerSqm": 3369.92,
+    "deposit": 222000,
+    "latitude": 48.1519331,
+    "longitude": 16.2605368,
+    "geocodeSource": "official",
+    "ownershipType": "Freistehendes Einfamilienhaus,\nGeschoße: \nKellergeschoß, \nErdgeschoß, \nDachgeschoß,\nSpitzboden.\nAußen-Schwimmbecken, große Freifläche.\nPellets-Heizung, Radiatoren, tw. Fußbodenheizung.\nWarmwasser über",
+    "summary": "Freistehendes Einfamilienhaus,\nGeschoße: \nKellergeschoß, \nErdgeschoß, \nDachgeschoß,\nSpitzboden.\nAußen-Schwimmbecken, große Freifläche.\nPellets-Heizung, Radiatoren, tw. Fußbodenheizung.\nWarmwasser über",
+    "riskTags": [],
+    "detailUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/alldoc/476871fc4cdfe486c1258df600357f62!OpenDocument",
+    "pdfUrl": "https://edikte.justiz.gv.at/edikte/ex/exedi3.nsf/0/4df369d472d863b1c1258df600357f64/$file/GA%201230%20Rielg%2022.pdf",
+    "shortReportUrl": ""
   }
 ]
