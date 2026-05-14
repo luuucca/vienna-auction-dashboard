@@ -790,41 +790,41 @@ export default function HomePage() {
       </section>
 
       {/* ════════════ FOOTER ════════════ */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-10" style={{ borderTop: '1px solid rgba(212,175,55,0.1)', background: '#0a0a0a' }}>
+      <footer className="py-8 px-4 sm:px-6 lg:px-10" style={{ borderTop: '1px solid rgba(212,175,55,0.18)', background: '#0a0a0a' }}>
         <div className="max-w-6xl mx-auto">
           {/* Top row */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-            <div className="font-bold text-sm text-white">奥匈置业研究所</div>
-            <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.22)' }}>
+            <div className="font-bold text-sm" style={{ color: '#d4af37' }}>奥匈置业研究所</div>
+            <p className="text-xs text-center" style={{ color: 'rgba(212,175,55,0.65)' }}>
               © 2025 Yellowbird Immobilienmakler GmbH · Wien, Austria
             </p>
-            <Link to="/about" className="text-xs transition-colors" style={{ color: 'rgba(255,255,255,0.3)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}>
+            <Link to="/about" className="text-xs transition-colors" style={{ color: 'rgba(212,175,55,0.7)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#e8c552')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(212,175,55,0.7)')}>
               联系我们 →
             </Link>
           </div>
           {/* Legal links row */}
-          <div className="flex items-center justify-center gap-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="flex items-center justify-center gap-4 pt-3" style={{ borderTop: '1px solid rgba(212,175,55,0.12)' }}>
             {[
               { to: '/impressum',   label: 'Impressum' },
               { to: '/datenschutz', label: '隐私政策 / Datenschutz' },
             ].map(({ to, label }) => (
               <Link key={to} to={to}
                 className="text-[11px] transition-colors"
-                style={{ color: 'rgba(255,255,255,0.25)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}>
+                style={{ color: 'rgba(212,175,55,0.6)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#e8c552')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(212,175,55,0.6)')}>
                 {label}
               </Link>
             ))}
-            <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.12)' }}>
+            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.55)' }}>
               · 数据来源：Ediktsdatei.justiz.gv.at
             </span>
           </div>
           {/* Justimmo attribution */}
           <div className="flex justify-center pt-3">
-            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.55)' }}>
+            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.6)' }}>
               © Justimmo / Immobilienmaklersoftware
             </span>
           </div>
