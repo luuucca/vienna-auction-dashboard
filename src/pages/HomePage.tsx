@@ -287,30 +287,30 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* Headline with continuous slow gold caress */}
+          {/* Headline with continuous slow gold caress (text always visible) */}
           <style>{`
             @keyframes goldCaress {
-              0%   { background-position: 160% 50%; }
-              100% { background-position: -60% 50%; }
+              0%   { background-position: 0%    50%; }
+              100% { background-position: -200% 50%; }
             }
             .gold-shimmer-title {
               background: linear-gradient(
                 105deg,
                 #d4af37 0%,
-                #d4af37 22%,
-                #d8b842 30%,
-                #e1c460 37%,
-                #ead582 44%,
-                #f3e4a2 48%,
+                #d4af37 35%,
+                #d8b842 40%,
+                #e3c560 44%,
+                #ecd281 47%,
+                #f5e8a8 49%,
                 #fff8d6 50%,
-                #f3e4a2 52%,
-                #ead582 56%,
-                #e1c460 63%,
-                #d8b842 70%,
-                #d4af37 78%,
+                #f5e8a8 51%,
+                #ecd281 53%,
+                #e3c560 56%,
+                #d8b842 60%,
+                #d4af37 65%,
                 #d4af37 100%
               );
-              background-size: 220% 100%;
+              background-size: 300% 100%;
               background-repeat: no-repeat;
               -webkit-background-clip: text;
               background-clip: text;
