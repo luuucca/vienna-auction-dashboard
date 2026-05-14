@@ -290,8 +290,8 @@ export default function HomePage() {
           {/* Headline with continuous slow gold caress (text always visible) */}
           <style>{`
             @keyframes goldCaress {
-              0%   { background-position: 0%    50%; }
-              100% { background-position: -200% 50%; }
+              0%   { background-position: 100% 50%; }
+              100% { background-position: 0%   50%; }
             }
             .gold-shimmer-title {
               background: linear-gradient(
