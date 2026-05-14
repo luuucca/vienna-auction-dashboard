@@ -122,22 +122,30 @@ function normalize(page) {
 async function fetchNotionDatabase() {
   const dbId = process.env.NOTION_DATABASE_ID
   if (!dbId) throw new Error('Missing NOTION_DATABASE_ID')
-  const r = await fetch(`${NOTION_API}/databases/${dbId}/query`, {
-    method: 'POST',
-    headers: notionHeaders(),
-    body: JSON.stringify({
-      filter: {
-        property: 'Status',
-        select: { equals: 'Active' },
-      },
+
+  const all = []
+  let cursor = undefined
+  do {
+    const body = {
+      filter: { property: 'Status', select: { equals: 'Active' } },
       page_size: 100,
-    }),
-  })
-  if (!r.ok) {
-    const t = await r.text()
-    throw new Error(`Notion query error ${r.status}: ${t}`)
-  }
-  return r.json()
+    }
+    if (cursor) body.start_cursor = cursor
+    const r = await fetch(`${NOTION_API}/databases/${dbId}/query`, {
+      method: 'POST',
+      headers: notionHeaders(),
+      body: JSON.stringify(body),
+    })
+    if (!r.ok) {
+      const t = await r.text()
+      throw new Error(`Notion query error ${r.status}: ${t}`)
+    }
+    const data = await r.json()
+    all.push(...(data.results || []))
+    cursor = data.has_more ? data.next_cursor : undefined
+  } while (cursor)
+
+  return { results: all }
 }
 
 async function fetchNotionPage(id) {
