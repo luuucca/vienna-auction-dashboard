@@ -265,15 +265,9 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
         <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(212,175,55,0.09)" />
 
-        {/* Mouse glow */}
+        {/* Mouse glow — follows cursor */}
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: `radial-gradient(700px circle at ${mouse.x}px ${mouse.y}px,rgba(212,175,55,0.07),transparent 40%)` }} />
-
-        {/* Ambient orbs */}
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle,rgba(212,175,55,0.05) 0%,transparent 70%)', filter: 'blur(50px)' }} />
-        <div className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle,rgba(80,100,200,0.04) 0%,transparent 70%)', filter: 'blur(40px)' }} />
 
         <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-20 text-center">
 
