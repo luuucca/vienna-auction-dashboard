@@ -26,23 +26,26 @@ async function nominatim(q) {
   return data.length > 0 ? data[0] : null;
 }
 
-async function geocode(address) {
-  // Strip Austrian postal code + city prefix: "1190 Wien Villenweg 46" → "Villenweg 46"
+/**
+ * Extract just the first address when multiple are present:
+ *   "1110 Wien Enkplatz 5-7 / Sedlitzkygasse 25 / Simmeringer Hauptstr 68"
+ *   → "Enkplatz 5-7"
+ *   "1130 Wien Auhofstraße 205/Aichbühelgasse 5" → "Auhofstraße 205"
+ * Always returns the first address only - more reliable for geocoding.
+ */
+function firstStreet(address) {
   const streetOnly = address
     .replace(/^\d{4}\s+\S+\s+/, '')   // remove "1190 Wien " prefix
-    .replace(/\s*\/\s*/g, ', ')        // "Str. 10/Gasse 5" → "Str. 10, Gasse 5"
     .trim();
+  // Split on "/" (with or without spaces) and take first segment only
+  const first = streetOnly.split(/\s*\/\s*/)[0].trim();
+  return first;
+}
 
+async function geocode(address) {
+  const first = firstStreet(address);
   try {
-    let hit = await nominatim(streetOnly);
-
-    // Fallback for multi-street addresses: try just the first street
-    if (!hit && streetOnly.includes(',')) {
-      const firstStreet = streetOnly.split(',')[0].trim();
-      await sleep(DELAY);
-      hit = await nominatim(firstStreet);
-    }
-
+    const hit = await nominatim(first);
     if (hit) {
       return { lat: parseFloat(hit.lat), lng: parseFloat(hit.lon), displayName: hit.display_name };
     }
