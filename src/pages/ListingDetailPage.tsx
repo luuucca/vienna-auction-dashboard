@@ -141,6 +141,100 @@ function POILayer({ propLat, propLng }: { propLat: number; propLng: number }) {
   )
 }
 
+// ─── Geocode address → lat/lng (Nominatim) ────────────────────────────────────
+function useGeocode(street: string, plz: string) {
+  const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null)
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    if (!street) return
+    setLoading(true)
+    const q = `${street}, ${plz} Wien, Austria`
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`)
+      .then(r => r.json())
+      .then(data => {
+        if (data[0]) setPos({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) })
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [street, plz])
+  return { pos, loading }
+}
+
+// Updates map center when geocoded position arrives
+function MapCenterUpdater({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap()
+  useEffect(() => { map.setView([lat, lng], 16) }, [lat, lng])
+  return null
+}
+
+// ─── Detail map: geocodes address, shows POIs + route ────────────────────────
+function DetailMap({ street, plz, storedLat, storedLng, title, hasHouseNumber }:
+  { street: string; plz: string; storedLat: number; storedLng: number; title: string; hasHouseNumber: boolean }) {
+
+  const { pos: geocoded, loading } = useGeocode(hasHouseNumber ? street : '', plz)
+
+  // Use geocoded position if available, otherwise fall back to stored
+  const lat = geocoded?.lat ?? storedLat
+  const lng = geocoded?.lng ?? storedLng
+
+  if (!lat || !lng) return (
+    <div className="flex items-center justify-center h-full text-white/20 text-sm">
+      {loading ? '定位中…' : '暂无位置'}
+    </div>
+  )
+
+  return (
+    <div className="relative" style={{ height: 420 }}>
+      <MapContainer
+        center={[storedLat || lat, storedLng || lng]}
+        zoom={15}
+        scrollWheelZoom={false}
+        style={{ height: '100%', width: '100%', background: '#0e0e0e' }}
+        attributionControl={false}
+      >
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="" />
+        {/* Auto-update center once geocoded */}
+        {geocoded && <MapCenterUpdater lat={geocoded.lat} lng={geocoded.lng} />}
+        <Marker position={[lat, lng]} icon={goldPinIcon}>
+          <Popup className="custom-popup">
+            <div style={{ color: '#141414', fontWeight: 600, fontSize: 12 }}>{title}</div>
+            <div style={{ color: '#666', fontSize: 11, marginTop: 2 }}>{plz} Wien · {street}</div>
+          </Popup>
+        </Marker>
+        {hasHouseNumber && <POILayer propLat={lat} propLng={lng} />}
+      </MapContainer>
+
+      {/* Legend */}
+      {hasHouseNumber && (
+        <div className="absolute bottom-3 left-3 z-[400] flex gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
+            style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            🚇 地铁站
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
+            style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            🛒 超市
+          </div>
+          {loading && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
+              style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              📍 定位中…
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Google Maps link */}
+      <a href={`https://www.google.com/maps/search/${encodeURIComponent(street + ', ' + plz + ' Wien')}`}
+        target="_blank" rel="noopener noreferrer"
+        className="absolute bottom-3 right-3 z-[400] px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all hover:scale-105"
+        style={{ background: 'rgba(20,20,20,0.85)', color: '#d4af37', backdropFilter: 'blur(10px)', border: '1px solid rgba(212,175,55,0.3)' }}>
+        Google 地图 <ExternalLink size={11} />
+      </a>
+    </div>
+  )
+}
+
 const goldPinIcon = L.divIcon({
   className: 'custom-gold-pin',
   html: `<div style="
@@ -532,8 +626,8 @@ export default function ListingDetailPage() {
             </motion.div>
           )}
 
-          {/* Map */}
-          {data.location.lat > 0 && data.location.lng > 0 && (
+          {/* Map — show if stored coords exist OR there's a geocodeable street address */}
+          {(data.location.lat > 0 || data.address.street) && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -547,46 +641,14 @@ export default function ListingDetailPage() {
                   {data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}
                 </p>
               </div>
-              <div className="relative" style={{ height: 420 }}>
-                <MapContainer
-                  center={[data.location.lat, data.location.lng]}
-                  zoom={15}
-                  scrollWheelZoom={false}
-                  style={{ height: '100%', width: '100%', background: '#0e0e0e' }}
-                  attributionControl={false}
-                >
-                  <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="" />
-                  <Marker position={[data.location.lat, data.location.lng]} icon={goldPinIcon}>
-                    <Popup className="custom-popup">
-                      <div style={{ color: '#141414', fontWeight: 600, fontSize: 12 }}>{data.title}</div>
-                      <div style={{ color: '#666', fontSize: 11, marginTop: 2 }}>{data.address.plz} {data.address.city}</div>
-                    </Popup>
-                  </Marker>
-                  {/* POI markers — only for listings with a precise street address */}
-                  {data.address.street && /\d/.test(data.address.street) && (
-                    <POILayer propLat={data.location.lat} propLng={data.location.lng} />
-                  )}
-                </MapContainer>
-                {/* Legend */}
-                {data.address.street && /\d/.test(data.address.street) && (
-                  <div className="absolute bottom-3 left-3 z-[400] flex gap-2">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
-                      style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      🚇 <span>地铁站</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
-                      style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      🛒 <span>超市</span>
-                    </div>
-                  </div>
-                )}
-                <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="absolute bottom-3 right-3 z-[400] px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all hover:scale-105"
-                  style={{ background: 'rgba(20,20,20,0.85)', color: '#d4af37', backdropFilter: 'blur(10px)', border: '1px solid rgba(212,175,55,0.3)' }}>
-                  Google 地图 <ExternalLink size={11} />
-                </a>
-              </div>
+              <DetailMap
+                street={data.address.street}
+                plz={data.address.plz}
+                storedLat={data.location.lat}
+                storedLng={data.location.lng}
+                title={data.title}
+                hasHouseNumber={!!(data.address.street && /\d/.test(data.address.street))}
+              />
             </motion.div>
           )}
         </div>
