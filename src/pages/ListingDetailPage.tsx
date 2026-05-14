@@ -6,9 +6,140 @@ import {
   ChevronLeft, ChevronRight, Loader2, ExternalLink, Heart, Share2,
   Bed, Bath, TreePine, Layers, Sparkles
 } from 'lucide-react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+
+// ─── POI types ───────────────────────────────────────────────────────────────
+interface POIPoint { lat: number; lng: number; name: string; type: 'subway' | 'shop' }
+
+// ─── Emoji map icons ─────────────────────────────────────────────────────────
+const makeEmojiIcon = (emoji: string) =>
+  L.divIcon({
+    className: '',
+    html: `<div style="font-size:26px;line-height:1;background:rgba(12,12,12,0.78);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.14);box-shadow:0 3px 12px rgba(0,0,0,0.5);cursor:pointer;">${emoji}</div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+  })
+const subwayIcon = makeEmojiIcon('🚇')
+const shopIcon   = makeEmojiIcon('🛒')
+
+// ─── Fetch nearest POIs from Overpass ────────────────────────────────────────
+async function fetchPOIs(lat: number, lng: number): Promise<{ subway: POIPoint | null; shop: POIPoint | null }> {
+  const q = `[out:json][timeout:15];
+(
+  node(around:2500,${lat},${lng})[station=subway];
+  node(around:2500,${lat},${lng})[railway=subway_entrance];
+  node(around:2500,${lat},${lng})[railway=station][station=subway];
+  node(around:1200,${lat},${lng})[shop=supermarket];
+  node(around:1200,${lat},${lng})[shop=convenience];
+  node(around:1200,${lat},${lng})[shop=grocery];
+);
+out body 30;`
+
+  const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: q })
+  const data = await r.json()
+  const els: any[] = data.elements || []
+
+  const dist = (e: any) => Math.hypot(e.lat - lat, e.lon - lng)
+
+  const subwayEls = els.filter(e =>
+    e.tags?.station === 'subway' || e.tags?.railway === 'subway_entrance' ||
+    (e.tags?.railway === 'station' && e.tags?.station === 'subway')
+  )
+  const shopEls = els.filter(e =>
+    e.tags?.shop === 'supermarket' || e.tags?.shop === 'convenience' || e.tags?.shop === 'grocery'
+  )
+
+  const nearest = (arr: any[]): POIPoint | null => {
+    if (!arr.length) return null
+    const e = arr.reduce((a, b) => dist(a) < dist(b) ? a : b)
+    return { lat: e.lat, lng: e.lon, name: e.tags?.name || '', type: 'subway' }
+  }
+
+  const sub = nearest(subwayEls)
+  const sh  = shopEls.length
+    ? (() => { const e = shopEls.reduce((a, b) => dist(a) < dist(b) ? a : b); return { lat: e.lat, lng: e.lon, name: e.tags?.name || '', type: 'shop' as const } })()
+    : null
+
+  return { subway: sub, shop: sh }
+}
+
+// ─── Fetch walking route from OSRM ───────────────────────────────────────────
+async function fetchRoute(from: POIPoint, toLat: number, toLng: number): Promise<[number,number][] | null> {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/foot/${from.lng},${from.lat};${toLng},${toLat}?overview=full&geometries=geojson`
+    const r = await fetch(url)
+    const d = await r.json()
+    const coords = d.routes?.[0]?.geometry?.coordinates
+    if (!coords) return null
+    return coords.map(([lng, lat]: [number, number]) => [lat, lng])
+  } catch { return null }
+}
+
+// ─── POI Layer (must live inside MapContainer) ────────────────────────────────
+function POILayer({ propLat, propLng }: { propLat: number; propLng: number }) {
+  const map = useMap()
+  const [subway, setSubway]         = useState<POIPoint | null>(null)
+  const [shop, setShop]             = useState<POIPoint | null>(null)
+  const [route, setRoute]           = useState<[number,number][] | null>(null)
+  const [activeType, setActiveType] = useState<'subway' | 'shop' | null>(null)
+  const [fetching, setFetching]     = useState(false)
+
+  useEffect(() => {
+    fetchPOIs(propLat, propLng).then(({ subway: s, shop: sh }) => {
+      setSubway(s)
+      setShop(sh)
+    })
+  }, [propLat, propLng])
+
+  const handleClick = async (poi: POIPoint) => {
+    if (activeType === poi.type) {           // toggle off
+      setRoute(null); setActiveType(null); return
+    }
+    setActiveType(poi.type)
+    setFetching(true)
+    const r = await fetchRoute(poi, propLat, propLng)
+    setRoute(r)
+    setFetching(false)
+    if (r) {
+      // Fit map to show both property and POI
+      const bounds = L.latLngBounds([[propLat, propLng], [poi.lat, poi.lng]])
+      map.fitBounds(bounds, { padding: [60, 60] })
+    }
+  }
+
+  return (
+    <>
+      {subway && (
+        <Marker position={[subway.lat, subway.lng]} icon={subwayIcon}
+          eventHandlers={{ click: () => handleClick({ ...subway, type: 'subway' }) }}>
+          <Popup className="custom-popup">
+            <div style={{ fontWeight: 700, fontSize: 13 }}>🚇 {subway.name || 'U-Bahn Station'}</div>
+            <div style={{ fontSize: 11, color: '#888', marginTop: 3 }}>
+              {activeType === 'subway' ? '点击关闭路线' : '点击查看步行路线'}
+            </div>
+          </Popup>
+        </Marker>
+      )}
+      {shop && (
+        <Marker position={[shop.lat, shop.lng]} icon={shopIcon}
+          eventHandlers={{ click: () => handleClick({ ...shop, type: 'shop' }) }}>
+          <Popup className="custom-popup">
+            <div style={{ fontWeight: 700, fontSize: 13 }}>🛒 {shop.name || '超市'}</div>
+            <div style={{ fontSize: 11, color: '#888', marginTop: 3 }}>
+              {activeType === 'shop' ? '点击关闭路线' : '点击查看步行路线'}
+            </div>
+          </Popup>
+        </Marker>
+      )}
+      {route && (
+        <Polyline positions={route}
+          pathOptions={{ color: '#d4af37', weight: 4, opacity: 0.9, dashArray: '10 7' }} />
+      )}
+    </>
+  )
+}
 
 const goldPinIcon = L.divIcon({
   className: 'custom-gold-pin',
@@ -431,7 +562,24 @@ export default function ListingDetailPage() {
                       <div style={{ color: '#666', fontSize: 11, marginTop: 2 }}>{data.address.plz} {data.address.city}</div>
                     </Popup>
                   </Marker>
+                  {/* POI markers — only for listings with a precise street address */}
+                  {data.address.street && /\d/.test(data.address.street) && (
+                    <POILayer propLat={data.location.lat} propLng={data.location.lng} />
+                  )}
                 </MapContainer>
+                {/* Legend */}
+                {data.address.street && /\d/.test(data.address.street) && (
+                  <div className="absolute bottom-3 left-3 z-[400] flex gap-2">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
+                      style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      🚇 <span>地铁站</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium"
+                      style={{ background: 'rgba(12,12,12,0.82)', color: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      🛒 <span>超市</span>
+                    </div>
+                  </div>
+                )}
                 <a href={`https://www.google.com/maps?q=${data.location.lat},${data.location.lng}`}
                   target="_blank" rel="noopener noreferrer"
                   className="absolute bottom-3 right-3 z-[400] px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all hover:scale-105"
