@@ -30,6 +30,37 @@ function getFiles(prop) {
   return prop.files.map(f => f.file?.url || f.external?.url).filter(Boolean)
 }
 
+/**
+ * Convert the stored plain-text description (with \n newlines and **bold** markers)
+ * into safe HTML for dangerouslySetInnerHTML rendering.
+ *   \n\n  → paragraph break  <p>…</p>
+ *   \n    → line break        <br>
+ *   **x** → <strong>x</strong>
+ *   · x   → styled bullet span
+ */
+function descToHtml(text) {
+  if (!text) return ''
+
+  // 1. Escape HTML special chars
+  let s = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+  // 2. Bold: **text** → <strong>text</strong>
+  s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+
+  // 3. Split on double newlines → paragraphs
+  const paragraphs = s.split(/\n{2,}/)
+  s = paragraphs.map(para => {
+    // Within each paragraph: single \n → <br>
+    const inner = para.replace(/\n/g, '<br>')
+    return `<p>${inner}</p>`
+  }).join('')
+
+  return s
+}
+
 function normalize(page) {
   const p = page.properties || {}
   const photos = getFiles(p.Photos)
@@ -55,7 +86,7 @@ function normalize(page) {
       lat: getNumber(p.Lat),
       lng: getNumber(p.Lng),
     },
-    description: getText(p.Description),
+    description: descToHtml(getText(p.Description)),
     photos,
     coverImage: photos[0] || null,
     imageCount: photos.length,
