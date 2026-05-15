@@ -20,6 +20,37 @@ function sanitize(s, max = 500) {
   return String(s).trim().slice(0, max)
 }
 
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+// Non-blocking Telegram notification — failures don't break the form submit.
+async function notifyTelegram(lead) {
+  const token = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+  if (!token || !chatId) return // not configured
+
+  const lines = [
+    `🔔 <b>新客户留资</b>`,
+    `<b>来源：</b> ${escapeHtml(lead.source)}`,
+    `<b>姓名：</b> ${escapeHtml(lead.name)}`,
+    lead.contact && `<b>联系方式：</b> ${escapeHtml(lead.contact)}`,
+    lead.email   && `<b>邮箱：</b> ${escapeHtml(lead.email)}`,
+    lead.address && `<b>地址：</b> ${escapeHtml(lead.address)}`,
+    lead.message && `\n<b>留言：</b>\n${escapeHtml(lead.message)}`,
+  ].filter(Boolean).join('\n')
+
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ chat_id: chatId, text: lines, parse_mode: 'HTML', disable_web_page_preview: true }),
+    })
+  } catch (e) {
+    console.error('Telegram notify failed:', e.message)
+  }
+}
+
 export default async function handler(req, res) {
   // CORS — same origin only on prod, but be defensive
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -90,6 +121,10 @@ export default async function handler(req, res) {
       console.error('Notion error', r.status, errText)
       return res.status(502).json({ error: '提交失败，请稍后重试或直接微信联系' })
     }
+
+    // Fire-and-forget Telegram notification (don't block response)
+    notifyTelegram({ name, contact, email, message, source: finalSource, address })
+
     return res.status(200).json({ ok: true })
   } catch (e) {
     console.error('Lead submit error', e)
