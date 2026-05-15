@@ -96,17 +96,18 @@ function AuctionIconStat({
    Swap any URL below to tweak the rotation. Photos must be served
    from a CORS-friendly CDN; Unsplash works out of the box.
 ───────────────────────────────────────────── */
+// All five URLs verified live against images.unsplash.com.
 const HERO_SLIDES = [
-  // Stephansdom at sunset (original)
+  // Stephansdom at sunset
   'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=2400&q=85&auto=format&fit=crop',
-  // Karlskirche / city by night
-  'https://images.unsplash.com/photo-1573599852326-d2d4da0bbe613?w=2400&q=85&auto=format&fit=crop',
-  // Schönbrunn / palace gardens
-  'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=2400&q=85&auto=format&fit=crop',
-  // Riesenrad / Prater golden hour
-  'https://images.unsplash.com/photo-1583089761625-c2eafdfdfa1f?w=2400&q=85&auto=format&fit=crop',
-  // Belvedere / Vienna rooftops
-  'https://images.unsplash.com/photo-1495491088095-bb1282a78c5e?w=2400&q=85&auto=format&fit=crop',
+  // Vienna aerial at golden hour
+  'https://images.unsplash.com/photo-1519923041107-e4dc8d9193da?w=2400&q=85&auto=format&fit=crop',
+  // Karlskirche
+  'https://images.unsplash.com/photo-1509358033937-2784de2bfed8?w=2400&q=85&auto=format&fit=crop',
+  // Schönbrunn / classical palace
+  'https://images.unsplash.com/photo-1573599852326-2d4da0bbe613?w=2400&q=85&auto=format&fit=crop',
+  // Innere Stadt — horse carriage on cobbled street
+  'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?w=2400&q=85&auto=format&fit=crop',
 ]
 
 function HeroCinemagraph() {
