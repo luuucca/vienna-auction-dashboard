@@ -302,11 +302,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Scroll hint — only on hero, hidden once scrolled */}
+          {/* Scroll hint — vertical line with a gold dot traveling down */}
           <div className="hero-fade-5 mt-14 flex justify-center" style={{ animationDelay: '0.7s' }}>
-            <div className="flex flex-col items-center gap-2 text-fg-tertiary">
+            <div className="flex flex-col items-center gap-3 text-fg-tertiary">
               <span className="text-overline uppercase">向下滚动</span>
-              <span className="block w-px h-8 bg-gradient-to-b from-gold-line to-transparent scroll-pulse" />
+              <div className="relative w-px h-12 overflow-hidden" style={{ background: 'rgba(212,175,55,0.18)' }}>
+                <span className="scroll-trail absolute left-1/2 -translate-x-1/2 w-1 h-3 rounded-full" style={{ background: '#d4af37', boxShadow: '0 0 8px rgba(212,175,55,0.6)' }} />
+              </div>
             </div>
           </div>
         </div>

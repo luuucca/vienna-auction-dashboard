@@ -153,7 +153,7 @@ function DetailMap({ street, plz, storedLat, storedLng, title, hasHouseNumber }:
   )
 
   return (
-    <div className="relative" style={{ height: 420 }}>
+    <div className="relative dark-map" style={{ height: 420 }}>
       <MapContainer
         center={[storedLat, storedLng]}
         zoom={16}

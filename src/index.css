@@ -112,19 +112,21 @@ body {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Leaflet overrides — keep map markers consistent with the design system.
+   Leaflet overrides.
+   The listing-detail map uses CartoDB dark tiles → dark popups (.dark-map)
+   The auction page uses light tiles → light popups (default below)
    ────────────────────────────────────────────────────────────────────────── */
 .leaflet-container {
-  background: #0a0a0a;
+  background: #e8e4dc;
   font-family: inherit;
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  background: var(--bg-elev-1);
-  color: var(--fg-primary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1c1a17;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #DDD7C8;
   padding: 0;
 }
 
@@ -133,44 +135,37 @@ body {
   width: auto !important;
 }
 
+.leaflet-popup-tip-container { margin-top: -1px; }
 .leaflet-popup-tip {
+  background: #ffffff;
+  border: 1px solid #DDD7C8;
+}
+
+/* Dark variant — applied via .dark-map className on the container */
+.dark-map .leaflet-container { background: #0a0a0a; }
+.dark-map .leaflet-popup-content-wrapper {
+  background: var(--bg-elev-1);
+  color: var(--fg-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dark-map .leaflet-popup-tip {
   background: var(--bg-elev-1);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-.leaflet-popup-tip-container { margin-top: -1px; }
-
-/* Tooltip — dark variant for auction map */
-.leaflet-custom-tooltip {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-.leaflet-custom-tooltip::before { display: none; }
-.leaflet-tooltip {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* Zoom control — dark */
-.leaflet-control-zoom a {
+.dark-map .leaflet-control-zoom a {
   background: var(--bg-elev-1) !important;
   color: var(--fg-primary) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
-.leaflet-control-zoom a:hover {
+.dark-map .leaflet-control-zoom a:hover {
   background: var(--bg-elev-2) !important;
 }
-
-/* Attribution control — readable on dark */
-.leaflet-control-attribution {
+.dark-map .leaflet-control-attribution {
   background: rgba(12, 12, 12, 0.7) !important;
   color: var(--fg-tertiary) !important;
-  font-size: 10px !important;
 }
-.leaflet-control-attribution a {
+.dark-map .leaflet-control-attribution a {
   color: var(--fg-secondary) !important;
 }
 
@@ -224,17 +219,17 @@ body {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Hero scroll pulse — the thin gold vertical line under the stat strip.
-   Single, very slow loop. Per DESIGN.md the only continuous animation
-   besides the map-pin pulse.
+   Hero scroll trail — a gold dot travels down a thin track, repeating.
+   Single allowed continuous loop besides the map-pin pulse.
    ────────────────────────────────────────────────────────────────────────── */
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.35; transform: scaleY(1);    }
-  50%      { opacity: 1;    transform: scaleY(1.1);  }
+@keyframes scrollTrail {
+  0%   { top: -12px; opacity: 0;   }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { top: 100%;  opacity: 0;   }
 }
-.scroll-pulse {
-  animation: scrollPulse 2.4s var(--ease-standard) infinite;
-  transform-origin: top center;
+.scroll-trail {
+  animation: scrollTrail 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
