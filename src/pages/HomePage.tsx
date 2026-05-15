@@ -407,9 +407,9 @@ export default function HomePage() {
           outer handles positioning, inner handles the entrance.
         */}
         <motion.div
-          className="absolute left-1/2 z-20 hidden sm:block"
+          className="absolute left-1/2 z-20"
           style={{
-            bottom: 'calc(40px + env(safe-area-inset-bottom, 0px))',
+            bottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
             transform: 'translateX(-50%)', // centering — must NOT be animated
             opacity: heroOpacity,
           }}
@@ -420,11 +420,12 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-overline uppercase text-fg-secondary tracking-[0.3em]">
+            {/* Text label hidden on mobile where vertical space is tight */}
+            <span className="hidden sm:inline text-overline uppercase text-fg-secondary tracking-[0.3em]">
               向下滚动
             </span>
             <div
-              className="relative w-px h-10 sm:h-12 overflow-hidden"
+              className="relative w-px h-8 sm:h-12 overflow-hidden"
               style={{ background: 'rgba(212,175,55,0.22)' }}
             >
               <span
