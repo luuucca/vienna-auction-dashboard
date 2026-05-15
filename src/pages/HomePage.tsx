@@ -395,28 +395,48 @@ export default function HomePage() {
 
         </motion.div>
 
-        {/* Scroll hint — pinned to the bottom of the hero with safe-area
-            padding so iOS/Android browser UI bars don't clip the trail. */}
+        {/*
+          Scroll hint.
+
+          ⚠️  Architecture note: the CSS class .hero-fade-* animates
+          `transform: translateY(20px → 0)`, which OVERRIDES the
+          Tailwind utility `-translate-x-1/2` (centering). If you put
+          the class on the same element that needs horizontal centering,
+          the element will visibly jolt sideways the moment the
+          animation begins. Solution: split into two elements —
+          outer handles positioning, inner handles the entrance.
+        */}
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 hero-fade-5"
+          className="absolute left-1/2 z-20"
           style={{
             bottom: 'calc(40px + env(safe-area-inset-bottom, 0px))',
-            animationDelay: '0.9s',
+            transform: 'translateX(-50%)', // centering — must NOT be animated
             opacity: heroOpacity,
           }}
         >
-          <span className="text-overline uppercase text-fg-secondary tracking-[0.3em]">
-            向下滚动
-          </span>
-          <div className="relative w-px h-10 sm:h-12 overflow-hidden" style={{ background: 'rgba(212,175,55,0.22)' }}>
-            <span
-              className="scroll-trail absolute left-1/2 -translate-x-1/2 w-1.5 h-3 rounded-full"
-              style={{
-                background: '#d4af37',
-                boxShadow: '0 0 10px rgba(212,175,55,0.85), 0 0 4px rgba(212,175,55,1)',
-              }}
-            />
-          </div>
+          <motion.div
+            className="flex flex-col items-center gap-2"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="text-overline uppercase text-fg-secondary tracking-[0.3em]">
+              向下滚动
+            </span>
+            <div
+              className="relative w-px h-10 sm:h-12 overflow-hidden"
+              style={{ background: 'rgba(212,175,55,0.22)' }}
+            >
+              <span
+                className="scroll-trail absolute left-1/2 w-1.5 h-3 rounded-full"
+                style={{
+                  background: '#d4af37',
+                  boxShadow: '0 0 10px rgba(212,175,55,0.85), 0 0 4px rgba(212,175,55,1)',
+                  transform: 'translateX(-50%)',
+                }}
+              />
+            </div>
+          </motion.div>
         </motion.div>
       </section>
 
