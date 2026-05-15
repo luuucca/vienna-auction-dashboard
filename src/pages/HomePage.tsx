@@ -407,7 +407,7 @@ export default function HomePage() {
           outer handles positioning, inner handles the entrance.
         */}
         <motion.div
-          className="absolute left-1/2 z-20"
+          className="absolute left-1/2 z-20 hidden sm:block"
           style={{
             bottom: 'calc(40px + env(safe-area-inset-bottom, 0px))',
             transform: 'translateX(-50%)', // centering — must NOT be animated
