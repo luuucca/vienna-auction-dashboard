@@ -158,10 +158,16 @@ function useFeaturedListings() {
       .then(r => r.json())
       .then(data => {
         const all = (data.listings || []) as any[]
-        // Prefer listings that have a cover image and are for sale; take 3
+        // Prefer listings that have multiple images and are for sale; take 3
         const ranked = all
           .filter(l => l.coverImage && !l.forRent)
-          .sort((a, b) => (b.id || '').localeCompare(a.id || ''))
+          .sort((a, b) => {
+            // Pictures-rich first, then newest IDs
+            const ac = (a.images?.length || 0)
+            const bc = (b.images?.length || 0)
+            if (ac !== bc) return bc - ac
+            return (b.id || '').localeCompare(a.id || '')
+          })
           .slice(0, 3)
         setListings(ranked.length ? ranked : all.slice(0, 3))
       })

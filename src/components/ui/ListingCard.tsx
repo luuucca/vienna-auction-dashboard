@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, Maximize2, Home, ImageIcon } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MapPin, Maximize2, Home, ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 
 /**
  * The single listing-card component, used both on HomePage's "近期推荐"
@@ -32,6 +33,8 @@ export interface ListingCardData {
   }
   coverImage: string | null
   imageCount?: number
+  /** Optional — when present, card supports horizontal swipe. */
+  images?: string[]
 }
 
 interface Props {
@@ -63,6 +66,22 @@ export function ListingCard({ listing, href, variant = 'default', className }: P
   const district = districtFromText(listing.address.district)
   const link = href ?? `/listings/${listing.id}`
 
+  // Multi-image swipe state. Falls back to coverImage only when images is missing.
+  const allImages =
+    listing.images && listing.images.length > 0
+      ? listing.images
+      : listing.coverImage ? [listing.coverImage] : []
+  const [imgIdx, setImgIdx] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const hasMultiple = allImages.length > 1
+
+  const goTo = (delta: number, e?: React.MouseEvent | React.PointerEvent) => {
+    if (e) { e.preventDefault(); e.stopPropagation() }
+    if (!hasMultiple) return
+    setDirection(delta)
+    setImgIdx(i => (i + delta + allImages.length) % allImages.length)
+  }
+
   return (
     <Link
       to={link}
@@ -75,29 +94,98 @@ export function ListingCard({ listing, href, variant = 'default', className }: P
         className || '',
       ].join(' ')}
     >
-      {/* ── Image (4:3 aspect, never letterboxed) ────────────────────── */}
+      {/* ── Image (4:3 aspect, swipeable when multiple) ──────────────── */}
       <div
         className="relative w-full overflow-hidden bg-bg-elev-2"
         style={{ aspectRatio: '4 / 3' }}
       >
-        {listing.coverImage ? (
-          <img
-            src={listing.coverImage}
-            alt={listing.title}
-            className="h-full w-full object-cover transition-transform duration-slow ease-standard group-hover:scale-[1.01]"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none'
-            }}
-          />
+        {allImages.length > 0 ? (
+          <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+            <motion.img
+              key={imgIdx}
+              src={allImages[imgIdx]}
+              alt={listing.title}
+              custom={direction}
+              initial={{ opacity: 0, x: direction > 0 ? 30 : -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction > 0 ? -30 : 30 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              draggable={false}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+              // Touch swipe — only when multiple
+              drag={hasMultiple ? 'x' : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.15}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -60)      goTo(1)
+                else if (info.offset.x > 60)  goTo(-1)
+              }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
+          </AnimatePresence>
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             <ImageIcon size={28} strokeWidth={1.5} className="text-fg-disabled" />
           </div>
         )}
 
-        {/* Top-left badges — monochrome, never colored */}
+        {/* Prev / Next — visible on hover (desktop) or always on touch */}
+        {hasMultiple && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => goTo(-1, e)}
+              aria-label="上一张"
+              className={[
+                'absolute left-2 top-1/2 -translate-y-1/2 z-10',
+                'w-7 h-7 rounded-full flex items-center justify-center',
+                'bg-black/55 backdrop-blur-sm border border-white/[0.12]',
+                'text-fg-primary',
+                'opacity-0 group-hover:opacity-100 transition-opacity duration-base ease-standard',
+                'active:scale-95',
+              ].join(' ')}
+            >
+              <ChevronLeft size={14} strokeWidth={1.5} />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => goTo(1, e)}
+              aria-label="下一张"
+              className={[
+                'absolute right-2 top-1/2 -translate-y-1/2 z-10',
+                'w-7 h-7 rounded-full flex items-center justify-center',
+                'bg-black/55 backdrop-blur-sm border border-white/[0.12]',
+                'text-fg-primary',
+                'opacity-0 group-hover:opacity-100 transition-opacity duration-base ease-standard',
+                'active:scale-95',
+              ].join(' ')}
+            >
+              <ChevronRight size={14} strokeWidth={1.5} />
+            </button>
+          </>
+        )}
+
+        {/* Indicator dots */}
+        {hasMultiple && (
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1">
+            {allImages.slice(0, 8).map((_, i) => (
+              <span
+                key={i}
+                className={[
+                  'h-1 rounded-full transition-all duration-base ease-standard',
+                  i === imgIdx ? 'w-3 bg-white/90' : 'w-1 bg-white/40',
+                ].join(' ')}
+              />
+            ))}
+            {allImages.length > 8 && (
+              <span className="text-[8px] text-white/60 ml-0.5">+</span>
+            )}
+          </div>
+        )}
+
+        {/* Top-left badges — monochrome */}
         <div className="absolute left-3 top-3 z-10 flex gap-1.5">
           <span className="rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-fg-primary backdrop-blur-sm">
             {listing.forRent ? '租' : '售'}
@@ -109,10 +197,10 @@ export function ListingCard({ listing, href, variant = 'default', className }: P
           )}
         </div>
 
-        {/* Image count — bottom-right, only when more than one */}
-        {(listing.imageCount ?? 0) > 1 && (
-          <span className="absolute bottom-3 right-3 z-10 flex items-center gap-1 rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-medium text-fg-secondary backdrop-blur-sm">
-            <ImageIcon size={9} strokeWidth={1.75} /> {listing.imageCount}
+        {/* Image count — top-right when more than one */}
+        {(listing.imageCount ?? allImages.length) > 1 && (
+          <span className="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-medium text-fg-secondary backdrop-blur-sm tabular">
+            <ImageIcon size={9} strokeWidth={1.75} /> {listing.imageCount ?? allImages.length}
           </span>
         )}
       </div>

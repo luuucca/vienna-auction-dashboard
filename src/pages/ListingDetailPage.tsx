@@ -9,6 +9,7 @@ import {
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { Lightbox } from '../components/ui/Lightbox'
 
 // ─── POI types ───────────────────────────────────────────────────────────────
 interface POIPoint { lat: number; lng: number; name: string; type: 'subway' | 'shop' }
@@ -251,11 +252,12 @@ function fmtPrice(p: number, rent: boolean, onReq: boolean) {
 }
 
 /* ─────────────────────────────────────────────
-   Hero Gallery
+   Hero Gallery — touch/keyboard navigation + click-to-expand lightbox
 ───────────────────────────────────────────── */
 function HeroGallery({ images, title }: { images: string[]; title: string }) {
   const [idx, setIdx] = useState(0)
   const [direction, setDirection] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   const go = (delta: number) => {
     setDirection(delta)
@@ -263,78 +265,97 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
   }
 
   useEffect(() => {
+    if (lightboxOpen) return // lightbox handles its own keyboard
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') go(-1)
+      if (e.key === 'ArrowLeft')  go(-1)
       if (e.key === 'ArrowRight') go(1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [idx])
+  }, [idx, lightboxOpen])
 
-  // Preload neighboring images for instant nav
+  // Preload neighbors for instant nav
   useEffect(() => {
-    const preload = (src: string) => {
-      const img = new Image()
-      img.src = src
-    }
-    const next = (idx + 1) % images.length
-    const prev = (idx - 1 + images.length) % images.length
-    if (images[next]) preload(images[next])
-    if (images[prev]) preload(images[prev])
+    if (!images.length) return
+    const preload = (src: string) => { const i = new Image(); i.src = src }
+    if (images[(idx + 1) % images.length]) preload(images[(idx + 1) % images.length])
+    if (images[(idx - 1 + images.length) % images.length])
+      preload(images[(idx - 1 + images.length) % images.length])
   }, [idx, images])
 
   if (!images.length) {
     return (
-      <div className="relative w-full max-w-6xl mx-auto" style={{ aspectRatio: '16/10', background: '#0a0a0a' }}>
-        <div className="absolute inset-0 flex items-center justify-center text-white/20">无图片</div>
+      <div className="relative w-full max-w-content mx-auto rounded-2xl overflow-hidden bg-bg-elev-2 flex items-center justify-center text-fg-disabled" style={{ aspectRatio: '16/10' }}>
+        无图片
       </div>
     )
   }
 
   return (
     <>
-      <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-2xl" style={{ aspectRatio: '16/10', background: '#0a0a0a' }}>
+      <div
+        className="relative w-full max-w-content mx-auto overflow-hidden rounded-2xl bg-bg-elev-2 cursor-zoom-in"
+        style={{ aspectRatio: '16/10' }}
+        onClick={() => setLightboxOpen(true)}
+      >
         <AnimatePresence initial={false} mode="popLayout" custom={direction}>
           <motion.img
             key={idx}
             src={images[idx]}
             alt={title}
             custom={direction}
-            initial={{ opacity: 0, scale: 1.02, x: direction > 0 ? 40 : -40 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 1.02, x: direction > 0 ? -40 : 40 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ background: '#0a0a0a' }}
+            initial={{ opacity: 0, x: direction > 0 ? 40 : -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction > 0 ? -40 : 40 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 w-full h-full object-cover select-none"
             draggable={false}
             loading="eager"
             decoding="async"
-            // @ts-ignore - fetchpriority is valid HTML attribute
+            // @ts-ignore - fetchpriority is a valid HTML attribute
             fetchpriority="high"
+            // Touch swipe within the hero (without opening lightbox)
+            drag={images.length > 1 ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.18}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -80)      go(1)
+              else if (info.offset.x > 80)  go(-1)
+            }}
           />
         </AnimatePresence>
 
         {/* Vignette */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,0.35) 0%, transparent 25%, transparent 60%, rgba(20,20,20,0.95) 100%)' }} />
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, transparent 22%, transparent 62%, rgba(0,0,0,0.55) 100%)' }} />
 
         {images.length > 1 && (
           <>
-            <button onClick={() => go(-1)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <ChevronLeft size={18} color="white" />
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); go(-1) }}
+              aria-label="上一张"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center bg-black/55 backdrop-blur-md border border-white/[0.12] text-fg-primary transition-[background,transform] duration-base ease-standard hover:bg-black/75 active:scale-95"
+            >
+              <ChevronLeft size={16} strokeWidth={1.5} />
             </button>
-            <button onClick={() => go(1)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <ChevronRight size={18} color="white" />
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); go(1) }}
+              aria-label="下一张"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center bg-black/55 backdrop-blur-md border border-white/[0.12] text-fg-primary transition-[background,transform] duration-base ease-standard hover:bg-black/75 active:scale-95"
+            >
+              <ChevronRight size={16} strokeWidth={1.5} />
             </button>
 
             {/* Counter */}
-            <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full text-xs font-medium"
-              style={{ background: 'rgba(20,20,20,0.7)', backdropFilter: 'blur(10px)', color: 'rgba(255,255,255,0.9)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full text-caption font-medium tabular bg-black/65 backdrop-blur-md text-fg-primary border border-white/[0.1]">
               {idx + 1} / {images.length}
+            </div>
+
+            {/* Expand hint */}
+            <div className="absolute bottom-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase tracking-wider bg-black/65 backdrop-blur-md text-fg-secondary border border-white/[0.1] hidden sm:block">
+              点击查看大图
             </div>
           </>
         )}
@@ -342,30 +363,32 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 mt-3">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-10 mt-3">
           <div className="flex gap-2 overflow-x-auto pb-2 thumb-strip">
             {images.slice(0, 30).map((img, i) => (
-              <motion.button
+              <button
                 key={i}
+                type="button"
                 onClick={() => { setDirection(i > idx ? 1 : -1); setIdx(i) }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                className="flex-shrink-0 rounded-lg overflow-hidden"
-                style={{
-                  width: 88, height: 60,
-                  border: i === idx ? '2px solid #d4af37' : '2px solid rgba(255,255,255,0.08)',
-                  opacity: i === idx ? 1 : 0.55,
-                  transition: 'opacity 0.2s, border-color 0.2s',
-                  boxShadow: i === idx ? '0 4px 14px rgba(212,175,55,0.35)' : 'none',
-                }}>
-                <img src={img} alt="" className="w-full h-full object-cover"
-                  loading={i < 6 ? 'eager' : 'lazy'} decoding="async" />
-              </motion.button>
+                className={[
+                  'flex-shrink-0 rounded-lg overflow-hidden',
+                  'transition-[border-color,opacity] duration-base ease-standard',
+                  'active:scale-[0.96]',
+                  i === idx
+                    ? 'border-2 border-gold opacity-100'
+                    : 'border-2 border-white/[0.08] opacity-60 hover:opacity-100',
+                ].join(' ')}
+                style={{ width: 88, height: 60 }}
+              >
+                <img src={img} alt="" loading={i < 6 ? 'eager' : 'lazy'} decoding="async"
+                  className="w-full h-full object-cover" />
+              </button>
             ))}
           </div>
         </div>
       )}
 
+      <Lightbox images={images} startIndex={idx} open={lightboxOpen} onClose={() => setLightboxOpen(false)} />
     </>
   )
 }
