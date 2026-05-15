@@ -53,6 +53,16 @@ html, body {
   padding: 0;
 }
 
+/* Reserve space for the vertical scrollbar at all times so that pages
+   with content shorter than the viewport don't briefly render at full
+   width and then jolt sideways once a scrollbar appears. Supported in
+   all modern browsers; older browsers fall back to the explicit
+   overflow-y: scroll rule below. */
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
 body {
   background-color: var(--bg-base);
   color: var(--fg-primary);
