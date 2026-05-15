@@ -560,7 +560,7 @@ export default function HomePage() {
             className="hero-fade-3 mt-6 mb-12 max-w-2xl mx-auto text-body-lg"
             style={{ color: 'var(--fg-secondary)', y: subtitleY }}
           >
-            真实房源 · 自住投资 · 法拍专长 · 选址避坑<br className="hidden sm:block" />
+            真实房源 · 自住投资 · 司法拍卖 · 选址避坑<br className="hidden sm:block" />
             从看房到过户，全程中文陪伴。
           </motion.p>
 
