@@ -411,7 +411,7 @@ function StatCard({ icon, label, value, delay = 0 }: { icon: React.ReactNode; la
         {icon}
         {label}
       </div>
-      <p className="text-xl font-serif font-semibold text-white tracking-tight">{value}</p>
+      <p className="text-xl font-semibold text-white tracking-tight tabular">{value}</p>
     </motion.div>
   )
 }
@@ -670,7 +670,7 @@ export default function ListingDetailPage() {
               <p className="text-overline text-fg-tertiary uppercase mb-3">
                 {data.forRent ? '月租金' : '出售价格'}
               </p>
-              <p className="font-serif text-display-lg text-gold tabular leading-none">
+              <p className="text-display-lg font-semibold text-gold tabular leading-none">
                 {fmtPrice(data.price, data.forRent, data.priceOnRequest)}
               </p>
               {data.sqm > 0 && data.price > 0 && !data.priceOnRequest && !data.forRent && (

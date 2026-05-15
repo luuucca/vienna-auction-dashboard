@@ -143,7 +143,7 @@ export function MortgageCalculator({ initialPrice = 450_000, variant = 'full', h
         >
           <p className="text-overline text-fg-tertiary uppercase mb-2">月供</p>
           <p className={[
-            'font-serif text-gold tabular leading-none',
+            'text-gold tabular leading-none font-semibold',
             isCompact ? 'text-display-lg' : 'text-display-xl sm:text-display-2xl',
           ].join(' ')}>
             {fmtEUR(monthly)}
@@ -266,7 +266,7 @@ function StatCard({ label, value, accent = false, compact = false }: { label: st
     ].join(' ')}>
       <p className="text-overline text-fg-tertiary uppercase mb-1.5">{label}</p>
       <p className={[
-        'font-serif leading-tight tabular',
+        'leading-tight tabular font-semibold',
         compact ? 'text-heading-md' : 'text-heading-lg',
         accent ? 'text-gold' : 'text-fg-primary',
       ].join(' ')}>
