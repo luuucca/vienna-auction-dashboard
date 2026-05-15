@@ -13,6 +13,7 @@ import DatenschutzPage from './pages/DatenschutzPage'
 import QuizPage from './pages/QuizPage'
 import MortgagePage from './pages/MortgagePage'
 import BuyingGuidePage from './pages/BuyingGuidePage'
+import MarketPage from './pages/MarketPage'
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/quiz"          element={<><NavBar /><QuizPage /></>} />
         <Route path="/mortgage"      element={<><NavBar /><MortgagePage /></>} />
         <Route path="/buying-guide"  element={<><NavBar /><BuyingGuidePage /></>} />
+        <Route path="/market"        element={<><NavBar /><MarketPage /></>} />
       </Routes>
 
       {/* Cookie consent — rendered outside Routes so it appears on every page */}

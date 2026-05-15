@@ -18,6 +18,7 @@ const navLinks: NavItem[] = [
       { to: '/quiz',          label: '资格测试',      desc: '90 秒判断能否在维也纳买房' },
       { to: '/mortgage',      label: '贷款计算器',     desc: '月供 + 税费一键算清' },
       { to: '/buying-guide',  label: '购房指南',       desc: '完整购房流程与税费规则' },
+      { to: '/market',        label: '房价走势',       desc: '5 年趋势 + 23 区均价对比' },
     ],
   },
   { to: '/list-property', label: '业主委托' },
