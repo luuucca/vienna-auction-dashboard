@@ -28,7 +28,16 @@ function escapeHtml(s) {
 async function notifyTelegram(lead) {
   const token = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
-  if (!token || !chatId) return // not configured
+  console.log('[telegram] env check', {
+    hasToken: !!token,
+    tokenLen: token ? token.length : 0,
+    hasChatId: !!chatId,
+    chatId: chatId || '(missing)',
+  })
+  if (!token || !chatId) {
+    console.warn('[telegram] env vars missing — skipping notification')
+    return
+  }
 
   const lines = [
     `🔔 <b>新客户留资</b>`,
@@ -41,13 +50,15 @@ async function notifyTelegram(lead) {
   ].filter(Boolean).join('\n')
 
   try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({ chat_id: chatId, text: lines, parse_mode: 'HTML', disable_web_page_preview: true }),
     })
+    const tgBody = await tgRes.text()
+    console.log('[telegram] response', tgRes.status, tgBody.slice(0, 300))
   } catch (e) {
-    console.error('Telegram notify failed:', e.message)
+    console.error('[telegram] notify failed:', e.message)
   }
 }
 
