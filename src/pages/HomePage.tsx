@@ -760,9 +760,6 @@ export default function HomePage() {
                     <TrendingUp size={14} strokeWidth={1.75} className="text-gold" />
                     <span className="text-caption uppercase tracking-[0.18em] text-fg-secondary">实时洞察</span>
                   </div>
-                  <div className="h-14 -mx-1">
-                    <InsightSparkline />
-                  </div>
                   <div className="flex flex-col gap-2">
                     <InsightMetaRow icon={<Database size={12} strokeWidth={2} />} label="数据源"   value="Ediktsdatei" />
                     <InsightMetaRow icon={<Clock    size={12} strokeWidth={2} />} label="更新频率" value="实时更新" />
