@@ -2,38 +2,29 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  MapPin, ArrowRight, Gavel, Building2, MessageCircle,
+  ArrowRight, Gavel, Building2,
   TrendingUp, Shield, Globe, ChevronRight, Check,
-  Home, Maximize2,
 } from 'lucide-react'
+import { ButtonLink, Button } from '../components/ui/Button'
+import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 
 /* ─────────────────────────────────────────────
-   BG Pattern
+   BG Pattern — subtle dot grid, used sparingly per DESIGN.md
 ───────────────────────────────────────────── */
 function BGPattern({
-  variant = 'dots',
-  mask = 'none',
   size = 28,
   fill = 'rgba(255,255,255,0.04)',
-}: {
-  variant?: 'dots' | 'grid'
-  mask?: 'fade-edges' | 'none'
-  size?: number
-  fill?: string
-}) {
-  const img =
-    variant === 'dots'
-      ? `radial-gradient(${fill} 1px, transparent 1px)`
-      : `linear-gradient(to right,${fill} 1px,transparent 1px),linear-gradient(to bottom,${fill} 1px,transparent 1px)`
-  const maskVal =
-    mask === 'fade-edges'
-      ? 'radial-gradient(ellipse at center,#000 30%,transparent 80%)'
-      : 'none'
+}: { size?: number; fill?: string }) {
   return (
     <div
       aria-hidden
       className="absolute inset-0 pointer-events-none z-0"
-      style={{ backgroundImage: img, backgroundSize: `${size}px ${size}px`, WebkitMaskImage: maskVal, maskImage: maskVal }}
+      style={{
+        backgroundImage: `radial-gradient(${fill} 1px, transparent 1px)`,
+        backgroundSize: `${size}px ${size}px`,
+        WebkitMaskImage: 'radial-gradient(ellipse at center,#000 30%,transparent 80%)',
+        maskImage: 'radial-gradient(ellipse at center,#000 30%,transparent 80%)',
+      }}
     />
   )
 }
@@ -157,82 +148,33 @@ function CityNetworkCanvas() {
 }
 
 /* ─────────────────────────────────────────────
-   Featured property card (glassmorphism)
+   Featured listings — fetched live from Notion via /api/listings.
+   We surface 3 sale + 0 rent, sorted by recency (newest IDs first).
 ───────────────────────────────────────────── */
-interface PropCard {
-  image: string; title: string; location: string
-  price: string; area: string; rooms: string; tag: string
+function useFeaturedListings() {
+  const [listings, setListings] = useState<ListingCardData[]>([])
+  useEffect(() => {
+    fetch('/api/listings')
+      .then(r => r.json())
+      .then(data => {
+        const all = (data.listings || []) as any[]
+        // Prefer listings that have a cover image and are for sale; take 3
+        const ranked = all
+          .filter(l => l.coverImage && !l.forRent)
+          .sort((a, b) => (b.id || '').localeCompare(a.id || ''))
+          .slice(0, 3)
+        setListings(ranked.length ? ranked : all.slice(0, 3))
+      })
+      .catch(() => setListings([]))
+  }, [])
+  return listings
 }
-function PropertyCard({ image, title, location, price, area, rooms, tag }: PropCard) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4, borderColor: 'rgba(212,175,55,0.45)' }}
-      className="group relative overflow-hidden rounded-2xl transition-all duration-400"
-      style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(18px)', border: '1px solid rgba(212,175,55,0.18)' }}
-    >
-      <div className="relative h-56 overflow-hidden">
-        <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(to top,#141414 0%,transparent 55%)' }} />
-        <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-        <span className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full text-[11px] font-bold" style={{ background: '#d4af37', color: '#141414' }}>
-          {tag}
-        </span>
-      </div>
-      <div className="p-5">
-        <h3 className="font-bold text-white text-sm mb-1 line-clamp-1">{title}</h3>
-        <div className="flex items-center gap-1 text-[11px] mb-3" style={{ color: 'rgba(255,255,255,0.38)' }}>
-          <MapPin size={10} />{location}
-        </div>
-        <div className="flex items-center gap-3 text-[11px] mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          <span className="flex items-center gap-1"><Maximize2 size={10} />{area}</span>
-          <span className="w-px h-3 bg-white/10" />
-          <span className="flex items-center gap-1"><Home size={10} />{rooms}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-bold" style={{ color: '#d4af37' }}>{price}</span>
-          <button
-            className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
-            style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.2)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
-          >
-            查看详情
-          </button>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-/* ─────────────────────────────────────────────
-   Data
-───────────────────────────────────────────── */
-const FEATURED: PropCard[] = [
-  {
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-    title: '19区别墅式公寓', location: '1190 Wien, Döbling',
-    price: '€ 850.000', area: '120 m²', rooms: '4 间', tag: '精选推荐',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
-    title: '1区历史建筑改造', location: '1010 Wien, Innere Stadt',
-    price: '€ 1.200.000', area: '95 m²', rooms: '3 间', tag: '投资优选',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
-    title: '22区新建住宅', location: '1220 Wien, Donaustadt',
-    price: '€ 420.000', area: '78 m²', rooms: '3 间', tag: '首次购房',
-  },
-]
 
 /* ─────────────────────────────────────────────
    Page
 ───────────────────────────────────────────── */
 export default function HomePage() {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const featured = useFeaturedListings()
   const [formSent, setFormSent] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
 
@@ -269,147 +211,120 @@ export default function HomePage() {
     setFormLoading(false)
   }
 
-  useEffect(() => {
-    const mv = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY })
-    window.addEventListener('mousemove', mv)
-    return () => window.removeEventListener('mousemove', mv)
-  }, [])
-
   return (
-    <div className="min-h-screen bg-[#141414] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-bg-base text-fg-primary overflow-x-hidden">
 
       {/* ════════════ HERO ════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-        <BGPattern variant="dots" mask="fade-edges" size={32} fill="rgba(212,175,55,0.09)" />
+      <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6 lg:px-10">
+        <BGPattern size={32} fill="rgba(212,175,55,0.06)" />
 
-        {/* Mouse glow — follows cursor */}
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: `radial-gradient(700px circle at ${mouse.x}px ${mouse.y}px,rgba(212,175,55,0.07),transparent 40%)` }} />
+        <div className="relative z-10 w-full max-w-content mx-auto py-24 text-center">
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-20 text-center">
-
-          {/* Badge */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}
-            className="flex justify-center mb-7">
-            <div className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium"
-              style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: '#d4af37' }}>
-              <Building2 size={13} />
-              维也纳房产经纪人
+          {/* Overline badge */}
+          <div className="hero-fade-1 mb-8 flex justify-center">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-overline text-gold"
+              style={{ background: 'var(--gold-tint)', border: '1px solid var(--gold-line)' }}>
+              <Building2 size={11} strokeWidth={1.75} />
+              维也纳 · 华人房产经纪
             </div>
-          </motion.div>
+          </div>
 
-          {/* Headline with continuous slow gold caress (text always visible) */}
-          <style>{`
-            @keyframes goldCaress {
-              0%   { background-position: 100% 50%; }
-              100% { background-position: 0%   50%; }
-            }
-            .gold-shimmer-title {
-              background: linear-gradient(
-                105deg,
-                #d4af37 0%,
-                #d4af37 35%,
-                #d8b842 40%,
-                #e3c560 44%,
-                #ecd281 47%,
-                #f5e8a8 49%,
-                #fff8d6 50%,
-                #f5e8a8 51%,
-                #ecd281 53%,
-                #e3c560 56%,
-                #d8b842 60%,
-                #d4af37 65%,
-                #d4af37 100%
-              );
-              background-size: 300% 100%;
-              background-repeat: no-repeat;
-              -webkit-background-clip: text;
-              background-clip: text;
-              -webkit-text-fill-color: transparent;
-              color: transparent;
-              animation: goldCaress 18s linear infinite;
-              filter: drop-shadow(0 0 18px rgba(212,175,55,0.12));
-            }
-          `}</style>
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="font-bold tracking-tight mb-5 gold-shimmer-title"
-            style={{ fontSize: 'clamp(44px, 8vw, 96px)', lineHeight: 1.04 }}
+          {/* Display headline — static gold, no shimmer */}
+          <h1
+            className="hero-fade-2 font-serif mb-6 mx-auto"
+            style={{
+              color: 'var(--fg-display)',
+              fontSize: 'clamp(40px, 7vw, 72px)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.025em',
+              fontWeight: 600,
+              maxWidth: '14ch',
+            }}
           >
-            奥匈置业研究所
-          </motion.h1>
+            维也纳房产，<br/>
+            <span className="text-gold">中文一条龙</span>服务
+          </h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.22 }}
-            className="text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed"
-            style={{ color: 'rgba(255,255,255,0.46)' }}
+          <p
+            className="hero-fade-3 mt-6 mb-12 max-w-xl mx-auto text-body-lg"
+            style={{ color: 'var(--fg-secondary)' }}
           >
-            专注维也纳房产投资、自住、选址避坑<br className="hidden sm:block" />
-            华人专属中文支持，一条龙服务
-          </motion.p>
+            真实房源、法拍房专长、购房流程指南。<br className="hidden sm:block" />
+            从看房到过户，全程中文陪伴。
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.36 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center"
-          >
-            <Link to="/listings"
-              className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-base transition-colors duration-200"
-              style={{ background: '#d4af37', color: '#141414' }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+          <div className="hero-fade-4 flex flex-col sm:flex-row gap-3 justify-center">
+            <ButtonLink
+              to="/listings"
+              variant="primary"
+              size="lg"
+              trailingIcon={<ArrowRight size={15} strokeWidth={1.75} />}
             >
               浏览精选房源
-              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-            <Link to="/auction"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200"
-              style={{ border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.72)', background: 'rgba(255,255,255,0.04)' }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
+            </ButtonLink>
+            <ButtonLink
+              to="/auction"
+              variant="ghost"
+              size="lg"
+              leadingIcon={<Gavel size={15} strokeWidth={1.75} />}
             >
-              <Gavel size={15} />
               法拍房信息汇总
-            </Link>
-          </motion.div>
+            </ButtonLink>
+          </div>
+
+          {/* Quiet stat strip */}
+          <div className="hero-fade-5 mt-16 grid grid-cols-3 max-w-md mx-auto text-center gap-4">
+            {[
+              { v: '114+', l: '在售房源' },
+              { v: '60+',  l: '法拍房源' },
+              { v: '1–23', l: '全维也纳' },
+            ].map(({ v, l }) => (
+              <div key={l}>
+                <div className="text-heading-lg text-gold tabular">{v}</div>
+                <div className="mt-1 text-caption text-fg-tertiary">{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ════════════ FEATURED LISTINGS ════════════ */}
-      <section className="py-24 relative overflow-hidden" style={{ background: '#0f0f0f' }}>
-        <BGPattern variant="grid" mask="fade-edges" size={40} fill="rgba(212,175,55,0.04)" />
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.55 }} className="mb-10">
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>精选房源</p>
-            <div className="flex items-end justify-between">
-              <h2 className="text-4xl sm:text-5xl font-bold text-white">近期推荐</h2>
-              <Link to="/listings"
-                className="hidden sm:flex items-center gap-1 text-sm transition-colors"
-                style={{ color: 'rgba(255,255,255,0.38)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#d4af37')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.38)')}
-              >
-                查看全部 <ChevronRight size={13} />
-              </Link>
+      {/* ════════════ FEATURED LISTINGS — real data ════════════ */}
+      <section className="py-20 sm:py-28 lg:py-32 bg-bg-elev-1 px-4 sm:px-6 lg:px-10">
+        <div className="max-w-content mx-auto">
+          <div className="mb-12 flex items-end justify-between gap-6">
+            <div>
+              <p className="text-overline text-gold/80 mb-2 uppercase">Featured</p>
+              <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary">
+                近期推荐
+              </h2>
             </div>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURED.map((p, i) => (
-              <motion.div key={i} transition={{ delay: i * 0.07 }}>
-                <PropertyCard {...p} />
-              </motion.div>
-            ))}
+            <Link
+              to="/listings"
+              className="hidden sm:inline-flex items-center gap-1 text-body text-fg-secondary hover:text-gold transition-colors duration-base ease-standard"
+            >
+              查看全部 <ChevronRight size={14} strokeWidth={1.75} />
+            </Link>
           </div>
 
-          <div className="mt-7 sm:hidden text-center">
-            <Link to="/listings" className="inline-flex items-center gap-1 text-sm" style={{ color: 'rgba(212,175,55,0.75)' }}>
-              查看全部房源 <ChevronRight size={13} />
+          {featured.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {featured.map(l => (
+                <ListingCard key={l.id} listing={l} variant="compact" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[0, 1, 2].map(i => (
+                <div key={i} className="rounded-xl bg-bg-elev-2 border border-white/[0.06]" style={{ aspectRatio: '3 / 4' }} />
+              ))}
+            </div>
+          )}
+
+          <div className="mt-10 sm:hidden text-center">
+            <Link to="/listings" className="inline-flex items-center gap-1 text-body text-gold">
+              查看全部房源 <ChevronRight size={14} strokeWidth={1.75} />
             </Link>
           </div>
         </div>
@@ -417,7 +332,7 @@ export default function HomePage() {
 
       {/* ════════════ 独家工具 — 法拍房 ════════════ */}
       <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
-        <BGPattern variant="dots" mask="fade-edges" size={28} fill="rgba(212,175,55,0.06)" />
+        <BGPattern size={28} fill="rgba(212,175,55,0.06)" />
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
           <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.55 }} className="text-center mb-12">
@@ -507,7 +422,7 @@ export default function HomePage() {
 
       {/* ════════════ FOR OWNERS (Sell / Rent) ════════════ */}
       <section className="py-20 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
-        <BGPattern variant="grid" mask="fade-edges" size={48} fill="rgba(212,175,55,0.05)" />
+        <BGPattern size={48} fill="rgba(212,175,55,0.04)" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
@@ -591,7 +506,7 @@ export default function HomePage() {
 
       {/* ════════════ CONTACT FORM ════════════ */}
       <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
-        <BGPattern variant="dots" mask="fade-edges" size={30} fill="rgba(212,175,55,0.07)" />
+        <BGPattern size={30} fill="rgba(212,175,55,0.06)" />
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-10">
           <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-10">
