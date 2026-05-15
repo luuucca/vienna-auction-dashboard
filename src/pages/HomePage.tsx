@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Gavel, Building2,
   TrendingUp, Shield, Globe, ChevronRight, Check,
@@ -153,29 +153,60 @@ function CityNetworkCanvas() {
    Featured listings — fetched live from Notion via /api/listings.
    We surface 3 sale + 0 rent, sorted by recency (newest IDs first).
 ───────────────────────────────────────────── */
+/**
+ * Featured listings — fetches the full pool once, then rotates 3 random
+ * picks every 8 seconds. Prefer listings with multiple images so the
+ * homepage feels image-rich.
+ */
 function useFeaturedListings() {
-  const [listings, setListings] = useState<ListingCardData[]>([])
+  const [pool, setPool] = useState<ListingCardData[]>([])
+  const [current, setCurrent] = useState<ListingCardData[]>([])
+
+  // Fetch the pool once
   useEffect(() => {
     fetch('/api/listings')
       .then(r => r.json())
       .then(data => {
         const all = (data.listings || []) as any[]
-        // Prefer listings that have multiple images and are for sale; take 3
-        const ranked = all
-          .filter(l => l.coverImage && !l.forRent)
-          .sort((a, b) => {
-            // Pictures-rich first, then newest IDs
-            const ac = (a.images?.length || 0)
-            const bc = (b.images?.length || 0)
-            if (ac !== bc) return bc - ac
-            return (b.id || '').localeCompare(a.id || '')
-          })
-          .slice(0, 3)
-        setListings(ranked.length ? ranked : all.slice(0, 3))
+        const filtered = all.filter(l => l.coverImage && !l.forRent && (l.images?.length || 0) >= 3)
+        // Fallback to anything with a cover image if filter is empty
+        const usable = filtered.length >= 3 ? filtered : all.filter(l => l.coverImage)
+        setPool(usable)
       })
-      .catch(() => setListings([]))
+      .catch(() => setPool([]))
   }, [])
-  return listings
+
+  // Pick 3 random distinct items from the pool
+  function pickThree(source: ListingCardData[]): ListingCardData[] {
+    if (source.length <= 3) return source.slice(0, 3)
+    const indices = new Set<number>()
+    while (indices.size < 3) indices.add(Math.floor(Math.random() * source.length))
+    return Array.from(indices).map(i => source[i])
+  }
+
+  // Initial pick when pool arrives
+  useEffect(() => {
+    if (pool.length > 0 && current.length === 0) setCurrent(pickThree(pool))
+  }, [pool, current.length])
+
+  // Auto-rotate every 8 seconds — only if there are enough listings to make
+  // the rotation meaningful, and only when the tab is focused.
+  useEffect(() => {
+    if (pool.length <= 3) return
+    let timer: number | undefined
+    const tick = () => setCurrent(pickThree(pool))
+    const start = () => { timer = window.setInterval(tick, 8000) }
+    const stop  = () => { if (timer) { clearInterval(timer); timer = undefined } }
+    if (!document.hidden) start()
+    const onVis = () => (document.hidden ? stop() : start())
+    document.addEventListener('visibilitychange', onVis)
+    return () => {
+      stop()
+      document.removeEventListener('visibilitychange', onVis)
+    }
+  }, [pool])
+
+  return current
 }
 
 /* ─────────────────────────────────────────────
@@ -372,11 +403,19 @@ export default function HomePage() {
 
           {featured.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {featured.map((l, i) => (
-                <Reveal key={l.id} delay={i * 90}>
-                  <ListingCard listing={l} variant="compact" />
-                </Reveal>
-              ))}
+              <AnimatePresence mode="popLayout" initial={false}>
+                {featured.map((l) => (
+                  <motion.div
+                    key={l.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <ListingCard listing={l} variant="compact" />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

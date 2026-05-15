@@ -219,6 +219,32 @@ body {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
+   Buying-guide editorial styling — prose content with list bullets,
+   inline strong/em accents, link gold underlines.
+   ────────────────────────────────────────────────────────────────────────── */
+.prose-content ul,
+.prose-content ol {
+  margin: 0.4em 0;
+  padding-left: 1.25em;
+}
+.prose-content ul li {
+  list-style: disc;
+  margin: 0.4em 0;
+}
+.prose-content ol li {
+  list-style: decimal;
+  margin: 0.4em 0;
+}
+.prose-content ul li::marker,
+.prose-content ol li::marker {
+  color: var(--gold);
+}
+.prose-content strong { font-weight: 600; color: var(--fg-primary); }
+.prose-content em     { color: var(--gold); font-style: normal; }
+.prose-content a      { color: var(--gold); text-decoration: underline; text-underline-offset: 4px; }
+.prose-content a:hover { color: var(--gold-hover); }
+
+/* ──────────────────────────────────────────────────────────────────────────
    Hero scroll trail — a gold dot travels down a thin track, repeating.
    Single allowed continuous loop besides the map-pin pulse.
    ────────────────────────────────────────────────────────────────────────── */
