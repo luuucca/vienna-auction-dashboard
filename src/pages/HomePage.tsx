@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import {
   ArrowRight, Gavel, Building2,
   TrendingUp, Shield, Globe, ChevronRight, Check,
@@ -186,6 +186,20 @@ export default function HomePage() {
   const [formSent, setFormSent] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
 
+  // ── Scroll-driven hero animation ─────────────────────────────────────────
+  // As the user scrolls down through the first viewport (0 → 100vh), the
+  // hero content fades out and translates upward at different speeds to
+  // create a subtle parallax depth. Honors prefers-reduced-motion.
+  const reduceMotion = useReducedMotion()
+  const { scrollY } = useScroll()
+  const heroOpacity   = useTransform(scrollY, [0, 380], reduceMotion ? [1, 1] : [1, 0])
+  const badgeY        = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, -90])
+  const titleY        = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, -60])
+  const subtitleY     = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, -40])
+  const ctaY          = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, -25])
+  const statsY        = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, -15])
+  const bgPatternY    = useTransform(scrollY, [0, 380], reduceMotion ? [0, 0] : [0, 50])
+
   const [formError, setFormError] = useState<string | null>(null)
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -224,21 +238,27 @@ export default function HomePage() {
 
       {/* ════════════ HERO ════════════ */}
       <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6 lg:px-10">
-        <BGPattern size={32} fill="rgba(212,175,55,0.06)" />
+        {/* Background pattern drifts down on scroll (opposite direction = depth) */}
+        <motion.div className="absolute inset-0 pointer-events-none" style={{ y: bgPatternY }}>
+          <BGPattern size={32} fill="rgba(212,175,55,0.06)" />
+        </motion.div>
 
-        <div className="relative z-10 w-full max-w-content mx-auto py-24 text-center">
-
-          {/* Overline badge */}
-          <div className="hero-fade-1 mb-8 flex justify-center">
+        {/* Hero content fades + parallax-translates as user scrolls */}
+        <motion.div
+          className="relative z-10 w-full max-w-content mx-auto py-24 text-center"
+          style={{ opacity: heroOpacity }}
+        >
+          {/* Overline badge — fastest parallax */}
+          <motion.div className="hero-fade-1 mb-8 flex justify-center" style={{ y: badgeY }}>
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-overline text-gold"
               style={{ background: 'var(--gold-tint)', border: '1px solid var(--gold-line)' }}>
               <Building2 size={11} strokeWidth={1.75} />
               维也纳 · 华人房产经纪
             </div>
-          </div>
+          </motion.div>
 
-          {/* Display headline — static gold, no shimmer */}
-          <h1
+          {/* Display headline */}
+          <motion.h1
             className="hero-fade-2 font-serif mb-6 mx-auto"
             style={{
               color: 'var(--fg-display)',
@@ -247,23 +267,24 @@ export default function HomePage() {
               letterSpacing: '-0.025em',
               fontWeight: 600,
               maxWidth: '14ch',
+              y: titleY,
             }}
           >
             维也纳房产，<br/>
-            <span className="text-gold">中文一条龙</span>服务
-          </h1>
+            <span className="text-gold">中文一站式</span>服务
+          </motion.h1>
 
           {/* Subtitle */}
-          <p
-            className="hero-fade-3 mt-6 mb-12 max-w-xl mx-auto text-body-lg"
-            style={{ color: 'var(--fg-secondary)' }}
+          <motion.p
+            className="hero-fade-3 mt-6 mb-12 max-w-2xl mx-auto text-body-lg"
+            style={{ color: 'var(--fg-secondary)', y: subtitleY }}
           >
-            真实房源、法拍房专长、购房流程指南。<br className="hidden sm:block" />
+            真实房源 · 自住投资 · 法拍专长 · 选址避坑<br className="hidden sm:block" />
             从看房到过户，全程中文陪伴。
-          </p>
+          </motion.p>
 
           {/* CTAs */}
-          <div className="hero-fade-4 flex flex-col sm:flex-row gap-3 justify-center">
+          <motion.div className="hero-fade-4 flex flex-col sm:flex-row gap-3 justify-center" style={{ y: ctaY }}>
             <ButtonLink
               to="/listings"
               variant="primary"
@@ -280,13 +301,16 @@ export default function HomePage() {
             >
               法拍房信息汇总
             </ButtonLink>
-          </div>
+          </motion.div>
 
-          {/* Quiet stat strip — animated count-up on viewport entry */}
-          <div className="hero-fade-5 mt-16 grid grid-cols-3 max-w-md mx-auto text-center gap-4">
+          {/* Quiet stat strip */}
+          <motion.div
+            className="hero-fade-5 mt-16 grid grid-cols-3 max-w-md mx-auto text-center gap-4"
+            style={{ y: statsY }}
+          >
             <div>
               <div className="text-heading-lg text-gold">
-                <CountUp value={114} suffix="+" duration={1400} />
+                <CountUp value={100} suffix="+" duration={1400} />
               </div>
               <div className="mt-1 text-caption text-fg-tertiary">在售房源</div>
             </div>
@@ -300,15 +324,16 @@ export default function HomePage() {
               <div className="text-heading-lg text-gold tabular">1–23</div>
               <div className="mt-1 text-caption text-fg-tertiary">全维也纳</div>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
         {/* Scroll hint — absolutely pinned to the bottom of the hero so it
-            never gets pushed off-screen by tall content */}
-        <div
+            never gets pushed off-screen by tall content. Fades with the
+            rest of the hero so it disappears once the user starts scrolling. */}
+        <motion.div
           className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 hero-fade-5"
-          style={{ bottom: 28, animationDelay: '0.9s' }}
+          style={{ bottom: 28, animationDelay: '0.9s', opacity: heroOpacity }}
         >
           <span className="text-overline uppercase text-fg-secondary tracking-[0.3em]">
             向下滚动
@@ -322,7 +347,7 @@ export default function HomePage() {
               }}
             />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ════════════ FEATURED LISTINGS — real data ════════════ */}
