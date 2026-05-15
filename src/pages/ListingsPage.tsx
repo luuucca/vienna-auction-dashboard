@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ListingCard as SharedListingCard } from '../components/ui/ListingCard'
 import { ButtonLink } from '../components/ui/Button'
+import { Reveal } from '../components/ui/Reveal'
 
 /* ─────────────────────────────────────────────
    Types
@@ -244,13 +245,15 @@ export default function ListingsPage() {
       {/* Header */}
       <div className="px-4 sm:px-6 lg:px-10 pt-12 pb-8 border-b border-white/[0.06]">
         <div className="max-w-content mx-auto">
-          <p className="text-overline text-gold/80 mb-3 uppercase">Listings</p>
-          <h1 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-2 tracking-tight">
-            维也纳精选房源
-          </h1>
-          <p className="text-body text-fg-secondary">
-            真实在售房源 · 共 <span className="text-fg-primary font-medium tabular">{listings.length}</span> 套
-          </p>
+          <Reveal>
+            <p className="text-overline text-gold/80 mb-3 uppercase">Listings</p>
+            <h1 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-2 tracking-tight">
+              维也纳精选房源
+            </h1>
+            <p className="text-body text-fg-secondary">
+              真实在售房源 · 共 <span className="text-fg-primary font-medium tabular">{listings.length}</span> 套
+            </p>
+          </Reveal>
         </div>
       </div>
 

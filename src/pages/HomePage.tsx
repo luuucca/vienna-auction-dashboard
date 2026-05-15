@@ -7,6 +7,8 @@ import {
 } from 'lucide-react'
 import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
+import { Reveal } from '../components/ui/Reveal'
+import { CountUp } from '../components/ui/CountUp'
 
 /* ─────────────────────────────────────────────
    BG Pattern — subtle dot grid, used sparingly per DESIGN.md
@@ -280,18 +282,32 @@ export default function HomePage() {
             </ButtonLink>
           </div>
 
-          {/* Quiet stat strip */}
+          {/* Quiet stat strip — animated count-up on viewport entry */}
           <div className="hero-fade-5 mt-16 grid grid-cols-3 max-w-md mx-auto text-center gap-4">
-            {[
-              { v: '114+', l: '在售房源' },
-              { v: '60+',  l: '法拍房源' },
-              { v: '1–23', l: '全维也纳' },
-            ].map(({ v, l }) => (
-              <div key={l}>
-                <div className="text-heading-lg text-gold tabular">{v}</div>
-                <div className="mt-1 text-caption text-fg-tertiary">{l}</div>
+            <div>
+              <div className="text-heading-lg text-gold">
+                <CountUp value={114} suffix="+" duration={1400} />
               </div>
-            ))}
+              <div className="mt-1 text-caption text-fg-tertiary">在售房源</div>
+            </div>
+            <div>
+              <div className="text-heading-lg text-gold">
+                <CountUp value={60} suffix="+" duration={1400} />
+              </div>
+              <div className="mt-1 text-caption text-fg-tertiary">法拍房源</div>
+            </div>
+            <div>
+              <div className="text-heading-lg text-gold tabular">1–23</div>
+              <div className="mt-1 text-caption text-fg-tertiary">全维也纳</div>
+            </div>
+          </div>
+
+          {/* Scroll hint — only on hero, hidden once scrolled */}
+          <div className="hero-fade-5 mt-14 flex justify-center" style={{ animationDelay: '0.7s' }}>
+            <div className="flex flex-col items-center gap-2 text-fg-tertiary">
+              <span className="text-overline uppercase">向下滚动</span>
+              <span className="block w-px h-8 bg-gradient-to-b from-gold-line to-transparent scroll-pulse" />
+            </div>
           </div>
         </div>
       </section>
@@ -299,25 +315,29 @@ export default function HomePage() {
       {/* ════════════ FEATURED LISTINGS — real data ════════════ */}
       <section className="py-20 sm:py-28 lg:py-32 bg-bg-elev-1 px-4 sm:px-6 lg:px-10">
         <div className="max-w-content mx-auto">
-          <div className="mb-12 flex items-end justify-between gap-6">
-            <div>
-              <p className="text-overline text-gold/80 mb-2 uppercase">Featured</p>
-              <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary">
-                近期推荐
-              </h2>
+          <Reveal>
+            <div className="mb-12 flex items-end justify-between gap-6">
+              <div>
+                <p className="text-overline text-gold/80 mb-2 uppercase">Featured</p>
+                <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary">
+                  近期推荐
+                </h2>
+              </div>
+              <Link
+                to="/listings"
+                className="hidden sm:inline-flex items-center gap-1 text-body text-fg-secondary hover:text-gold transition-colors duration-base ease-standard group"
+              >
+                查看全部 <ChevronRight size={14} strokeWidth={1.75} className="transition-transform duration-base ease-standard group-hover:translate-x-0.5" />
+              </Link>
             </div>
-            <Link
-              to="/listings"
-              className="hidden sm:inline-flex items-center gap-1 text-body text-fg-secondary hover:text-gold transition-colors duration-base ease-standard"
-            >
-              查看全部 <ChevronRight size={14} strokeWidth={1.75} />
-            </Link>
-          </div>
+          </Reveal>
 
           {featured.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {featured.map(l => (
-                <ListingCard key={l.id} listing={l} variant="compact" />
+              {featured.map((l, i) => (
+                <Reveal key={l.id} delay={i * 90}>
+                  <ListingCard listing={l} variant="compact" />
+                </Reveal>
               ))}
             </div>
           ) : (
@@ -339,76 +359,88 @@ export default function HomePage() {
       {/* ════════════ 独家工具 — 法拍房 ════════════ */}
       <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-base">
         <div className="max-w-content mx-auto">
-          <div className="mb-12 max-w-prose">
-            <p className="text-overline text-gold/80 mb-3 uppercase">Exclusive Tool</p>
-            <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
-              法拍房信息汇总
-            </h2>
-            <p className="mt-4 text-body-lg text-fg-secondary">
-              自主研发系统实时抓取 Ediktsdatei 数据，地图可视化全维也纳 60+ 在拍房源。
-            </p>
-          </div>
-
-          {/* Feature card — calmer, no glassmorphism */}
-          <div className="rounded-2xl overflow-hidden bg-bg-elev-1 border border-white/[0.06]">
-            {/* Animated city network canvas */}
-            <div className="relative h-72 overflow-hidden bg-bg-base">
-              <CityNetworkCanvas />
-              <div className="absolute bottom-0 left-0 right-0 h-20"
-                style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }} />
+          <Reveal>
+            <div className="mb-12 max-w-prose">
+              <p className="text-overline text-gold/80 mb-3 uppercase">Exclusive Tool</p>
+              <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
+                法拍房信息汇总
+              </h2>
+              <p className="mt-4 text-body-lg text-fg-secondary">
+                自主研发系统实时抓取 Ediktsdatei 数据，地图可视化全维也纳 60+ 在拍房源。
+              </p>
             </div>
+          </Reveal>
 
-            {/* Stats + CTA */}
-            <div className="p-7 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
-                {[
-                  { v: '60+',     l: '在拍房源' },
-                  { v: '50%',     l: '最低起拍' },
-                  { v: '1–23 区', l: '全维也纳' },
-                  { v: '免费',    l: '无需注册' },
-                ].map(({ v, l }) => (
-                  <div key={l}>
-                    <div className="text-heading-lg text-gold tabular">{v}</div>
-                    <div className="mt-1 text-caption text-fg-tertiary">{l}</div>
-                  </div>
-                ))}
+          <Reveal delay={120}>
+            <div className="rounded-2xl overflow-hidden bg-bg-elev-1 border border-white/[0.06]">
+              {/* Animated city network canvas */}
+              <div className="relative h-72 overflow-hidden bg-bg-base">
+                <CityNetworkCanvas />
+                <div className="absolute bottom-0 left-0 right-0 h-20"
+                  style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }} />
               </div>
-              <ButtonLink
-                to="/auction"
-                variant="primary"
-                size="md"
-                leadingIcon={<Gavel size={14} strokeWidth={1.75} />}
-                trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
-              >
-                进入看板
-              </ButtonLink>
+
+              {/* Stats + CTA */}
+              <div className="p-7 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
+                  <div>
+                    <div className="text-heading-lg text-gold"><CountUp value={60} suffix="+" /></div>
+                    <div className="mt-1 text-caption text-fg-tertiary">在拍房源</div>
+                  </div>
+                  <div>
+                    <div className="text-heading-lg text-gold"><CountUp value={50} suffix="%" /></div>
+                    <div className="mt-1 text-caption text-fg-tertiary">最低起拍</div>
+                  </div>
+                  <div>
+                    <div className="text-heading-lg text-gold tabular">1–23 区</div>
+                    <div className="mt-1 text-caption text-fg-tertiary">全维也纳</div>
+                  </div>
+                  <div>
+                    <div className="text-heading-lg text-gold tabular">免费</div>
+                    <div className="mt-1 text-caption text-fg-tertiary">无需注册</div>
+                  </div>
+                </div>
+                <ButtonLink
+                  to="/auction"
+                  variant="primary"
+                  size="md"
+                  leadingIcon={<Gavel size={14} strokeWidth={1.75} />}
+                  trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
+                >
+                  进入看板
+                </ButtonLink>
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ════════════ WHY VIENNA ════════════ */}
       <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-y border-white/[0.06]">
         <div className="max-w-content mx-auto">
-          <div className="mb-12 max-w-prose">
-            <p className="text-overline text-gold/80 mb-3 uppercase">Market</p>
-            <h2 className="font-serif text-display-lg text-fg-primary tracking-tight">
-              为什么选择维也纳
-            </h2>
-          </div>
+          <Reveal>
+            <div className="mb-12 max-w-prose">
+              <p className="text-overline text-gold/80 mb-3 uppercase">Market</p>
+              <h2 className="font-serif text-display-lg text-fg-primary tracking-tight">
+                为什么选择维也纳
+              </h2>
+            </div>
+          </Reveal>
           <div className="grid sm:grid-cols-3 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
             {[
               { icon: <TrendingUp size={17} strokeWidth={1.5} />, title: '价格仍具优势', desc: '对比伦敦、巴黎、慕尼黑，维也纳每平方米单价显著偏低，中长期增值潜力突出。' },
               { icon: <Shield     size={17} strokeWidth={1.5} />, title: '法律框架透明', desc: '奥地利产权保护健全，购房程序规范；非 EU 买家须额外审批，各州政策有所不同。' },
               { icon: <Globe      size={17} strokeWidth={1.5} />, title: '欧盟核心城市', desc: '申根区核心，生活质量连续多年全球第一，是华人移居欧洲的热门目的地之一。' },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} className="p-7 bg-bg-base">
-                <div className="w-9 h-9 flex items-center justify-center rounded-md mb-5 bg-gold-tint border border-gold-line text-gold">
-                  {icon}
+            ].map(({ icon, title, desc }, i) => (
+              <Reveal key={title} delay={100 + i * 100}>
+                <div className="p-7 bg-bg-base h-full group">
+                  <div className="w-9 h-9 flex items-center justify-center rounded-md mb-5 bg-gold-tint border border-gold-line text-gold transition-transform duration-base ease-standard group-hover:scale-105">
+                    {icon}
+                  </div>
+                  <h3 className="text-heading-md text-fg-primary mb-2">{title}</h3>
+                  <p className="text-body text-fg-secondary">{desc}</p>
                 </div>
-                <h3 className="text-heading-md text-fg-primary mb-2">{title}</h3>
-                <p className="text-body text-fg-secondary">{desc}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -416,6 +448,7 @@ export default function HomePage() {
 
       {/* ════════════ FOR OWNERS (Sell / Rent) ════════════ */}
       <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-base">
+        <Reveal>
         <div className="max-w-content mx-auto rounded-2xl p-8 sm:p-12 lg:p-14 bg-bg-elev-1 border border-white/[0.06]">
             <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-3">
@@ -472,30 +505,36 @@ export default function HomePage() {
                   { num: '100%', label: '中文服务' },
                   { num: '0',    label: '前期费用' },
                   { num: '一站', label: '全流程'   },
-                ].map(s => (
-                  <div key={s.label} className="rounded-xl p-5 text-center bg-bg-base border border-white/[0.06]">
-                    <p className="font-serif text-heading-xl text-gold mb-1 tabular">{s.num}</p>
-                    <p className="text-overline text-fg-tertiary uppercase">{s.label}</p>
-                  </div>
+                ].map((s, i) => (
+                  <Reveal key={s.label} delay={150 + i * 70}>
+                    <div className="rounded-xl p-5 text-center bg-bg-base border border-white/[0.06] transition-[border-color,transform] duration-base ease-standard hover:border-gold-line hover:-translate-y-0.5">
+                      <p className="font-serif text-heading-xl text-gold mb-1 tabular">{s.num}</p>
+                      <p className="text-overline text-fg-tertiary uppercase">{s.label}</p>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ════════════ CONTACT FORM ════════════ */}
       <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-t border-white/[0.06]">
         <div className="max-w-prose mx-auto">
-          <div className="mb-10">
-            <p className="text-overline text-gold/80 mb-3 uppercase">Contact</p>
-            <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
-              开始您的置业之旅
-            </h2>
-            <p className="mt-4 text-body-lg text-fg-secondary">
-              我们将在 24 小时内与您联系。
-            </p>
-          </div>
+          <Reveal>
+            <div className="mb-10">
+              <p className="text-overline text-gold/80 mb-3 uppercase">Contact</p>
+              <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
+                开始您的置业之旅
+              </h2>
+              <p className="mt-4 text-body-lg text-fg-secondary">
+                我们将在 24 小时内与您联系。
+              </p>
+            </div>
+          </Reveal>
 
+          <Reveal delay={120}>
           <div className="rounded-2xl p-7 sm:p-8 bg-bg-base border border-white/[0.06]">
             {formSent ? (
               <div className="text-center py-12">
@@ -577,6 +616,7 @@ export default function HomePage() {
               </form>
             )}
           </div>
+          </Reveal>
         </div>
       </section>
 

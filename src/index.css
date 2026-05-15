@@ -222,3 +222,23 @@ body {
 .section-animate {
   animation: sectionFadeUp 0.5s var(--ease-standard) both;
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Hero scroll pulse — the thin gold vertical line under the stat strip.
+   Single, very slow loop. Per DESIGN.md the only continuous animation
+   besides the map-pin pulse.
+   ────────────────────────────────────────────────────────────────────────── */
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.35; transform: scaleY(1);    }
+  50%      { opacity: 1;    transform: scaleY(1.1);  }
+}
+.scroll-pulse {
+  animation: scrollPulse 2.4s var(--ease-standard) infinite;
+  transform-origin: top center;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Marquee pause-on-hover already exists; no change.
+   Add a tiny shimmer for gold-on-dark wordmarks in the brand strip when
+   they slide into the central viewport (visual cue) — DEFERRED for now.
+   ────────────────────────────────────────────────────────────────────────── */
