@@ -59,7 +59,7 @@ const RENT_PRICE_RANGES = [
   { label: '> €3,000/月', min: 3000, max: Infinity },
 ]
 const ROOM_OPTIONS = ['全部', '1间', '2间', '3间', '4间+']
-const TYPE_OPTIONS = ['全部类型', '公寓', '别墅', '联排', '出租楼', '商铺', '车库']
+const TYPE_OPTIONS = ['全部类型', '公寓', 'Haus', '出租楼', '商铺', '车库']
 
 const SORT_OPTIONS = [
   { key: 'default',    label: '默认排序' },

@@ -136,9 +136,49 @@ function buildDescription(d, translatedBody, translatedFeatures) {
   return out;
 }
 
+// ─── Type classifier (shared logic — mirrors scripts/reclassify-types.mjs) ───
+const HEADLINE_RULES = [
+  { type: '车库',   re: /\b(Tiefgaragenplatz|Garagenplatz|Stellplatz(?:paket)?|Garagenpaket|Parkplatzpaket)\b/i },
+  { type: 'Haus',   re: /\b(Einfamilienhaus|Reihenhaus|Reihenmittelhaus|Reihenendhaus|Doppelhaus(?:hälfte)?|Stadthaus|Bauernhaus|Bungalow|Landhaus|Cottage|Villa\b)/i },
+  { type: '出租楼', re: /\b(Zinshaus|Mietshaus|Mehrfamilienhaus|Wohn-?\s?(?:und|&)\s?Geschäftshaus|Anlageobjekt|Apartmentprojekt|Apartment-?Investment|Apartmentnutzung)\b/i },
+  { type: '商铺',   re: /\b(Geschäftslokal|Geschäftsfläche|Bürofläche|Praxisräume|Lagerhalle|Werkstatt|Gewerbeobjekt|Gastronomieobjekt|Hotelobjekt|Produktionshalle)\b/i },
+];
+const BODY_OBJECT_RE = {
+  'Haus':   /(?:zum Verkauf|zum Kauf|wird verkauft|bietet|gelangt)\s[^.]{0,80}\b(Einfamilienhaus|Reihenhaus|Doppelhaus(?:hälfte)?|Stadthaus|Bungalow|Villa)\b/i,
+  '出租楼': /(?:zum Verkauf|zum Kauf|gelangt|bietet)\s[^.]{0,80}\b(Zinshaus|Mietshaus|Mehrfamilienhaus|Anlageobjekt)\b/i,
+};
+function firstHeadline(descDE) {
+  if (!descDE) return '';
+  const m = descDE.match(/^\s*(?:\*\*([^*\n]{3,140})\*\*)/);
+  if (m) return m[1];
+  const line = descDE.split(/\n/).map(l => l.trim()).find(l => l.length > 8);
+  return line ? line.slice(0, 200) : '';
+}
 function classifyType(d) {
-  if (d.rooms === 0) return '商铺';
-  if (d.sqm > 250 && d.rooms > 5) return '商铺';
+  const titleDE = d.titleDE || '';
+  const descDE  = d.descText || '';
+  const rooms   = d.rooms || 0;
+  const sqm     = d.sqm || 0;
+  const headline = `${titleDE}\n${firstHeadline(descDE)}`;
+  const body = descDE.slice(0, 2500);
+  const isMultiRoom = rooms >= 1;
+
+  for (const r of HEADLINE_RULES) {
+    if (!r.re.test(headline)) continue;
+    if (r.type === '车库'   && isMultiRoom) continue;
+    if (r.type === '商铺'   && isMultiRoom && !/Geschäftslokal|Geschäftsfläche|Bürofläche/i.test(headline)) continue;
+    if (r.type === '出租楼' && rooms > 0 && rooms < 5 && sqm < 200) continue;
+    return r.type;
+  }
+  for (const [type, re] of Object.entries(BODY_OBJECT_RE)) {
+    if (re.test(body)) {
+      if (type === '出租楼' && rooms > 0 && rooms < 5 && sqm < 200) continue;
+      return type;
+    }
+  }
+  if (rooms === 0 && sqm >= 200) {
+    if (/Zinshaus|Anlageobjekt|Mehrfamilienhaus/i.test(body)) return '出租楼';
+  }
   return '公寓';
 }
 
