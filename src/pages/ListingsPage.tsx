@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Home, Maximize2, Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, ImageIcon, Loader2 } from 'lucide-react'
+import { MapPin, Home, Maximize2, Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, ImageIcon, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 
 /* ─────────────────────────────────────────────
    Types
@@ -193,6 +193,8 @@ export default function ListingsPage() {
   const [propType, setPropType] = useState('全部类型')
   const [sortBy, setSortBy] = useState<SortKey>('default')
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [pageSize, setPageSize] = useState(20)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     let cancelled = false
@@ -271,6 +273,35 @@ export default function ListingsPage() {
     setPriceIdx(0); setDistrict('全部区域'); setRooms('全部'); setPropType('全部类型')
   }
   const hasFilters = priceIdx !== 0 || district !== '全部区域' || rooms !== '全部' || propType !== '全部类型'
+
+  // ── Pagination ────────────────────────────────────────────────────────────
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const safePage = Math.min(currentPage, totalPages)
+  const paginated = useMemo(
+    () => filtered.slice((safePage - 1) * pageSize, safePage * pageSize),
+    [filtered, safePage, pageSize]
+  )
+
+  // Reset to page 1 whenever the filter or sort or page size changes
+  useEffect(() => { setCurrentPage(1) }, [mode, priceIdx, district, rooms, propType, sortBy, pageSize])
+
+  // Scroll to top whenever the page changes (better UX)
+  useEffect(() => {
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [safePage])
+
+  // Build a compact page-number list: 1 … (current±2) … last
+  function pageList(): (number | '...')[] {
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1)
+    const pages: (number | '...')[] = [1]
+    const start = Math.max(2, safePage - 2)
+    const end = Math.min(totalPages - 1, safePage + 2)
+    if (start > 2) pages.push('...')
+    for (let i = start; i <= end; i++) pages.push(i)
+    if (end < totalPages - 1) pages.push('...')
+    pages.push(totalPages)
+    return pages
+  }
 
   return (
     <div className="min-h-screen bg-[#141414] text-white pt-16">
@@ -358,26 +389,57 @@ export default function ListingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
             找到 <span className="font-semibold text-white">{filtered.length}</span> 套{mode === 'buy' ? '购买' : '出租'}房源
+            {filtered.length > 0 && (
+              <span className="ml-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                · 第 {(safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, filtered.length)} 条
+              </span>
+            )}
           </p>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>排序</span>
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value as SortKey)}
-                className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(212,175,55,0.25)',
-                  color: sortBy === 'default' ? 'rgba(255,255,255,0.6)' : '#d4af37',
-                }}
-              >
-                {SORT_OPTIONS.map(o => (
-                  <option key={o.key} value={o.key} style={{ background: '#1e1e1e', color: 'white' }}>{o.label}</option>
-                ))}
-              </select>
-              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ color: 'rgba(212,175,55,0.5)' }} />
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Page size selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>每页</span>
+              <div className="relative">
+                <select
+                  value={pageSize}
+                  onChange={e => setPageSize(Number(e.target.value))}
+                  className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(212,175,55,0.25)',
+                    color: 'rgba(255,255,255,0.85)',
+                  }}
+                >
+                  {[10, 20, 50, 100].map(n => (
+                    <option key={n} value={n} style={{ background: '#1e1e1e', color: 'white' }}>{n} 条</option>
+                  ))}
+                </select>
+                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                  style={{ color: 'rgba(212,175,55,0.5)' }} />
+              </div>
+            </div>
+
+            {/* Sort selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>排序</span>
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value as SortKey)}
+                  className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(212,175,55,0.25)',
+                    color: sortBy === 'default' ? 'rgba(255,255,255,0.6)' : '#d4af37',
+                  }}
+                >
+                  {SORT_OPTIONS.map(o => (
+                    <option key={o.key} value={o.key} style={{ background: '#1e1e1e', color: 'white' }}>{o.label}</option>
+                  ))}
+                </select>
+                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                  style={{ color: 'rgba(212,175,55,0.5)' }} />
+              </div>
             </div>
           </div>
         </div>
@@ -402,11 +464,67 @@ export default function ListingsPage() {
             </button>
           </div>
         ) : (
-          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <AnimatePresence mode="popLayout">
-              {filtered.map(l => <ListingCard key={l.id} listing={l} />)}
-            </AnimatePresence>
-          </motion.div>
+          <>
+            <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <AnimatePresence mode="popLayout">
+                {paginated.map(l => <ListingCard key={l.id} listing={l} />)}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Pagination controls */}
+            {totalPages > 1 && (
+              <div className="mt-10 flex items-center justify-center gap-1.5 flex-wrap">
+                {/* Prev */}
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={safePage === 1}
+                  className="flex items-center gap-1 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.7)',
+                  }}>
+                  <ChevronLeft size={13} /> 上一页
+                </button>
+
+                {/* Page numbers */}
+                {pageList().map((p, i) =>
+                  p === '...' ? (
+                    <span key={`dots-${i}`} className="px-2 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>…</span>
+                  ) : (
+                    <button
+                      key={p}
+                      onClick={() => setCurrentPage(p as number)}
+                      className="min-w-[36px] px-3 py-2 rounded-lg text-xs font-semibold transition-all"
+                      style={p === safePage ? {
+                        background: '#d4af37',
+                        color: '#141414',
+                        border: '1px solid #d4af37',
+                      } : {
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        color: 'rgba(255,255,255,0.7)',
+                      }}>
+                      {p}
+                    </button>
+                  )
+                )}
+
+                {/* Next */}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={safePage === totalPages}
+                  className="flex items-center gap-1 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.7)',
+                  }}>
+                  下一页 <ChevronRight size={13} />
+                </button>
+              </div>
+            )}
+          </>
         )}
 
         {/* Auction CTA */}
