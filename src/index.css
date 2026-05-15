@@ -3,46 +3,126 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ──────────────────────────────────────────────────────────────────────────
+   Design tokens — single source of truth, mirrors DESIGN.md.
+   All component styling should reference these instead of hard-coding hex.
+   ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --color-cream: #F8F5EE;
-  --color-forest: #1C1C2A;
-  --color-gold: #B8922A;
+  /* Surfaces */
+  --bg-base:    #0c0c0c;
+  --bg-elev-1:  #131313;
+  --bg-elev-2:  #1a1a1a;
+  --bg-elev-3:  #242424;
+  --bg-overlay: rgba(255, 255, 255, 0.04);
+
+  /* Foreground */
+  --fg-primary:   #ededed;
+  --fg-secondary: #a0a0a0;
+  --fg-tertiary:  #6a6a6a;
+  --fg-disabled:  #4a4a4a;
+  --fg-display:   #ffffff; /* RESERVED — hero display type only */
+
+  /* Accent — Editorial Gold */
+  --gold:       #d4af37;
+  --gold-hover: #c9a431;
+  --gold-tint:  rgba(212, 175, 55, 0.08);
+  --gold-line:  rgba(212, 175, 55, 0.25);
+
+  /* Semantic */
+  --success: #4ade80;
+  --danger:  #f87171;
+  --info:    #60a5fa;
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap:     cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Legacy aliases — kept so old inline references still resolve */
+  --color-cream:      #F8F5EE;
+  --color-forest:     #1C1C2A;
+  --color-gold:       #d4af37;
   --color-gold-light: #D4A843;
-  --color-border: #DDD7C8;
+  --color-border:     rgba(255, 255, 255, 0.06);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
 }
 
-#root {
-  min-height: 100vh;
-}
-
 body {
-  background-color: var(--color-cream);
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1c1a17;
+  background-color: var(--bg-base);
+  color: var(--fg-primary);
+  font-family: 'Inter', -apple-system, system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Leaflet overrides */
+#root { min-height: 100vh; }
+
+/* Native focus ring — gold, offset, not blurred. */
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* All numbers default to tabular (consistent column alignment). */
+.tnum, .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Honor reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Scrollbar — discreet, matches dark palette.
+   ────────────────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Auction list scroll area (consumed by AuctionList component) */
+.auction-list-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a var(--bg-base);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Leaflet overrides — keep map markers consistent with the design system.
+   ────────────────────────────────────────────────────────────────────────── */
 .leaflet-container {
-  background: #e8e4dc;
-  font-family: 'Inter', system-ui, sans-serif;
+  background: #0a0a0a;
+  font-family: inherit;
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 0;
 }
 
@@ -51,119 +131,53 @@ body {
   width: auto !important;
 }
 
-.leaflet-popup-tip-container {
-  margin-top: -1px;
-}
+.leaflet-popup-tip-container { margin-top: -1px; }
 
-/* Custom price marker */
 .price-marker-wrap {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
   cursor: pointer;
-  transition: filter 0.15s ease;
+  transition: filter 0.2s var(--ease-standard);
 }
-
 .price-marker-wrap:hover {
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.6));
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f0ece3;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c5bfb3;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a09a8e;
-}
-
-/* Auction list scroll area */
-.auction-list-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #c5bfb3 #f0ece3;
-}
-
-/* Transition utilities */
-.transition-card {
-  transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
-}
-
-/* Header grid pattern overlay */
+/* ──────────────────────────────────────────────────────────────────────────
+   Legacy header pattern overlay — kept so AuctionPage Header still renders.
+   ────────────────────────────────────────────────────────────────────────── */
 .header-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40zm0-40h2l-2 2V0zm0 4l4-4h2l-6 6V4zm0 4l8-8h2L40 10V8zm0 4L52 0h2L40 14v-2zm0 4L56 0h2L40 18v-2zm0 4L60 0h2L40 22v-2zm0 4L64 0h2L40 26v-2zm0 4L68 0h2L40 30v-2zm0 4L72 0h2L40 34v-2zm0 4L76 0h2L40 38v-2zm0 4L80 0v2L42 40h-2zm4 0L80 4v2L46 40h-2zm4 0L80 8v2L50 40h-2zm4 0l28-28v2L54 40h-2zm4 0l24-24v2L58 40h-2zm4 0l20-20v2L62 40h-2zm4 0l16-16v2L66 40h-2zm4 0l12-12v2L70 40h-2zm4 0l8-8v2l-6 6h-2zm4 0l4-4v2l-2 2h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Selected card highlight */
+/* Selected card highlight (auction list) */
 @keyframes selectedPulse {
-  0% { box-shadow: 0 0 0 0 rgba(184, 146, 42, 0.3); }
-  70% { box-shadow: 0 0 0 6px rgba(184, 146, 42, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(184, 146, 42, 0); }
+  0%   { box-shadow: 0 0 0 0   rgba(212, 175, 55, 0.35); }
+  70%  { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0);    }
+  100% { box-shadow: 0 0 0 0   rgba(212, 175, 55, 0);    }
 }
-
 .card-selected-flash {
-  animation: selectedPulse 0.6s ease-out;
+  animation: selectedPulse 0.6s var(--ease-standard);
 }
 
-/* ── Hero animations ── */
+/* ──────────────────────────────────────────────────────────────────────────
+   Hero entrance animation utilities — used once per page only.
+   ────────────────────────────────────────────────────────────────────────── */
 @keyframes heroFadeUp {
-  from { opacity: 0; transform: translateY(26px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes heroLineScale {
-  from { transform: scaleX(0); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 1; }
-}
-
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-
-.hero-fade-1 {
-  opacity: 0;
-  animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
-}
-.hero-fade-2 {
-  opacity: 0;
-  animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.22s forwards;
-}
-.hero-fade-3 {
-  opacity: 0;
-  animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.42s forwards;
-}
-.hero-fade-4 {
-  opacity: 0;
-  animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.58s forwards;
-}
-.hero-fade-5 {
-  opacity: 0;
-  animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.72s forwards;
-}
-
-.hero-line {
-  transform-origin: left center;
-  animation: heroLineScale 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.38s both;
-}
-
-.hero-orb {
-  animation: heroFloat 6s ease-in-out infinite;
-}
-
-/* Section fade-in on scroll */
-@keyframes sectionFadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.hero-fade-1 { opacity: 0; animation: heroFadeUp 0.6s var(--ease-emphasis) 0.05s forwards; }
+.hero-fade-2 { opacity: 0; animation: heroFadeUp 0.6s var(--ease-emphasis) 0.15s forwards; }
+.hero-fade-3 { opacity: 0; animation: heroFadeUp 0.6s var(--ease-emphasis) 0.25s forwards; }
+.hero-fade-4 { opacity: 0; animation: heroFadeUp 0.6s var(--ease-emphasis) 0.35s forwards; }
+.hero-fade-5 { opacity: 0; animation: heroFadeUp 0.6s var(--ease-emphasis) 0.45s forwards; }
+
+/* Section fade-in on scroll (IntersectionObserver toggles --visible) */
+@keyframes sectionFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .section-animate {
-  animation: sectionFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: sectionFadeUp 0.5s var(--ease-standard) both;
 }
