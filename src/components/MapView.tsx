@@ -103,14 +103,13 @@ class MapErrorBoundary extends Component<
   render() {
     if (this.state.error) {
       return (
-        <div className="w-full h-full flex items-center justify-center bg-cream-50 text-sm text-warm-500 p-6 text-center">
+        <div className="w-full h-full flex items-center justify-center bg-bg-base text-sm text-fg-secondary p-6 text-center">
           <div>
-            <div className="text-2xl mb-2">🗺️</div>
-            <p className="font-medium text-warm-700 mb-1">地图加载失败</p>
-            <p className="text-xs text-warm-400">{this.state.error}</p>
+            <p className="text-heading-md text-fg-primary mb-1">地图加载失败</p>
+            <p className="text-caption text-fg-tertiary mb-3">{this.state.error}</p>
             <button
               onClick={() => this.setState({ error: null })}
-              className="mt-3 px-3 py-1.5 bg-forest-700 text-cream-100 text-xs rounded"
+              className="px-4 py-2 bg-gold text-bg-base text-caption font-semibold rounded-md hover:bg-gold-hover transition-colors duration-base ease-standard active:scale-[0.98]"
             >
               重试
             </button>
@@ -129,8 +128,8 @@ interface Props {
 }
 
 const LAYERS = {
-  light:     { label: '地图', url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',     attr: '© OpenStreetMap © CARTO', sub: 'abcd' },
-  osm:       { label: '街道', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',                   attr: '© OpenStreetMap', sub: 'abc' },
+  dark:      { label: '深色', url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',      attr: '© OpenStreetMap © CARTO', sub: 'abcd' },
+  light:     { label: '浅色', url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',     attr: '© OpenStreetMap © CARTO', sub: 'abcd' },
   satellite: { label: '卫星', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr: '© Esri', sub: undefined },
 }
 type LayerKey = keyof typeof LAYERS
@@ -147,13 +146,13 @@ function createClusterIcon(count: number): L.DivIcon {
   return L.divIcon({
     className: '',
     html: `<div style="
-      background:#B8922A;color:#fff;border:2px solid #fff;border-radius:50%;
-      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+      background:#d4af37;color:#0c0c0c;border:2px solid rgba(12,12,12,0.6);border-radius:50%;
+      width:34px;height:34px;display:flex;align-items:center;justify-content:center;
       font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;
-      box-shadow:0 2px 8px rgba(0,0,0,0.4);cursor:pointer;
+      box-shadow:0 3px 10px rgba(0,0,0,0.6);cursor:pointer;
     ">${count}</div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
   })
 }
 
@@ -161,7 +160,7 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
   const initialFit = useRef(false)
   const today = new Date().toISOString().split('T')[0]
   const validAuctions = auctions.filter(validCoord)
-  const [layer, setLayer] = useState<LayerKey>('light')
+  const [layer, setLayer] = useState<LayerKey>('dark')
   const [expandedClusters, setExpandedClusters] = useState<Set<string>>(new Set())
   const current = LAYERS[layer]
 
@@ -183,16 +182,18 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
   return (
     <div className="relative w-full h-full">
       {/* Layer switcher */}
-      <div className="absolute top-3 right-3 z-[1000] flex rounded-lg overflow-hidden shadow-md border border-cream-200">
+      <div className="absolute top-3 right-3 z-[1000] flex rounded-md overflow-hidden border border-white/[0.08] bg-bg-elev-1/95 backdrop-blur-md shadow-card-hover">
         {(Object.keys(LAYERS) as LayerKey[]).map((k) => (
           <button
             key={k}
             onClick={() => setLayer(k)}
-            className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+            className={[
+              'px-3 py-1.5 text-caption font-medium',
+              'transition-[background,color] duration-base ease-standard',
               layer === k
-                ? 'bg-forest-700 text-cream-100'
-                : 'bg-white text-warm-600 hover:bg-cream-50'
-            }`}
+                ? 'bg-gold text-bg-base'
+                : 'bg-transparent text-fg-secondary hover:text-fg-primary hover:bg-white/[0.05]',
+            ].join(' ')}
           >
             {LAYERS[k].label}
           </button>
@@ -274,23 +275,23 @@ export function MapView({ auctions, selectedId, onSelect }: Props) {
 
 function MapTooltip({ auction }: { auction: Auction }) {
   return (
-    <div className="p-3 min-w-[220px] max-w-[280px]">
-      <div className="text-xs font-semibold text-forest-700 font-serif leading-tight mb-1">
+    <div className="p-3 min-w-[220px] max-w-[280px] bg-bg-elev-1 rounded-md" style={{ color: '#ededed' }}>
+      <div className="text-caption font-semibold font-serif text-fg-primary leading-tight mb-1">
         {generateTitle(auction)}
       </div>
-      <div className="text-xs text-warm-600 mb-2 leading-tight">{auction.address}</div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+      <div className="text-[11px] text-fg-secondary mb-2 leading-tight">{auction.address}</div>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] tabular">
         <div>
-          <span className="text-warm-400">起拍价</span>
-          <div className="font-semibold text-gold-600">{formatCurrency(auction.minimumBid)}</div>
+          <span className="text-fg-tertiary">起拍价</span>
+          <div className="font-semibold text-gold">{formatCurrency(auction.minimumBid)}</div>
         </div>
         <div>
-          <span className="text-warm-400">估值</span>
-          <div className="font-semibold text-warm-700">{formatCurrency(auction.estimatedValue)}</div>
+          <span className="text-fg-tertiary">估值</span>
+          <div className="font-semibold text-fg-primary">{formatCurrency(auction.estimatedValue)}</div>
         </div>
       </div>
-      <div className="mt-1.5 text-xs text-warm-400">
-        📅 {auction.auctionDate} · 案号 {auction.caseNumber}
+      <div className="mt-1.5 text-[11px] text-fg-tertiary tabular">
+        {auction.auctionDate} · 案号 {auction.caseNumber}
       </div>
     </div>
   )

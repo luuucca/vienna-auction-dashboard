@@ -417,7 +417,7 @@ export default function ListingDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#141414] text-white pt-16">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-bg-base text-fg-primary pt-16">
         <Loader2 size={32} className="animate-spin mb-3" style={{ color: '#d4af37' }} />
         <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>加载房源…</p>
       </div>
@@ -425,7 +425,7 @@ export default function ListingDetailPage() {
   }
   if (error || !data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#141414] text-white pt-16 px-4 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-bg-base text-fg-primary pt-16 px-4 text-center">
         <p className="text-3xl mb-3">😶</p>
         <p className="font-semibold mb-2">房源未找到</p>
         <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>{error || '该房源可能已下架'}</p>
@@ -441,7 +441,7 @@ export default function ListingDetailPage() {
   const districtName = data.address.district?.split(',')[1]?.trim() || ''
 
   return (
-    <div className="min-h-screen bg-[#141414] text-white pt-16">
+    <div className="min-h-screen bg-bg-base text-fg-primary pt-16">
       <style>{`
         @keyframes pulse-gold {
           0%, 100% { box-shadow: 0 6px 18px rgba(212,175,55,0.45), 0 0 0 2px rgba(212,175,55,0.25); }
@@ -503,24 +503,23 @@ export default function ListingDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase"
-                style={{ background: data.forRent ? 'rgba(34,197,94,0.18)' : 'rgba(212,175,55,0.18)', color: data.forRent ? '#22c55e' : '#d4af37', border: `1px solid ${data.forRent ? 'rgba(34,197,94,0.35)' : 'rgba(212,175,55,0.35)'}` }}>
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-gold-tint border border-gold-line text-gold">
                 {data.forRent ? '出租' : '出售'}
               </span>
-              <span className="text-xs" style={{ color: 'rgba(212,175,55,0.6)' }}>{data.typeName || data.type}</span>
+              <span className="text-caption text-fg-secondary">{data.typeName || data.type}</span>
               {districtNum && (
                 <>
-                  <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
-                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{districtNum} 区 {districtName}</span>
+                  <span className="text-fg-disabled">·</span>
+                  <span className="text-caption text-fg-secondary">{districtNum} 区 {districtName}</span>
                 </>
               )}
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+            <h1 className="font-serif text-display-lg sm:text-display-xl lg:text-display-2xl text-fg-primary mb-5 tracking-tight">
               {data.title}
             </h1>
-            <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              <MapPin size={14} style={{ color: '#d4af37' }} />
+            <div className="flex items-center gap-2 text-body text-fg-secondary">
+              <MapPin size={14} strokeWidth={1.5} className="text-gold" />
               <span>{data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}</span>
             </div>
           </motion.div>
@@ -621,41 +620,31 @@ export default function ListingDetailPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:sticky lg:top-24 space-y-4"
           >
-            <div className="rounded-2xl p-6 relative overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.03) 100%)',
-                border: '1px solid rgba(212,175,55,0.3)',
-              }}>
-              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full"
-                style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)' }} />
-
-              <p className="text-[10px] uppercase tracking-[0.2em] mb-2 relative z-10" style={{ color: 'rgba(212,175,55,0.85)' }}>
+            <div className="rounded-2xl p-6 bg-bg-elev-1 border border-white/[0.06]">
+              <p className="text-overline text-fg-tertiary uppercase mb-3">
                 {data.forRent ? '月租金' : '出售价格'}
               </p>
-              <p className="font-serif text-3xl sm:text-4xl font-bold mb-1 relative z-10" style={{ color: '#d4af37', letterSpacing: '-0.02em' }}>
+              <p className="font-serif text-display-lg text-gold tabular leading-none">
                 {fmtPrice(data.price, data.forRent, data.priceOnRequest)}
               </p>
               {data.sqm > 0 && data.price > 0 && !data.priceOnRequest && !data.forRent && (
-                <p className="text-xs relative z-10" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="mt-3 text-caption text-fg-tertiary tabular">
                   约 € {Math.round(data.price / data.sqm).toLocaleString()} / m²
                 </p>
               )}
             </div>
 
-            <Link to="/about"
-              className="group relative block w-full text-center py-4 rounded-xl text-sm font-semibold transition-all overflow-hidden"
-              style={{ background: '#d4af37', color: '#141414' }}
-              onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
-              onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
+            <Link
+              to="/about"
+              className="block w-full text-center py-3.5 rounded-lg text-body-lg font-semibold bg-gold text-bg-base hover:bg-gold-hover transition-[background,transform] duration-base ease-standard active:scale-[0.98]"
             >
-              <span className="relative z-10">咨询此房源 →</span>
+              咨询此房源 →
             </Link>
 
             {data.objektnummer && (
-              <div className="px-4 py-3 rounded-xl text-xs flex items-center justify-between"
-                style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)' }}>
-                <span>房源编号</span>
-                <span className="font-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>{data.objektnummer}</span>
+              <div className="px-4 py-3 rounded-lg flex items-center justify-between bg-bg-elev-1 border border-white/[0.06]">
+                <span className="text-caption text-fg-tertiary">房源编号</span>
+                <span className="font-mono text-caption text-fg-secondary tabular">{data.objektnummer}</span>
               </div>
             )}
           </motion.div>

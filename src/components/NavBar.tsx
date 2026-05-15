@@ -35,10 +35,9 @@ export function NavBar() {
       <nav
         className={[
           'fixed top-0 left-0 right-0 z-50',
-          'transition-[background-color,backdrop-filter,height,border-color] duration-base ease-standard',
-          scrolled
-            ? 'h-14 bg-bg-base/78 backdrop-blur-md border-b border-white/[0.06]'
-            : 'h-16 bg-transparent border-b border-transparent',
+          'bg-bg-base border-b',
+          'transition-[height,border-color] duration-base ease-standard',
+          scrolled ? 'h-14 border-white/[0.06]' : 'h-16 border-transparent',
         ].join(' ')}
       >
         <div className="max-w-content mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between">
