@@ -9,7 +9,6 @@ import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 import { Reveal } from '../components/ui/Reveal'
 import { CountUp } from '../components/ui/CountUp'
-import { HeroFlowLines } from '../components/ui/HeroFlowLines'
 
 /* ─────────────────────────────────────────────
    BG Pattern — subtle dot grid, used sparingly per DESIGN.md
@@ -394,11 +393,6 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-        </motion.div>
-
-        {/* ── Hero flow lines — black-gold restrained curves ──────────────── */}
-        <motion.div className="absolute inset-0 z-[2] pointer-events-none" style={{ opacity: heroOpacity }}>
-          <HeroFlowLines />
         </motion.div>
 
         {/* Scroll hint — absolutely pinned to the bottom of the hero so it

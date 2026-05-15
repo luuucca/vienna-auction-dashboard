@@ -257,38 +257,6 @@ body {
   animation: scrollTrail 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
-   HeroFlowLines — flowing gold contour lines.
-   Each dashed path drifts via stroke-dashoffset, slow enough (14–22s) to
-   feel like silk threads or financial-chart lines, not arcade visuals.
-   ────────────────────────────────────────────────────────────────────────── */
-@keyframes hfl-flow {
-  to { stroke-dashoffset: -290; }
-}
-.hfl-flow { animation: hfl-flow 18s linear infinite; }
-.hfl-flow-1 { animation-duration: 14s; }
-.hfl-flow-2 { animation-duration: 19s; }
-.hfl-flow-3 { animation-duration: 22s; }
-
-/* Sparkle particles — slow staggered breathing */
-@keyframes hfl-sparkle {
-  0%, 100% { opacity: 0.25; transform: scale(0.7); }
-  50%      { opacity: 1;    transform: scale(1.5); }
-}
-.hfl-sparkle {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: hfl-sparkle 4.2s ease-in-out infinite;
-}
-.hfl-sparkle-0 { animation-delay: 0s;   }
-.hfl-sparkle-1 { animation-delay: 1.4s; }
-.hfl-sparkle-2 { animation-delay: 2.8s; }
-
-/* Mobile — reduce opacity of the whole layer so curves never compete
-   with the smaller text */
-@media (max-width: 640px) {
-  .hero-flow-lines { opacity: 0.55; }
-}
 
 /* ──────────────────────────────────────────────────────────────────────────
    Marquee pause-on-hover already exists; no change.
