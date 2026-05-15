@@ -468,10 +468,11 @@ export default function HomePage() {
                 <p className="text-overline text-gold/80 mb-3 uppercase">For Property Owners</p>
                 <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-5 tracking-tight">
                   您的房产，<br className="sm:hidden" />
-                  <span className="text-gold">中文渠道</span>
+                  <span className="text-gold">双向触达</span>
                 </h2>
                 <p className="text-body-lg text-fg-secondary mb-7 max-w-prose">
-                  从市场评估到交易过户，全程中文协助。专业摄影、定价建议、小红书 + 微信推广，让您的房产精准触达华人客户。
+                  我们同时覆盖中文圈层（小红书、微信）与维也纳本地市场（justimmo、willhaben 等主流平台）。
+                  您的房产将精准触达<strong className="text-fg-primary">华人买家与奥地利本地客户</strong>，最大化曝光与成交效率。
                 </p>
 
                 {/* Bullets */}
@@ -479,10 +480,10 @@ export default function HomePage() {
                   {[
                     '免费市场评估',
                     '专业摄影 / 视频',
-                    '小红书 + 微信推广',
+                    '中文圈层推广（小红书 / 微信）',
+                    '本地市场曝光（justimmo / willhaben）',
                     '陪同看房与谈判',
-                    '中文合同解读',
-                    '过户与税务协助',
+                    '中德文合同支持',
                   ].map(b => (
                     <li key={b} className="flex items-center gap-2.5 text-body text-fg-secondary">
                       <Check size={14} strokeWidth={2} className="text-gold flex-shrink-0" />

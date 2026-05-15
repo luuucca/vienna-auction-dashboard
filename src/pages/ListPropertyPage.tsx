@@ -9,7 +9,7 @@ import {
 const SERVICES = [
   { icon: <TrendingUp size={17} />, title: '市场评估与定价', desc: '基于维也纳各区实时成交数据，给出合理估价区间与定价策略。' },
   { icon: <Camera size={17} />, title: '专业房源包装', desc: '专业摄影、户型图、视频呈现，让您的房产在第一眼吸引买家/租客。' },
-  { icon: <Languages size={17} />, title: '中文客户推广', desc: '小红书 / 微信渠道覆盖大量在维华人群体，精准触达目标客户。' },
+  { icon: <Languages size={17} />, title: '双向客源', desc: '中文圈层（小红书 / 微信）+ 维也纳本地市场（justimmo / willhaben）双向推广，覆盖华人买家与本地客户。' },
   { icon: <Users size={17} />, title: '看房与谈判', desc: '我们安排预约、陪同看房、协助价格谈判，您只需等待签约。' },
   { icon: <FileText size={17} />, title: '中德文合同支持', desc: '与本地律所合作（MONOLAW），中文解读合同、保障交易安全。' },
   { icon: <ShieldCheck size={17} />, title: '后续过户与税务', desc: '协助完成产权过户、土地登记、土地交易税申报等流程。' },
@@ -72,7 +72,7 @@ export default function ListPropertyPage() {
             业主委托 · <span className="text-gold">出售 / 出租</span>
           </h1>
           <p className="text-body-lg text-fg-secondary max-w-prose">
-            维也纳或奥地利房产，从市场评估到交易完成的一站式中文服务。
+            维也纳或奥地利房产，从市场评估到交易完成的一站式服务 — 同时面向华人客户与本地市场。
           </p>
         </div>
       </section>
