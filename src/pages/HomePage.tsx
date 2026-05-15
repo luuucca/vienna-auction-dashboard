@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } fr
 import {
   ArrowRight, Gavel, Building2,
   TrendingUp, Shield, Globe, ChevronRight, Check,
+  Database, Clock, Target, Home, Percent, MapPin, Gem,
 } from 'lucide-react'
 import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
@@ -28,6 +29,62 @@ function BGPattern({
         maskImage: 'radial-gradient(ellipse at center,#000 30%,transparent 80%)',
       }}
     />
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Auction-card helpers — sparkline, meta row, icon stat
+───────────────────────────────────────────── */
+function InsightSparkline() {
+  // Decorative upward trend — synthetic, not data.
+  const pts = '0,38 14,36 28,32 42,33 56,28 70,24 84,26 98,20 112,22 126,16 140,18 154,12 168,14 182,8 196,5'
+  return (
+    <svg viewBox="0 0 200 50" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="auction-spark-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="rgba(212,175,55,0.35)" />
+          <stop offset="100%" stopColor="rgba(212,175,55,0)" />
+        </linearGradient>
+      </defs>
+      <polygon points={`0,50 ${pts} 200,50`} fill="url(#auction-spark-fill)" />
+      <polyline points={pts} fill="none" stroke="#d4af37" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      {/* End-point dot with glow */}
+      <circle cx="196" cy="5" r="3" fill="#d4af37" />
+      <circle cx="196" cy="5" r="6" fill="none" stroke="rgba(212,175,55,0.4)" strokeWidth="1" />
+    </svg>
+  )
+}
+
+function InsightMetaRow({
+  icon, label, value,
+}: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-bg-base/60 border border-white/[0.05]">
+      <div className="flex items-center gap-2 text-fg-secondary">
+        <span className="text-gold inline-flex">{icon}</span>
+        <span className="text-caption">{label}</span>
+      </div>
+      <span className="text-caption text-fg-primary font-medium">{value}</span>
+    </div>
+  )
+}
+
+function AuctionIconStat({
+  icon, value, label,
+}: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center text-gold shrink-0"
+        style={{ border: '1px solid var(--gold-line)', background: 'var(--gold-tint)' }}
+      >
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <div className="text-heading-md text-gold tabular leading-none">{value}</div>
+        <div className="mt-1 text-caption text-fg-tertiary">{label}</div>
+      </div>
+    </div>
   )
 }
 
@@ -509,39 +566,110 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal delay={120}>
-            <div className="rounded-2xl overflow-hidden bg-bg-elev-1 border border-white/[0.06]">
-              {/* Animated city network canvas */}
-              <div className="relative h-72 overflow-hidden bg-bg-base">
-                <CityNetworkCanvas />
-                <div className="absolute bottom-0 left-0 right-0 h-20"
-                  style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }} />
+            <div
+              className="rounded-2xl overflow-hidden bg-bg-elev-1"
+              style={{
+                border: '1px solid var(--gold-line)',
+                boxShadow: '0 0 0 1px rgba(0,0,0,0.4), 0 30px 80px -30px rgba(212,175,55,0.08)',
+              }}
+            >
+              {/* ── 3-column composition: caption | map | insights ─────────── */}
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)_minmax(0,300px)]">
+
+                {/* Left: caption */}
+                <div className="p-7 sm:p-8 lg:border-r border-white/[0.06] flex flex-col justify-center">
+                  <h3 className="font-serif text-heading-xl text-gold leading-tight">
+                    维也纳实时<br/>法拍信息汇总
+                  </h3>
+                  <div
+                    aria-hidden
+                    className="mt-4 mb-5 w-2 h-2 rotate-45"
+                    style={{ background: '#d4af37', boxShadow: '0 0 12px rgba(212,175,55,0.7)' }}
+                  />
+                  <p className="text-body text-fg-secondary leading-relaxed">
+                    数据实时更新 · 覆盖全维也纳<br/>
+                    精准洞察每一次投资机会
+                  </p>
+                </div>
+
+                {/* Center: animated map with pin overlays */}
+                <div className="relative h-72 lg:h-auto min-h-[260px] overflow-hidden bg-bg-base lg:border-r border-white/[0.06]">
+                  <CityNetworkCanvas />
+                  {/* Static gold map-pin overlays for editorial richness */}
+                  {[
+                    { left: '18%', top: '28%' }, { left: '46%', top: '18%' },
+                    { left: '70%', top: '32%' }, { left: '34%', top: '52%' },
+                    { left: '58%', top: '58%' }, { left: '78%', top: '62%' },
+                    { left: '24%', top: '72%' }, { left: '50%', top: '78%' },
+                  ].map((p, i) => (
+                    <div
+                      key={i}
+                      className="absolute -translate-x-1/2 -translate-y-full pointer-events-none"
+                      style={{
+                        left: p.left, top: p.top,
+                        filter: 'drop-shadow(0 0 6px rgba(212,175,55,0.55))',
+                        animation: `heroFadeUp 0.5s var(--ease-standard) ${0.3 + i * 0.06}s both`,
+                      }}
+                    >
+                      <MapPin size={18} strokeWidth={2} fill="#d4af37" stroke="rgba(12,12,12,0.6)" />
+                    </div>
+                  ))}
+                  {/* Bottom fade so map blends into card */}
+                  <div
+                    aria-hidden
+                    className="absolute bottom-0 left-0 right-0 h-12"
+                    style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }}
+                  />
+                </div>
+
+                {/* Right: real-time insights */}
+                <div className="p-6 sm:p-7 flex flex-col gap-4 justify-center border-t lg:border-t-0 border-white/[0.06]">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp size={14} strokeWidth={1.75} className="text-gold" />
+                    <span className="text-caption uppercase tracking-[0.18em] text-fg-secondary">实时洞察</span>
+                  </div>
+                  <div className="h-14 -mx-1">
+                    <InsightSparkline />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <InsightMetaRow icon={<Database size={12} strokeWidth={2} />} label="数据源"   value="Ediktsdatei" />
+                    <InsightMetaRow icon={<Clock    size={12} strokeWidth={2} />} label="更新频率" value="实时更新" />
+                    <InsightMetaRow icon={<Target   size={12} strokeWidth={2} />} label="覆盖范围" value="全维也纳" />
+                  </div>
+                </div>
               </div>
 
-              {/* Stats + CTA */}
-              <div className="p-7 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
-                  <div>
-                    <div className="text-heading-lg text-gold"><CountUp value={60} suffix="+" /></div>
-                    <div className="mt-1 text-caption text-fg-tertiary">在拍房源</div>
-                  </div>
-                  <div>
-                    <div className="text-heading-lg text-gold"><CountUp value={50} suffix="%" /></div>
-                    <div className="mt-1 text-caption text-fg-tertiary">最低起拍</div>
-                  </div>
-                  <div>
-                    <div className="text-heading-lg text-gold tabular">1–23 区</div>
-                    <div className="mt-1 text-caption text-fg-tertiary">全维也纳</div>
-                  </div>
-                  <div>
-                    <div className="text-heading-lg text-gold tabular">免费</div>
-                    <div className="mt-1 text-caption text-fg-tertiary">无需注册</div>
-                  </div>
+              {/* ── Bottom row: icon stats + CTA ────────────────────────────── */}
+              <div
+                className="border-t border-white/[0.06] p-6 sm:p-7 flex flex-col lg:flex-row items-start lg:items-center gap-6"
+                style={{ background: 'rgba(12,12,12,0.4)' }}
+              >
+                <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-5 w-full">
+                  <AuctionIconStat
+                    icon={<Home size={16} strokeWidth={1.75} />}
+                    value={<CountUp value={60} suffix="+" duration={1400} />}
+                    label="在拍房源"
+                  />
+                  <AuctionIconStat
+                    icon={<Percent size={16} strokeWidth={1.75} />}
+                    value={<CountUp value={50} suffix="%" duration={1400} />}
+                    label="最低起拍"
+                  />
+                  <AuctionIconStat
+                    icon={<MapPin size={16} strokeWidth={1.75} />}
+                    value={<>1–23<span className="text-caption ml-0.5">区</span></>}
+                    label="全维也纳"
+                  />
+                  <AuctionIconStat
+                    icon={<Gem size={16} strokeWidth={1.75} />}
+                    value={<>免费</>}
+                    label="无需注册"
+                  />
                 </div>
                 <ButtonLink
                   to="/auction"
                   variant="primary"
                   size="md"
-                  leadingIcon={<Gavel size={14} strokeWidth={1.75} />}
                   trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
                 >
                   进入看板
