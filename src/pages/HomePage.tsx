@@ -89,6 +89,66 @@ function AuctionIconStat({
 }
 
 /* ─────────────────────────────────────────────
+   Hero cinemagraph — multiple Vienna stills, slow Ken-Burns push,
+   1.5s crossfade between slides. Cheap-but-cinematic alternative to
+   shipping a real video file (200-400KB per still vs. multi-MB MP4).
+
+   Swap any URL below to tweak the rotation. Photos must be served
+   from a CORS-friendly CDN; Unsplash works out of the box.
+───────────────────────────────────────────── */
+const HERO_SLIDES = [
+  // Stephansdom at sunset (original)
+  'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=2400&q=85&auto=format&fit=crop',
+  // Karlskirche / city by night
+  'https://images.unsplash.com/photo-1573599852326-d2d4da0bbe613?w=2400&q=85&auto=format&fit=crop',
+  // Schönbrunn / palace gardens
+  'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=2400&q=85&auto=format&fit=crop',
+  // Riesenrad / Prater golden hour
+  'https://images.unsplash.com/photo-1583089761625-c2eafdfdfa1f?w=2400&q=85&auto=format&fit=crop',
+  // Belvedere / Vienna rooftops
+  'https://images.unsplash.com/photo-1495491088095-bb1282a78c5e?w=2400&q=85&auto=format&fit=crop',
+]
+
+function HeroCinemagraph() {
+  const [index, setIndex] = React.useState(0)
+  const reduce = useReducedMotion()
+
+  React.useEffect(() => {
+    if (reduce || HERO_SLIDES.length <= 1) return
+    const id = window.setInterval(() => {
+      if (document.hidden) return // pause while tab is hidden
+      setIndex(i => (i + 1) % HERO_SLIDES.length)
+    }, 9000)
+    return () => clearInterval(id)
+  }, [reduce])
+
+  return (
+    <>
+      {HERO_SLIDES.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: i === index ? 0.55 : 0,
+            transition: 'opacity 1600ms cubic-bezier(0.22, 1, 0.36, 1)',
+            animation: reduce ? undefined : `heroKenBurns 32s ease-in-out infinite alternate`,
+            animationDelay: `${-i * 8}s`, // offset each slide's KB phase for variety
+            willChange: 'transform, opacity',
+          }}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          // @ts-ignore — valid HTML attribute
+          fetchpriority={i === 0 ? 'high' : 'low'}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+        />
+      ))}
+    </>
+  )
+}
+
+/* ─────────────────────────────────────────────
    Editorial city-street visual — static SVG with two crossed pattern
    grids (rotated), a radial fade mask, scattered glints, and a single
    centered glowing map pin. Replaces the older animated network canvas.
@@ -427,21 +487,12 @@ export default function HomePage() {
       {/* ════════════ HERO ════════════ */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6 lg:px-10">
 
-        {/* ── Background image — dramatic Vienna at night (parallax) ─────── */}
+        {/* ── Background cinemagraph — rotating Vienna stills with Ken-Burns ── */}
         <motion.div
           className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
           style={{ y: bgPatternY }}
         >
-          <img
-            src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=2400&q=85&auto=format&fit=crop"
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: 0.55 }}
-            loading="eager"
-            decoding="async"
-            // @ts-ignore — valid HTML attribute
-            fetchpriority="high"
-          />
+          <HeroCinemagraph />
           {/* Top→bottom darkening so text stays readable */}
           <div
             aria-hidden

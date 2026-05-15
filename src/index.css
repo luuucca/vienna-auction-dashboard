@@ -255,6 +255,16 @@ body {
 .prose-content a:hover { color: var(--gold-hover); }
 
 /* ──────────────────────────────────────────────────────────────────────────
+   Hero cinemagraph — slow Ken-Burns push for the rotating background
+   slides. Each slide is offset to a different phase via animation-delay.
+   ────────────────────────────────────────────────────────────────────────── */
+@keyframes heroKenBurns {
+  0%   { transform: scale(1.04) translate3d(0%, 0%, 0); }
+  50%  { transform: scale(1.12) translate3d(-1.6%, -1.2%, 0); }
+  100% { transform: scale(1.06) translate3d(1.2%, -0.8%, 0); }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
    Auction-card centered map pin — soft pulsing halo behind the glyph.
    ────────────────────────────────────────────────────────────────────────── */
 @keyframes pinHalo {
