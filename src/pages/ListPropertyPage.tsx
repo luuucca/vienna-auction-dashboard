@@ -21,6 +21,7 @@ export default function ListPropertyPage() {
   const [mode, setMode] = useState<'sale' | 'rent'>(initialMode)
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const [errMsg, setErrMsg] = useState<string | null>(null)
 
   useEffect(() => {
     setMode(searchParams.get('mode') === 'rent' ? 'rent' : 'sale')
@@ -28,17 +29,30 @@ export default function ListPropertyPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setErrMsg(null)
     setLoading(true)
-    const formData = new FormData(e.currentTarget)
-    formData.append('_subject', `业主委托 - ${mode === 'sale' ? '出售' : '出租'}`)
+    const fd = new FormData(e.currentTarget)
+    const payload = {
+      name:    fd.get('name')        || '',
+      contact: fd.get('contact')     || '',
+      email:   fd.get('email')       || '',
+      message: fd.get('description') || '',
+      address: fd.get('address')     || '',
+      source:  mode === 'sale' ? '业主委托·出售' : '业主委托·出租',
+      _honeypot: fd.get('website')   || '',
+    }
     try {
-      const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-        method: 'POST', body: formData,
-        headers: { Accept: 'application/json' },
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
       })
-      if (res.ok) setSent(true)
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) setSent(true)
+      else setErrMsg(data.error || '提交失败，请稍后重试')
     } catch (err) {
       console.error(err)
+      setErrMsg('网络错误，请稍后重试')
     }
     setLoading(false)
   }
@@ -125,6 +139,9 @@ export default function ListPropertyPage() {
               </div>
             ) : (
               <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* honeypot for bots */}
+                <input type="text" name="website" tabIndex={-1} autoComplete="off"
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1 }} />
                 {/* Sale / Rent toggle */}
                 <div>
                   <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>需求类型</label>
@@ -161,6 +178,12 @@ export default function ListPropertyPage() {
                   />
                 </div>
 
+                {errMsg && (
+                  <div className="text-xs px-3 py-2 rounded-lg"
+                    style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.35)', color: '#fca5a5' }}>
+                    {errMsg}
+                  </div>
+                )}
                 <motion.button type="submit" disabled={loading}
                   whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                   className="w-full py-3.5 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-colors"

@@ -236,19 +236,36 @@ export default function HomePage() {
   const [formSent, setFormSent] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
 
+  const [formError, setFormError] = useState<string | null>(null)
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setFormError(null)
     setFormLoading(true)
     const form = e.currentTarget
-    const data = new FormData(form)
+    const fd = new FormData(form)
+    const payload = {
+      name:    fd.get('name')    || '',
+      contact: fd.get('contact') || fd.get('phone') || '',
+      email:   fd.get('email')   || '',
+      message: fd.get('message') || '',
+      source:  '首页咨询',
+      _honeypot: fd.get('website') || '', // honeypot field
+    }
     try {
-      const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      const res = await fetch('/api/lead', {
         method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
       })
-      if (res.ok) { setFormSent(true) }
-    } catch (_) {}
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) {
+        setFormSent(true)
+      } else {
+        setFormError(data.error || '提交失败，请稍后重试')
+      }
+    } catch (_) {
+      setFormError('网络错误，请稍后重试')
+    }
     setFormLoading(false)
   }
 
@@ -600,14 +617,17 @@ export default function HomePage() {
               </div>
             ) : (
               <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* honeypot for bots */}
+                <input type="text" name="website" tabIndex={-1} autoComplete="off"
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1 }} />
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
-                    { label: '姓名', type: 'text', placeholder: '请输入您的姓名' },
-                    { label: '电话 / 微信', type: 'tel', placeholder: '请输入联系方式' },
-                  ].map(({ label, type, placeholder }) => (
-                    <div key={label}>
+                    { label: '姓名',         name: 'name',    type: 'text', placeholder: '请输入您的姓名' },
+                    { label: '电话 / 微信',  name: 'contact', type: 'tel',  placeholder: '请输入联系方式' },
+                  ].map(({ label, name, type, placeholder }) => (
+                    <div key={name}>
                       <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</label>
-                      <input type={type} placeholder={placeholder} required
+                      <input type={type} name={name} placeholder={placeholder} required
                         className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                         onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
@@ -618,7 +638,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>邮箱</label>
-                  <input type="email" placeholder="请输入您的邮箱" required
+                  <input type="email" name="email" placeholder="请输入您的邮箱" required
                     className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
                     style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                     onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
@@ -627,13 +647,19 @@ export default function HomePage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>留言</label>
-                  <textarea rows={4} placeholder="请告诉我们您的置业需求，例如区域、预算、自住还是投资等" required
+                  <textarea rows={4} name="message" placeholder="请告诉我们您的置业需求，例如区域、预算、自住还是投资等" required
                     className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors resize-none"
                     style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                     onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
                     onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
                   />
                 </div>
+                {formError && (
+                  <div className="text-xs px-3 py-2 rounded-lg"
+                    style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.35)', color: '#fca5a5' }}>
+                    {formError}
+                  </div>
+                )}
                 <motion.button type="submit" disabled={formLoading}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   className="w-full py-3.5 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-colors"
