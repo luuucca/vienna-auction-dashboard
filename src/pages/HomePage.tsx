@@ -302,14 +302,25 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Scroll hint — vertical line with a gold dot traveling down */}
-          <div className="hero-fade-5 mt-14 flex justify-center" style={{ animationDelay: '0.7s' }}>
-            <div className="flex flex-col items-center gap-3 text-fg-tertiary">
-              <span className="text-overline uppercase">向下滚动</span>
-              <div className="relative w-px h-12 overflow-hidden" style={{ background: 'rgba(212,175,55,0.18)' }}>
-                <span className="scroll-trail absolute left-1/2 -translate-x-1/2 w-1 h-3 rounded-full" style={{ background: '#d4af37', boxShadow: '0 0 8px rgba(212,175,55,0.6)' }} />
-              </div>
-            </div>
+        </div>
+
+        {/* Scroll hint — absolutely pinned to the bottom of the hero so it
+            never gets pushed off-screen by tall content */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 hero-fade-5"
+          style={{ bottom: 28, animationDelay: '0.9s' }}
+        >
+          <span className="text-overline uppercase text-fg-secondary tracking-[0.3em]">
+            向下滚动
+          </span>
+          <div className="relative w-px h-14 overflow-hidden" style={{ background: 'rgba(212,175,55,0.22)' }}>
+            <span
+              className="scroll-trail absolute left-1/2 -translate-x-1/2 w-1.5 h-4 rounded-full"
+              style={{
+                background: '#d4af37',
+                boxShadow: '0 0 10px rgba(212,175,55,0.85), 0 0 4px rgba(212,175,55,1)',
+              }}
+            />
           </div>
         </div>
       </section>
