@@ -5,7 +5,7 @@ import {
   ArrowRight, Gavel, Building2,
   TrendingUp, Shield, Globe, ChevronRight, Check,
 } from 'lucide-react'
-import { ButtonLink, Button } from '../components/ui/Button'
+import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 
 /* ─────────────────────────────────────────────
@@ -331,126 +331,99 @@ export default function HomePage() {
       </section>
 
       {/* ════════════ 独家工具 — 法拍房 ════════════ */}
-      <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
-        <BGPattern size={28} fill="rgba(212,175,55,0.06)" />
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.55 }} className="text-center mb-12">
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>独家工具</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-3">法拍房信息汇总</h2>
-            <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              自主研发系统，实时抓取 Ediktsdatei 数据<br />
-              地图可视化全维也纳 60+ 在拍房源
+      <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-base">
+        <div className="max-w-content mx-auto">
+          <div className="mb-12 max-w-prose">
+            <p className="text-overline text-gold/80 mb-3 uppercase">Exclusive Tool</p>
+            <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
+              法拍房信息汇总
+            </h2>
+            <p className="mt-4 text-body-lg text-fg-secondary">
+              自主研发系统实时抓取 Ediktsdatei 数据，地图可视化全维也纳 60+ 在拍房源。
             </p>
-          </motion.div>
+          </div>
 
-          {/* Big feature card */}
-          <motion.div
-            initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-3xl overflow-hidden"
-            style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)' }}
-          >
+          {/* Feature card — calmer, no glassmorphism */}
+          <div className="rounded-2xl overflow-hidden bg-bg-elev-1 border border-white/[0.06]">
             {/* Animated city network canvas */}
-            <div className="relative h-72 overflow-hidden" style={{ background: '#0a0a0a' }}>
+            <div className="relative h-72 overflow-hidden bg-bg-base">
               <CityNetworkCanvas />
-              <div className="absolute bottom-0 left-0 right-0 h-16"
-                style={{ background: 'linear-gradient(to top,rgba(10,10,10,0.98),transparent)' }} />
+              <div className="absolute bottom-0 left-0 right-0 h-20"
+                style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }} />
             </div>
 
             {/* Stats + CTA */}
-            <div className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="p-7 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
                 {[
-                  { v: '60+', l: '在拍房源' }, { v: '50%', l: '最低起拍' },
-                  { v: '1–23区', l: '全维也纳' }, { v: '免费', l: '无需注册' },
+                  { v: '60+',     l: '在拍房源' },
+                  { v: '50%',     l: '最低起拍' },
+                  { v: '1–23 区', l: '全维也纳' },
+                  { v: '免费',    l: '无需注册' },
                 ].map(({ v, l }) => (
                   <div key={l}>
-                    <div className="text-lg font-bold" style={{ color: '#d4af37' }}>{v}</div>
-                    <div className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{l}</div>
+                    <div className="text-heading-lg text-gold tabular">{v}</div>
+                    <div className="mt-1 text-caption text-fg-tertiary">{l}</div>
                   </div>
                 ))}
               </div>
-              <Link to="/auction"
-                className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-colors"
-                style={{ background: '#d4af37', color: '#141414' }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
-                onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}
+              <ButtonLink
+                to="/auction"
+                variant="primary"
+                size="md"
+                leadingIcon={<Gavel size={14} strokeWidth={1.75} />}
+                trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
               >
-                <Gavel size={14} />
                 进入看板
-                <ArrowRight size={13} />
-              </Link>
+              </ButtonLink>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ════════════ WHY VIENNA ════════════ */}
-      <section className="py-20 relative overflow-hidden" style={{ background: '#0f0f0f' }}>
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10">
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>市场洞察</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white">为什么选择维也纳？</h2>
-          </motion.div>
-          <div className="grid sm:grid-cols-3 gap-5">
+      <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-y border-white/[0.06]">
+        <div className="max-w-content mx-auto">
+          <div className="mb-12 max-w-prose">
+            <p className="text-overline text-gold/80 mb-3 uppercase">Market</p>
+            <h2 className="font-serif text-display-lg text-fg-primary tracking-tight">
+              为什么选择维也纳
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
             {[
-              { icon: <TrendingUp size={17} />, title: '价格仍具优势', desc: '对比伦敦、巴黎、慕尼黑，维也纳每平方米单价显著偏低，中长期增值潜力突出。' },
-              { icon: <Shield size={17} />, title: '法律框架透明', desc: '奥地利产权保护健全，购房程序规范；非EU买家须额外审批，各州政策有所不同。' },
-              { icon: <Globe size={17} />, title: '欧盟核心城市', desc: '申根区核心，生活质量连续多年全球第一，是华人移居欧洲的热门目的地之一。' },
-            ].map(({ icon, title, desc }, i) => (
-              <motion.div key={title}
-                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="flex gap-4 p-5 rounded-xl"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-              >
-                <div className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full mt-0.5"
-                  style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37' }}>
+              { icon: <TrendingUp size={17} strokeWidth={1.5} />, title: '价格仍具优势', desc: '对比伦敦、巴黎、慕尼黑，维也纳每平方米单价显著偏低，中长期增值潜力突出。' },
+              { icon: <Shield     size={17} strokeWidth={1.5} />, title: '法律框架透明', desc: '奥地利产权保护健全，购房程序规范；非 EU 买家须额外审批，各州政策有所不同。' },
+              { icon: <Globe      size={17} strokeWidth={1.5} />, title: '欧盟核心城市', desc: '申根区核心，生活质量连续多年全球第一，是华人移居欧洲的热门目的地之一。' },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} className="p-7 bg-bg-base">
+                <div className="w-9 h-9 flex items-center justify-center rounded-md mb-5 bg-gold-tint border border-gold-line text-gold">
                   {icon}
                 </div>
-                <div>
-                  <h3 className="font-semibold text-white text-sm mb-1">{title}</h3>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{desc}</p>
-                </div>
-              </motion.div>
+                <h3 className="text-heading-md text-fg-primary mb-2">{title}</h3>
+                <p className="text-body text-fg-secondary">{desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ════════════ FOR OWNERS (Sell / Rent) ════════════ */}
-      <section className="py-20 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
-        <BGPattern size={48} fill="rgba(212,175,55,0.04)" />
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="rounded-3xl p-8 sm:p-12 relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(255,255,255,0.02) 100%)',
-              border: '1px solid rgba(212,175,55,0.22)',
-            }}
-          >
-            <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 70%)' }} />
-
-            <div className="relative grid lg:grid-cols-5 gap-8 items-center">
+      <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-base">
+        <div className="max-w-content mx-auto rounded-2xl p-8 sm:p-12 lg:p-14 bg-bg-elev-1 border border-white/[0.06]">
+            <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-3">
-                <p className="text-[11px] tracking-[0.25em] uppercase mb-3" style={{ color: 'rgba(212,175,55,0.85)' }}>
-                  For Property Owners · 业主委托
-                </p>
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
-                  您的房产，<br className="sm:hidden" />我们的中文渠道
+                <p className="text-overline text-gold/80 mb-3 uppercase">For Property Owners</p>
+                <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-5 tracking-tight">
+                  您的房产，<br className="sm:hidden" />
+                  <span className="text-gold">中文渠道</span>
                 </h2>
-                <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                  在维也纳或奥地利拥有房产并计划<strong className="text-white">出售或出租</strong>？
-                  我们提供专业市场评估、定价建议、房源包装、中文客户推广、看房安排，以及交易和过户全程协助。
+                <p className="text-body-lg text-fg-secondary mb-7 max-w-prose">
+                  从市场评估到交易过户，全程中文协助。专业摄影、定价建议、小红书 + 微信推广，让您的房产精准触达华人客户。
                 </p>
 
                 {/* Bullets */}
-                <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mb-7 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
                   {[
                     '免费市场评估',
                     '专业摄影 / 视频',
@@ -459,142 +432,150 @@ export default function HomePage() {
                     '中文合同解读',
                     '过户与税务协助',
                   ].map(b => (
-                    <li key={b} className="flex items-center gap-2">
-                      <Check size={14} style={{ color: '#d4af37', flexShrink: 0 }} />
+                    <li key={b} className="flex items-center gap-2.5 text-body text-fg-secondary">
+                      <Check size={14} strokeWidth={2} className="text-gold flex-shrink-0" />
                       <span>{b}</span>
                     </li>
                   ))}
                 </ul>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link to="/list-property?mode=sale"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all"
-                    style={{ background: '#d4af37', color: '#141414' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#e0bc4a')}
-                    onMouseLeave={e => (e.currentTarget.style.background = '#d4af37')}>
-                    我要出售房产 <ArrowRight size={15} />
-                  </Link>
-                  <Link to="/list-property?mode=rent"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all"
-                    style={{ background: 'transparent', color: '#d4af37', border: '1px solid rgba(212,175,55,0.5)' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,175,55,0.1)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.8)' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}>
-                    我要出租房产 <ArrowRight size={15} />
-                  </Link>
+                  <ButtonLink
+                    to="/list-property?mode=sale"
+                    variant="primary"
+                    size="md"
+                    trailingIcon={<ArrowRight size={15} strokeWidth={1.75} />}
+                  >
+                    我要出售房产
+                  </ButtonLink>
+                  <ButtonLink
+                    to="/list-property?mode=rent"
+                    variant="ghost"
+                    size="md"
+                    trailingIcon={<ArrowRight size={15} strokeWidth={1.75} />}
+                  >
+                    我要出租房产
+                  </ButtonLink>
                 </div>
               </div>
 
               {/* Visual stat block */}
               <div className="lg:col-span-2 grid grid-cols-2 gap-3">
                 {[
-                  { num: '24h', label: '快速响应' },
+                  { num: '24h',  label: '快速响应' },
                   { num: '100%', label: '中文服务' },
-                  { num: '0', label: '前期费用' },
-                  { num: '一站', label: '全流程' },
+                  { num: '0',    label: '前期费用' },
+                  { num: '一站', label: '全流程'   },
                 ].map(s => (
-                  <div key={s.label} className="rounded-2xl p-5 text-center"
-                    style={{ background: 'rgba(20,20,20,0.55)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <p className="font-serif text-2xl sm:text-3xl font-bold mb-1" style={{ color: '#d4af37' }}>{s.num}</p>
-                    <p className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.5)' }}>{s.label}</p>
+                  <div key={s.label} className="rounded-xl p-5 text-center bg-bg-base border border-white/[0.06]">
+                    <p className="font-serif text-heading-xl text-gold mb-1 tabular">{s.num}</p>
+                    <p className="text-overline text-fg-tertiary uppercase">{s.label}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </motion.div>
         </div>
       </section>
 
       {/* ════════════ CONTACT FORM ════════════ */}
-      <section className="py-24 relative overflow-hidden" style={{ background: '#141414' }}>
-        <BGPattern size={30} fill="rgba(212,175,55,0.06)" />
-        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-10">
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>联系我们</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-3">开始您的置业之旅</h2>
-            <p className="text-base" style={{ color: 'rgba(255,255,255,0.4)' }}>我们将在 24 小时内与您联系</p>
-          </motion.div>
+      <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-t border-white/[0.06]">
+        <div className="max-w-prose mx-auto">
+          <div className="mb-10">
+            <p className="text-overline text-gold/80 mb-3 uppercase">Contact</p>
+            <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary tracking-tight">
+              开始您的置业之旅
+            </h2>
+            <p className="mt-4 text-body-lg text-fg-secondary">
+              我们将在 24 小时内与您联系。
+            </p>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-3xl p-7 sm:p-10"
-            style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)', border: '1px solid rgba(212,175,55,0.18)' }}
-          >
+          <div className="rounded-2xl p-7 sm:p-8 bg-bg-base border border-white/[0.06]">
             {formSent ? (
-              <div className="text-center py-10">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-                  <Check size={28} style={{ color: '#d4af37' }} />
+              <div className="text-center py-12">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5 bg-gold-tint border border-gold-line">
+                  <Check size={24} strokeWidth={1.75} className="text-gold" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">发送成功！</h3>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.42)' }}>我们会尽快与您联系</p>
+                <h3 className="text-heading-lg text-fg-primary mb-2">提交成功</h3>
+                <p className="text-body text-fg-secondary">我们会尽快与您联系。</p>
               </div>
             ) : (
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-5" onSubmit={handleSubmit}>
                 {/* honeypot for bots */}
                 <input type="text" name="website" tabIndex={-1} autoComplete="off"
                   style={{ position: 'absolute', left: '-9999px', width: 1, height: 1 }} />
+
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
-                    { label: '姓名',         name: 'name',    type: 'text', placeholder: '请输入您的姓名' },
-                    { label: '电话 / 微信',  name: 'contact', type: 'tel',  placeholder: '请输入联系方式' },
+                    { label: '姓名',         name: 'name',    type: 'text', placeholder: '您的姓名'    },
+                    { label: '电话 / 微信',  name: 'contact', type: 'tel',  placeholder: '电话或微信号' },
                   ].map(({ label, name, type, placeholder }) => (
                     <div key={name}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</label>
-                      <input type={type} name={name} placeholder={placeholder} required
-                        className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-                        onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
-                        onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                      <label className="block text-overline text-fg-tertiary mb-2 uppercase">{label}</label>
+                      <input
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                        required
+                        className="w-full rounded-md px-4 py-3 text-body text-fg-primary placeholder:text-fg-disabled bg-bg-elev-2 border border-white/[0.08] outline-none transition-[border-color] duration-base ease-standard focus:border-gold-line"
                       />
                     </div>
                   ))}
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>邮箱</label>
-                  <input type="email" name="email" placeholder="请输入您的邮箱" required
-                    className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-                    onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
-                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                  <label className="block text-overline text-fg-tertiary mb-2 uppercase">邮箱</label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    required
+                    className="w-full rounded-md px-4 py-3 text-body text-fg-primary placeholder:text-fg-disabled bg-bg-elev-2 border border-white/[0.08] outline-none transition-[border-color] duration-base ease-standard focus:border-gold-line"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>留言</label>
-                  <textarea rows={4} name="message" placeholder="请告诉我们您的置业需求，例如区域、预算、自住还是投资等" required
-                    className="w-full rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors resize-none"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-                    onFocus={e => (e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)')}
-                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                  <label className="block text-overline text-fg-tertiary mb-2 uppercase">留言</label>
+                  <textarea
+                    rows={4}
+                    name="message"
+                    placeholder="您的置业需求 — 区域、预算、自住或投资等"
+                    required
+                    className="w-full rounded-md px-4 py-3 text-body text-fg-primary placeholder:text-fg-disabled bg-bg-elev-2 border border-white/[0.08] outline-none resize-none transition-[border-color] duration-base ease-standard focus:border-gold-line"
                   />
                 </div>
+
                 {formError && (
-                  <div className="text-xs px-3 py-2 rounded-lg"
-                    style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.35)', color: '#fca5a5' }}>
+                  <div className="text-caption text-danger px-4 py-2.5 rounded-md border border-danger/30" style={{ background: 'rgba(248,113,113,0.08)' }}>
                     {formError}
                   </div>
                 )}
-                <motion.button type="submit" disabled={formLoading}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="w-full py-3.5 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-colors"
-                  style={{ background: formLoading ? 'rgba(212,175,55,0.6)' : '#d4af37', color: '#141414', cursor: formLoading ? 'not-allowed' : 'pointer' }}
-                  onMouseEnter={e => { if (!formLoading) e.currentTarget.style.background = '#e0bc4a' }}
-                  onMouseLeave={e => { if (!formLoading) e.currentTarget.style.background = '#d4af37' }}
-                >
-                  {formLoading ? '发送中…' : <>提交咨询 <ArrowRight size={16} /></>}
-                </motion.button>
-                <p className="text-center text-xs pt-1" style={{ color: 'rgba(255,255,255,0.22)' }}>
+
+                <button type="submit" disabled={formLoading}
+                  className={[
+                    'w-full py-3.5 rounded-lg text-body-lg font-semibold',
+                    'flex items-center justify-center gap-2',
+                    'transition-[background,opacity,transform] duration-base ease-standard',
+                    'active:scale-[0.98]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base',
+                    formLoading
+                      ? 'bg-gold/40 text-bg-base cursor-not-allowed active:scale-100'
+                      : 'bg-gold text-bg-base hover:bg-gold-hover',
+                  ].join(' ')}>
+                  {formLoading ? '发送中…' : <>提交咨询 <ArrowRight size={16} strokeWidth={1.75} /></>}
+                </button>
+
+                <p className="text-center text-caption text-fg-tertiary pt-1">
                   或在小红书搜索「奥匈置业研究所 | CH」直接私信
                 </p>
               </form>
             )}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ════════════ PARTNERS MARQUEE ════════════ */}
-      <section style={{ background: '#0a0a0a', borderTop: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', padding: '52px 0' }}>
+      <section className="overflow-hidden border-t border-white/[0.06] bg-bg-base py-14">
         <style>{`
           @keyframes marqueeScroll {
             from { transform: translateX(0); }
@@ -604,22 +585,25 @@ export default function HomePage() {
             display: flex;
             align-items: center;
             width: max-content;
-            animation: marqueeScroll 36s linear infinite;
+            animation: marqueeScroll 48s linear infinite;
           }
           .marquee-track:hover { animation-play-state: paused; }
           .p-logo {
-            color: rgba(255,255,255,0.38);
-            transition: color 0.3s ease;
+            color: var(--fg-tertiary);
+            transition: color 0.3s var(--ease-standard);
             cursor: default;
             user-select: none;
             flex-shrink: 0;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
           }
-          .p-logo:hover { color: rgba(255,255,255,0.82); }
+          .p-logo:hover { color: var(--fg-primary); }
         `}</style>
 
-        <p className="text-center text-[11px] tracking-[0.28em] mb-10"
-          style={{ color: 'rgba(255,255,255,0.22)' }}>
+        <p className="text-center text-overline text-fg-tertiary mb-8 uppercase">
           合作伙伴
         </p>
 
@@ -629,96 +613,19 @@ export default function HomePage() {
         }}>
           <div className="marquee-track">
             {[0, 1].map(copy => (
-              <div key={copy} className="flex items-center" style={{ gap: '0 68px', paddingRight: '68px' }}>
-
-                {/* YELLOWBIRD — Montserrat 800, tight tracking */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Montserrat","Arial Black",sans-serif', fontWeight: 800, fontSize: '20px', letterSpacing: '0.05em' }}>
-                  YELLOWBIRD
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* GLORIT — Arial Black, very wide tracking */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Arial","Helvetica",sans-serif', fontWeight: 900, fontSize: '19px', letterSpacing: '0.22em' }}>
-                  GLORIT
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* VALERTO — Helvetica Neue medium, moderate tracking */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 500, fontSize: '18px', letterSpacing: '0.14em' }}>
-                  VALERTO
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* STOLZ — Arial Narrow condensed, very wide tracking */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Arial Narrow","Arial",sans-serif', fontWeight: 700, fontSize: '23px', letterSpacing: '0.38em' }}>
-                  STOLZ
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* LAGEEINS — geometric sans, bold, tight */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 700, fontSize: '19px', letterSpacing: '0.08em' }}>
-                  LAGEEINS
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* LANDAA — medium weight, spaced */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 600, fontSize: '19px', letterSpacing: '0.24em' }}>
-                  LANDAA
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* PRIMA — italic serif, bold */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Georgia","Times New Roman",serif', fontWeight: 700, fontSize: '21px', letterSpacing: '0.16em', fontStyle: 'italic' }}>
-                  PRIMA
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* KORN12 — light weight + bold number */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 300, fontSize: '21px', letterSpacing: '0.07em' }}>
-                  KORN12
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* WINEGG — semibold, elegant tracking */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 600, fontSize: '20px', letterSpacing: '0.18em' }}>
-                  WINEGG
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* HARING — Arial Black heavy, wide */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Arial Black","Arial",sans-serif', fontWeight: 900, fontSize: '19px', letterSpacing: '0.2em' }}>
-                  HARING
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* BOOMLIVING — extrabold, compact */}
-                <span className="p-logo"
-                  style={{ fontFamily: '"Helvetica Neue","Arial",sans-serif', fontWeight: 800, fontSize: '18px', letterSpacing: '0.05em' }}>
-                  BOOMLIVING
-                </span>
-
-                <div className="flex-shrink-0 w-px h-4" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
+              <div key={copy} className="flex items-center" style={{ gap: '0 64px', paddingRight: '64px' }}>
+                {[
+                  'YELLOWBIRD', 'GLORIT', 'VALERTO', 'STOLZ',
+                  'LAGEEINS', 'LANDAA', 'PRIMA', 'KORN12',
+                  'WINEGG', 'HARING', 'BOOMLIVING',
+                ].map((name, i, arr) => (
+                  <React.Fragment key={`${copy}-${name}`}>
+                    <span className="p-logo">{name}</span>
+                    {i < arr.length - 1 && (
+                      <div className="flex-shrink-0 w-px h-3 bg-white/[0.08]" />
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
             ))}
           </div>
@@ -726,42 +633,41 @@ export default function HomePage() {
       </section>
 
       {/* ════════════ FOOTER ════════════ */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-10" style={{ borderTop: '1px solid rgba(212,175,55,0.18)', background: '#0a0a0a' }}>
-        <div className="max-w-6xl mx-auto">
-          {/* Top row */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-            <div className="font-bold text-sm" style={{ color: '#d4af37' }}>奥匈置业研究所</div>
-            <p className="text-xs text-center" style={{ color: 'rgba(212,175,55,0.65)' }}>
+      <footer className="px-4 sm:px-6 lg:px-10 pt-10 pb-8 bg-bg-base border-t border-white/[0.06]">
+        <div className="max-w-content mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
+            <div className="text-body font-semibold text-gold">奥匈置业研究所</div>
+            <p className="text-caption text-fg-tertiary text-center">
               © 2025 Yellowbird Immobilienmakler GmbH · Wien, Austria
             </p>
-            <Link to="/about" className="text-xs transition-colors" style={{ color: 'rgba(212,175,55,0.7)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#e8c552')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(212,175,55,0.7)')}>
+            <Link
+              to="/about"
+              className="text-caption text-fg-secondary hover:text-gold transition-colors duration-base ease-standard"
+            >
               联系我们 →
             </Link>
           </div>
-          {/* Legal links row */}
-          <div className="flex items-center justify-center gap-4 pt-3" style={{ borderTop: '1px solid rgba(212,175,55,0.12)' }}>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-5 text-caption">
             {[
               { to: '/impressum',   label: 'Impressum' },
               { to: '/datenschutz', label: '隐私政策 / Datenschutz' },
             ].map(({ to, label }) => (
-              <Link key={to} to={to}
-                className="text-[11px] transition-colors"
-                style={{ color: 'rgba(212,175,55,0.6)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#e8c552')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(212,175,55,0.6)')}>
+              <Link
+                key={to}
+                to={to}
+                className="text-fg-tertiary hover:text-gold transition-colors duration-base ease-standard"
+              >
                 {label}
               </Link>
             ))}
-            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.55)' }}>
-              · 数据来源：Ediktsdatei.justiz.gv.at
+            <span className="text-fg-disabled hidden sm:inline">·</span>
+            <span className="text-fg-tertiary">
+              数据来源：Ediktsdatei.justiz.gv.at
             </span>
-          </div>
-          {/* Justimmo attribution */}
-          <div className="flex justify-center pt-3">
-            <span className="text-[11px]" style={{ color: 'rgba(212,175,55,0.6)' }}>
-              © Justimmo / Immobilienmaklersoftware
+            <span className="text-fg-disabled hidden sm:inline">·</span>
+            <span className="text-fg-tertiary">
+              © Justimmo
             </span>
           </div>
         </div>
