@@ -151,7 +151,7 @@ export default function BuyingGuidePage() {
               <li><strong className="text-fg-primary">Grunderwerbsteuer（土地交易税）3.5%</strong>：基于房价。</li>
               <li><strong className="text-fg-primary">Grundbucheintragung（登记费）1.1%</strong>：登记到土地册的费用。</li>
               <li><strong className="text-fg-primary">Notar / Anwaltskosten（公证 / 律师）1-2%</strong>：阶梯收费。</li>
-              <li><strong className="text-fg-primary">买方中介费</strong>：法律上 3% + 20% VAT，我们对买家通常豁免。</li>
+              <li><strong className="text-fg-primary">Maklerprovision（买方中介费）3% + 20% VAT ≈ 3.6%</strong>：奥地利法律规定的买方中介费率。</li>
             </ul>
             <p>持有期间：</p>
             <ul>
@@ -220,7 +220,7 @@ export default function BuyingGuidePage() {
 
           <Section id="roles" title="8. 各方角色">
             <ul>
-              <li><strong className="text-fg-primary">Makler（房产经纪）</strong>：我们 — 帮您找房、谈判、协调。买方中介费我们免收。</li>
+              <li><strong className="text-fg-primary">Makler（房产经纪）</strong>：我们 — 帮您找房、谈判、协调。买方中介费按奥地利法定标准 3% + 20% VAT。</li>
               <li><strong className="text-fg-primary">Notar / Anwalt（公证 / 律师）</strong>：起草合同、办理过户、土地登记。我们合作的 MONOLAW 提供中文支持。</li>
               <li><strong className="text-fg-primary">Banker（银行）</strong>：发放贷款。建议提前 1-2 周联系 1-2 家银行做预审。</li>
               <li><strong className="text-fg-primary">Steuerberater（税务师）</strong>：处理 ImmoESt、租赁收入申报。我们可推荐华语友好的税务师。</li>

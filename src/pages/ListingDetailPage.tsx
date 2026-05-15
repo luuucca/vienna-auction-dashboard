@@ -10,6 +10,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Lightbox } from '../components/ui/Lightbox'
+import { MortgageCalculator } from '../components/ui/MortgageCalculator'
 
 // ─── POI types ───────────────────────────────────────────────────────────────
 interface POIPoint { lat: number; lng: number; name: string; type: 'subway' | 'shop' }
@@ -605,6 +606,25 @@ export default function ListingDetailPage() {
               <div className="prose prose-sm prose-invert max-w-none listing-desc"
                 style={{ color: 'rgba(255,255,255,0.78)', fontSize: 14.5, lineHeight: 1.75 }}
                 dangerouslySetInnerHTML={{ __html: data.description }} />
+            </motion.div>
+          )}
+
+          {/* Mortgage calculator — only when there is a real price */}
+          {data.price > 0 && !data.priceOnRequest && !data.forRent && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl p-6 sm:p-8"
+              style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="mb-5">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] mb-1" style={{ color: '#d4af37' }}>贷款估算</h3>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                  基于本房源售价的月供 + Nebenkosten 估算（实时调整）
+                </p>
+              </div>
+              <MortgageCalculator initialPrice={data.price} variant="compact" />
             </motion.div>
           )}
 
