@@ -540,8 +540,8 @@ export default function ListingDetailPage() {
               )}
             </div>
             <h1
-              className="font-serif text-heading-xl sm:text-display-lg lg:text-display-xl text-fg-primary mb-5 tracking-tight"
-              style={{ lineHeight: 1.22 }}
+              className="text-heading-xl sm:text-display-lg text-fg-primary mb-5 tracking-tight font-semibold"
+              style={{ lineHeight: 1.25 }}
             >
               {data.title}
             </h1>
