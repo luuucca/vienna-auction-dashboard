@@ -293,12 +293,19 @@ async function main() {
 
     const description = buildDescription(d, translatedBody, translatedFeatures);
 
-    // Geocode (street if known, else district)
-    process.stdout.write(`  → 定位 ${d.street || districtName}, ${d.plz} Wien... `);
-    await sleep(1100);
-    const geo = await geocode(d.street ? `${d.street}, ${d.plz}` : `${districtName}, ${d.plz} Wien`);
-    if (geo) console.log(`✓ (${geo.lat.toFixed(4)}, ${geo.lng.toFixed(4)})`);
-    else console.log('✗');
+    // Geocode ONLY if we have a real street. Valerto deliberately hides
+    // precise addresses, so district-center coords would just be a fake
+    // pin — better to leave Lat/Lng empty so the map doesn't render.
+    let geo = null;
+    if (d.street) {
+      process.stdout.write(`  → 定位 ${d.street}, ${d.plz} Wien... `);
+      await sleep(1100);
+      geo = await geocode(`${d.street}, ${d.plz}`);
+      if (geo) console.log(`✓ (${geo.lat.toFixed(4)}, ${geo.lng.toFixed(4)})`);
+      else console.log('✗');
+    } else {
+      console.log('  → 无街道 (Valerto fuzzy address)，跳过定位');
+    }
 
     const props = {
       '名称':         { title:     [{ text: { content: titleZH } }] },

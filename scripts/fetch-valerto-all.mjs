@@ -75,9 +75,30 @@ function extractFloor(html) {
   const m = html.match(/STOCKWERK:?\s*[<\/li>]*([^<]+)/i);
   return m ? m[1].trim() : '';
 }
+// Valerto detail pages embed TWO JSON-LD blocks:
+//   1. The broker's office (RealEstateAgent + Organization)
+//   2. The listing itself (RealEstateListing)
+// Only block #2 has the listing's address — and Valerto deliberately
+// hides the precise street (`address-display-rule="fuzzy"`), so block 2
+// almost never contains streetAddress. Never trust a blind
+// /"streetAddress":/ regex — it returns the broker's office.
 function extractStreet(html) {
-  const m = html.match(/"streetAddress":\s*"([^"]+)"/);
-  return m ? m[1].trim() : '';
+  const blocks = [...html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/g)];
+  for (const m of blocks) {
+    let data;
+    try { data = JSON.parse(m[1]); } catch { continue; }
+    const types = [].concat(data['@type'] || []);
+    // Skip broker/office blocks
+    if (types.some(t => /Agent|Organization|ItemList/i.test(t))) continue;
+    // Walk for itemOffered.address or address.streetAddress
+    const candidates = [
+      data.address?.streetAddress,
+      data.offers?.itemOffered?.address?.streetAddress,
+      data.itemOffered?.address?.streetAddress,
+    ].filter(Boolean);
+    if (candidates.length) return String(candidates[0]).trim();
+  }
+  return '';
 }
 function htmlToText(html) {
   return html
