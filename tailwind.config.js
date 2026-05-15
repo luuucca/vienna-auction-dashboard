@@ -42,13 +42,32 @@ export default {
       },
 
       // ── Typography (per DESIGN.md type scale) ────────────────────────────
+      // Latin runs through Playfair / Inter; Chinese falls through to Noto
+      // Serif SC / Noto Sans SC (Google Fonts), then macOS native fonts,
+      // then Windows native fonts. Without this stack, Chinese characters
+      // in a font-serif heading fall back to the OS default which doesn't
+      // match Playfair's weight or modern feel.
       fontFamily: {
-        // Display — sparingly, hero only
-        serif: ['"Playfair Display"', 'Georgia', '"Times New Roman"', 'serif'],
-        // Body / UI default
-        sans:  ['"Inter"', '-apple-system', 'system-ui', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
-        // Same family for numeric, but expected to be combined with tabular-nums
-        mono:  ['"Inter"', '-apple-system', 'system-ui', 'sans-serif'],
+        serif: [
+          '"Playfair Display"',
+          '"Noto Serif SC"',
+          '"Source Han Serif SC"',
+          '"Songti SC"',
+          '"STSong"',
+          'Georgia',
+          '"Times New Roman"',
+          'serif',
+        ],
+        sans: [
+          '"Inter"',
+          '"Noto Sans SC"',
+          '-apple-system',
+          'system-ui',
+          '"PingFang SC"',
+          '"Microsoft YaHei"',
+          'sans-serif',
+        ],
+        mono: ['"Inter"', '-apple-system', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         overline:     ['11px',   { lineHeight: '1.4',  letterSpacing: '0.22em', fontWeight: '600' }],

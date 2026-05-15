@@ -539,7 +539,10 @@ export default function ListingDetailPage() {
                 </>
               )}
             </div>
-            <h1 className="font-serif text-display-lg sm:text-display-xl lg:text-display-2xl text-fg-primary mb-5 tracking-tight">
+            <h1
+              className="font-serif text-heading-xl sm:text-display-lg lg:text-display-xl text-fg-primary mb-5 tracking-tight"
+              style={{ lineHeight: 1.22 }}
+            >
               {data.title}
             </h1>
             <div className="flex items-center gap-2 text-body text-fg-secondary">
