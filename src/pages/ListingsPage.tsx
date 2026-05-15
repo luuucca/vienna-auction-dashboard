@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Home, Maximize2, Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, ImageIcon, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ListingCard as SharedListingCard } from '../components/ui/ListingCard'
+import { ButtonLink } from '../components/ui/Button'
 
 /* ─────────────────────────────────────────────
    Types
@@ -72,112 +74,45 @@ type SortKey = typeof SORT_OPTIONS[number]['key']
 function FilterSelect({
   value, onChange, options,
 }: { value: string; onChange: (v: string) => void; options: string[] }) {
+  const isDefault = value === options[0]
   return (
     <div className="relative">
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="appearance-none w-full pl-4 pr-9 py-2.5 rounded-xl text-sm font-medium outline-none cursor-pointer transition-colors"
-        style={{
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          color: value === options[0] ? 'rgba(255,255,255,0.45)' : 'white',
-        }}
+        className={[
+          'appearance-none w-full pl-4 pr-9 py-2.5 rounded-lg text-body font-medium',
+          'bg-bg-elev-2 border border-white/[0.08]',
+          'cursor-pointer transition-[border-color,color] duration-base ease-standard',
+          'hover:border-white/16 focus:border-gold-line focus:outline-none',
+          isDefault ? 'text-fg-tertiary' : 'text-fg-primary',
+        ].join(' ')}
       >
-        {options.map(o => <option key={o} value={o} style={{ background: '#1e1e1e', color: 'white' }}>{o}</option>)}
+        {options.map(o => (
+          <option key={o} value={o} style={{ background: '#1a1a1a', color: '#ededed' }}>{o}</option>
+        ))}
       </select>
-      <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: 'rgba(255,255,255,0.4)' }} />
+      <ChevronDown
+        size={14}
+        strokeWidth={1.5}
+        className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-fg-tertiary"
+      />
     </div>
   )
 }
 
+// Local wrapper around the shared ListingCard that keeps the
+// staggered enter/exit animation the list grid relies on.
 function ListingCard({ listing }: { listing: Listing }) {
-  const district = districtFromText(listing.address.district)
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.94 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4, borderColor: 'rgba(212,175,55,0.45)' }}
-      className="group relative overflow-hidden rounded-2xl transition-all duration-300"
-      style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(212,175,55,0.16)' }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Image */}
-      <Link to={`/listings/${listing.id}`} className="block relative h-52 overflow-hidden">
-        <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(to top,#141414 0%,transparent 55%)' }} />
-        {listing.coverImage ? (
-          <img src={listing.coverImage} alt={listing.title}
-            className="w-full h-full object-cover transition-transform duration-700"
-            style={{ transition: 'transform 0.7s ease' }}
-            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.04)' }}>
-            <ImageIcon size={32} style={{ color: 'rgba(255,255,255,0.18)' }} />
-          </div>
-        )}
-        {/* Badges */}
-        <div className="absolute top-3 left-3 z-20 flex gap-1.5">
-          <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
-            style={{ background: listing.forRent ? 'rgba(34,197,94,0.85)' : 'rgba(212,175,55,0.9)', color: '#141414' }}>
-            {listing.forRent ? '租' : '买'}
-          </span>
-          {district > 0 && (
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-medium"
-              style={{ background: 'rgba(20,20,20,0.7)', backdropFilter: 'blur(6px)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              {district}区
-            </span>
-          )}
-        </div>
-        {listing.imageCount > 1 && (
-          <span className="absolute top-3 right-3 z-20 px-2 py-0.5 rounded-md text-[10px] font-medium flex items-center gap-1"
-            style={{ background: 'rgba(20,20,20,0.7)', backdropFilter: 'blur(6px)', color: 'rgba(255,255,255,0.85)' }}>
-            <ImageIcon size={9} /> {listing.imageCount}
-          </span>
-        )}
-      </Link>
-
-      {/* Body */}
-      <div className="p-4">
-        <h3 className="font-semibold text-white text-sm mb-1 line-clamp-1">{listing.title || listing.typeName}</h3>
-        <div className="flex items-center gap-1 text-[11px] mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          <MapPin size={10} />
-          <span className="line-clamp-1">{listing.address.plz} {listing.address.city}{listing.address.street ? ` · ${listing.address.street}` : ''}</span>
-        </div>
-        <div className="flex items-center gap-3 text-[11px] mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          {listing.sqm > 0 && (
-            <span className="flex items-center gap-1"><Maximize2 size={10} />{Math.round(listing.sqm)} m²</span>
-          )}
-          {listing.rooms > 0 && (
-            <>
-              <span className="w-px h-3 bg-white/10" />
-              <span className="flex items-center gap-1"><Home size={10} />{listing.rooms} 间</span>
-            </>
-          )}
-          {listing.buildYear > 0 && (
-            <>
-              <span className="w-px h-3 bg-white/10" />
-              <span>建于 {listing.buildYear}</span>
-            </>
-          )}
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-bold" style={{ color: '#d4af37' }}>
-            {fmtPrice(listing.price, listing.forRent, listing.priceOnRequest)}
-          </span>
-          <Link to={`/listings/${listing.id}`}
-            className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
-            style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.2)' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.22)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(212,175,55,0.1)')}
-          >
-            查看详情 →
-          </Link>
-        </div>
-      </div>
+      <SharedListingCard listing={listing as any} />
     </motion.div>
   )
 }
@@ -304,61 +239,69 @@ export default function ListingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#141414] text-white pt-16">
+    <div className="min-h-screen bg-bg-base text-fg-primary pt-16">
 
       {/* Header */}
-      <div className="py-10 px-4 sm:px-6 lg:px-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="max-w-6xl mx-auto">
-          <p className="text-[11px] tracking-[0.2em] uppercase mb-2" style={{ color: 'rgba(212,175,55,0.65)' }}>真实房源</p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-1">维也纳精选房源</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            真实在售房源 · 共 <span className="text-white font-semibold">{listings.length}</span> 套
+      <div className="px-4 sm:px-6 lg:px-10 pt-12 pb-8 border-b border-white/[0.06]">
+        <div className="max-w-content mx-auto">
+          <p className="text-overline text-gold/80 mb-3 uppercase">Listings</p>
+          <h1 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-2 tracking-tight">
+            维也纳精选房源
+          </h1>
+          <p className="text-body text-fg-secondary">
+            真实在售房源 · 共 <span className="text-fg-primary font-medium tabular">{listings.length}</span> 套
           </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-8">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-10 py-10">
 
-        {/* Filter panel */}
-        <div className="mb-8 rounded-2xl p-5"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)' }}>
+        {/* Filter panel — no glassmorphism */}
+        <div className="mb-10 rounded-2xl p-5 bg-bg-elev-1 border border-white/[0.06]">
 
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex rounded-xl overflow-hidden p-0.5" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="flex rounded-lg overflow-hidden p-0.5 bg-bg-elev-2 border border-white/[0.06]">
               {(['buy', 'rent'] as const).map(m => (
                 <button key={m}
                   onClick={() => { setMode(m); setPriceIdx(0) }}
-                  className="px-5 py-2 rounded-lg text-sm font-semibold transition-all"
-                  style={mode === m
-                    ? { background: '#d4af37', color: '#141414' }
-                    : { color: 'rgba(255,255,255,0.45)', background: 'transparent' }}
+                  className={[
+                    'px-5 py-1.5 rounded-md text-body font-semibold',
+                    'transition-[background,color] duration-base ease-standard',
+                    mode === m
+                      ? 'bg-gold text-bg-base'
+                      : 'bg-transparent text-fg-secondary hover:text-fg-primary',
+                  ].join(' ')}
                 >
                   {m === 'buy' ? '购买' : '出租'}
                 </button>
               ))}
             </div>
             <button onClick={() => setFiltersOpen(o => !o)}
-              className="sm:hidden ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm transition-colors"
-              style={{ background: filtersOpen ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.06)', color: filtersOpen ? '#d4af37' : 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <SlidersHorizontal size={14} />
+              className={[
+                'sm:hidden ml-auto flex items-center gap-1.5 px-4 py-2 rounded-lg text-body',
+                'transition-[background,color,border-color] duration-base ease-standard',
+                filtersOpen
+                  ? 'bg-gold-tint text-gold border border-gold-line'
+                  : 'bg-bg-elev-2 text-fg-secondary border border-white/[0.06]',
+              ].join(' ')}>
+              <SlidersHorizontal size={14} strokeWidth={1.5} />
               筛选
             </button>
             {hasFilters && (
               <button onClick={resetFilters}
-                className="ml-auto hidden sm:flex items-center gap-1.5 text-xs transition-colors"
-                style={{ color: 'rgba(255,255,255,0.4)' }}>
-                <X size={13} /> 清除筛选
+                className="ml-auto hidden sm:flex items-center gap-1.5 text-caption text-fg-tertiary hover:text-fg-secondary transition-colors duration-base ease-standard">
+                <X size={13} strokeWidth={1.5} /> 清除筛选
               </button>
             )}
           </div>
 
           <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ${!filtersOpen ? 'hidden sm:grid' : 'grid'}`}>
             <div>
-              <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>类型</label>
+              <label className="block text-overline text-fg-tertiary mb-2 uppercase">类型</label>
               <FilterSelect value={propType} onChange={setPropType} options={TYPE_OPTIONS} />
             </div>
             <div>
-              <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>总价</label>
+              <label className="block text-overline text-fg-tertiary mb-2 uppercase">总价</label>
               <FilterSelect
                 value={priceLabel}
                 onChange={v => setPriceIdx(priceRanges.findIndex(r => r.label === v))}
@@ -366,18 +309,24 @@ export default function ListingsPage() {
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>区域</label>
+              <label className="block text-overline text-fg-tertiary mb-2 uppercase">区域</label>
               <FilterSelect value={district} onChange={setDistrict} options={districts} />
             </div>
             <div>
-              <label className="block text-[10px] uppercase tracking-wider mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>房间数量</label>
+              <label className="block text-overline text-fg-tertiary mb-2 uppercase">房间数量</label>
               <div className="flex gap-1.5">
                 {ROOM_OPTIONS.map(r => (
-                  <button key={r} onClick={() => setRooms(r)}
-                    className="flex-1 py-2.5 rounded-xl text-xs font-medium transition-all"
-                    style={rooms === r
-                      ? { background: '#d4af37', color: '#141414' }
-                      : { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}
+                  <button
+                    key={r}
+                    onClick={() => setRooms(r)}
+                    className={[
+                      'flex-1 py-2.5 rounded-lg text-caption font-medium',
+                      'transition-[background,color,border-color] duration-base ease-standard',
+                      'active:scale-[0.98]',
+                      rooms === r
+                        ? 'bg-gold text-bg-base border border-gold'
+                        : 'bg-bg-elev-2 text-fg-secondary border border-white/[0.06] hover:text-fg-primary hover:border-white/16',
+                    ].join(' ')}
                   >{r}</button>
                 ))}
               </div>
@@ -386,80 +335,78 @@ export default function ListingsPage() {
         </div>
 
         {/* Results header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            找到 <span className="font-semibold text-white">{filtered.length}</span> 套{mode === 'buy' ? '购买' : '出租'}房源
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <p className="text-body text-fg-secondary tabular">
+            找到 <span className="text-fg-primary font-medium">{filtered.length}</span> 套{mode === 'buy' ? '购买' : '出租'}房源
             {filtered.length > 0 && (
-              <span className="ml-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              <span className="ml-2 text-fg-tertiary">
                 · 第 {(safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, filtered.length)} 条
               </span>
             )}
           </p>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-4 flex-wrap">
             {/* Page size selector */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>每页</span>
+              <span className="text-overline text-fg-tertiary uppercase">每页</span>
               <div className="relative">
                 <select
                   value={pageSize}
                   onChange={e => setPageSize(Number(e.target.value))}
-                  className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(212,175,55,0.25)',
-                    color: 'rgba(255,255,255,0.85)',
-                  }}
+                  className="appearance-none pl-3 pr-8 py-1.5 rounded-md text-caption font-medium bg-bg-elev-2 border border-white/[0.06] text-fg-secondary cursor-pointer transition-[border-color,color] duration-base ease-standard hover:text-fg-primary hover:border-white/16 focus:border-gold-line focus:outline-none"
                 >
                   {[10, 20, 50, 100].map(n => (
-                    <option key={n} value={n} style={{ background: '#1e1e1e', color: 'white' }}>{n} 条</option>
+                    <option key={n} value={n} style={{ background: '#1a1a1a', color: '#ededed' }}>{n} 条</option>
                   ))}
                 </select>
-                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: 'rgba(212,175,55,0.5)' }} />
+                <ChevronDown size={12} strokeWidth={1.5}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-fg-tertiary" />
               </div>
             </div>
 
             {/* Sort selector */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.35)' }}>排序</span>
+              <span className="text-overline text-fg-tertiary uppercase">排序</span>
               <div className="relative">
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value as SortKey)}
-                  className="appearance-none pl-3.5 pr-8 py-2 rounded-lg text-xs font-medium outline-none cursor-pointer transition-colors"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(212,175,55,0.25)',
-                    color: sortBy === 'default' ? 'rgba(255,255,255,0.6)' : '#d4af37',
-                  }}
+                  className={[
+                    'appearance-none pl-3 pr-8 py-1.5 rounded-md text-caption font-medium',
+                    'bg-bg-elev-2 border border-white/[0.06] cursor-pointer',
+                    'transition-[border-color,color] duration-base ease-standard',
+                    'hover:text-fg-primary hover:border-white/16 focus:border-gold-line focus:outline-none',
+                    sortBy === 'default' ? 'text-fg-secondary' : 'text-gold',
+                  ].join(' ')}
                 >
                   {SORT_OPTIONS.map(o => (
-                    <option key={o.key} value={o.key} style={{ background: '#1e1e1e', color: 'white' }}>{o.label}</option>
+                    <option key={o.key} value={o.key} style={{ background: '#1a1a1a', color: '#ededed' }}>{o.label}</option>
                   ))}
                 </select>
-                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: 'rgba(212,175,55,0.5)' }} />
+                <ChevronDown size={12} strokeWidth={1.5}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-fg-tertiary" />
               </div>
             </div>
           </div>
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24" style={{ color: 'rgba(255,255,255,0.45)' }}>
-            <Loader2 size={28} className="animate-spin mb-3" style={{ color: '#d4af37' }} />
-            <p className="text-sm">加载中…</p>
+          <div className="flex flex-col items-center justify-center py-24 text-fg-secondary">
+            <Loader2 size={28} strokeWidth={1.5} className="animate-spin mb-3 text-gold" />
+            <p className="text-body">加载中…</p>
           </div>
         ) : error ? (
-          <div className="text-center py-20">
-            <p className="text-3xl mb-3">⚠️</p>
-            <p className="font-semibold text-white mb-1">加载失败</p>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>{error}</p>
+          <div className="text-center py-24">
+            <h3 className="text-heading-lg text-fg-primary mb-2">加载失败</h3>
+            <p className="text-body text-fg-secondary">{error}</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-3xl mb-3">🔍</p>
-            <p className="font-semibold text-white mb-1">暂无匹配房源</p>
-            <button onClick={resetFilters} className="mt-3 text-sm underline underline-offset-2" style={{ color: '#d4af37' }}>
+          <div className="text-center py-24">
+            <h3 className="text-heading-lg text-fg-primary mb-2">暂无匹配房源</h3>
+            <p className="text-body text-fg-secondary mb-4">调整筛选条件再试一次</p>
+            <button
+              onClick={resetFilters}
+              className="text-body text-gold hover:underline underline-offset-4"
+            >
               清除所有筛选
             </button>
           </div>
@@ -473,38 +420,37 @@ export default function ListingsPage() {
 
             {/* Pagination controls */}
             {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-center gap-1.5 flex-wrap">
+              <div className="mt-12 flex items-center justify-center gap-1.5 flex-wrap">
                 {/* Prev */}
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={safePage === 1}
-                  className="flex items-center gap-1 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.7)',
-                  }}>
-                  <ChevronLeft size={13} /> 上一页
+                  className={[
+                    'flex items-center gap-1 px-3.5 py-2 rounded-md text-caption font-medium',
+                    'bg-bg-elev-2 border border-white/[0.06] text-fg-secondary',
+                    'transition-[background,color,border-color,opacity] duration-base ease-standard',
+                    'hover:text-fg-primary hover:border-white/16 active:scale-[0.98]',
+                    'disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100',
+                  ].join(' ')}>
+                  <ChevronLeft size={13} strokeWidth={1.5} /> 上一页
                 </button>
 
                 {/* Page numbers */}
                 {pageList().map((p, i) =>
                   p === '...' ? (
-                    <span key={`dots-${i}`} className="px-2 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>…</span>
+                    <span key={`dots-${i}`} className="px-2 text-caption text-fg-tertiary">…</span>
                   ) : (
                     <button
                       key={p}
                       onClick={() => setCurrentPage(p as number)}
-                      className="min-w-[36px] px-3 py-2 rounded-lg text-xs font-semibold transition-all"
-                      style={p === safePage ? {
-                        background: '#d4af37',
-                        color: '#141414',
-                        border: '1px solid #d4af37',
-                      } : {
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        color: 'rgba(255,255,255,0.7)',
-                      }}>
+                      className={[
+                        'min-w-[36px] px-3 py-2 rounded-md text-caption font-semibold tabular',
+                        'transition-[background,color,border-color] duration-base ease-standard',
+                        'active:scale-[0.96]',
+                        p === safePage
+                          ? 'bg-gold text-bg-base border border-gold'
+                          : 'bg-bg-elev-2 border border-white/[0.06] text-fg-secondary hover:text-fg-primary hover:border-white/16',
+                      ].join(' ')}>
                       {p}
                     </button>
                   )
@@ -514,13 +460,14 @@ export default function ListingsPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={safePage === totalPages}
-                  className="flex items-center gap-1 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.7)',
-                  }}>
-                  下一页 <ChevronRight size={13} />
+                  className={[
+                    'flex items-center gap-1 px-3.5 py-2 rounded-md text-caption font-medium',
+                    'bg-bg-elev-2 border border-white/[0.06] text-fg-secondary',
+                    'transition-[background,color,border-color,opacity] duration-base ease-standard',
+                    'hover:text-fg-primary hover:border-white/16 active:scale-[0.98]',
+                    'disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100',
+                  ].join(' ')}>
+                  下一页 <ChevronRight size={13} strokeWidth={1.5} />
                 </button>
               </div>
             )}
@@ -528,22 +475,22 @@ export default function ListingsPage() {
         )}
 
         {/* Auction CTA */}
-        <div className="mt-10 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-5"
-          style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="mt-16 rounded-2xl p-7 flex flex-col sm:flex-row items-center gap-5 bg-gold-tint border border-gold-line">
           <div className="flex-1">
-            <h3 className="font-bold text-white text-base mb-1">寻找更低价格？</h3>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <h3 className="text-heading-lg text-fg-primary mb-1">寻找更低价格？</h3>
+            <p className="text-body text-fg-secondary">
               法拍房起拍价最低为评估价 50%，一手数据尽在法拍房信息汇总
             </p>
           </div>
-          <Link to="/auction"
-            className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
-            style={{ background: '#d4af37', color: '#141414' }}
+          <ButtonLink
+            to="/auction"
+            variant="primary"
+            size="md"
+            leadingIcon={<Gavel size={14} strokeWidth={1.75} />}
+            trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
           >
-            <Gavel size={14} />
             查看法拍房信息汇总
-            <ArrowRight size={13} />
-          </Link>
+          </ButtonLink>
         </div>
       </div>
     </div>
