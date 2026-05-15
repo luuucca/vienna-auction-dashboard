@@ -1057,12 +1057,13 @@ export default function HomePage() {
                   'YELLOWBIRD', 'GLORIT', 'VALERTO', 'STOLZ',
                   'LAGEEINS', 'LANDAA', 'PRIMA', 'KORN12',
                   'WINEGG', 'HARING', 'BOOMLIVING',
-                ].map((name, i, arr) => (
+                ].map((name) => (
                   <React.Fragment key={`${copy}-${name}`}>
                     <span className="p-logo">{name}</span>
-                    {i < arr.length - 1 && (
-                      <div className="flex-shrink-0 w-px h-3 bg-white/[0.08]" />
-                    )}
+                    {/* Always render divider — including after the last
+                        logo — so the wrap-around between the two
+                        copies also gets a separator. */}
+                    <div className="flex-shrink-0 w-px h-3 bg-white/[0.08]" />
                   </React.Fragment>
                 ))}
               </div>
