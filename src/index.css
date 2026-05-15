@@ -255,6 +255,14 @@ body {
 .prose-content a:hover { color: var(--gold-hover); }
 
 /* ──────────────────────────────────────────────────────────────────────────
+   Auction-card centered map pin — soft pulsing halo behind the glyph.
+   ────────────────────────────────────────────────────────────────────────── */
+@keyframes pinHalo {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1);    }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.18); }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
    Hero scroll trail — a gold dot travels down a thin track, repeating.
    ────────────────────────────────────────────────────────────────────────── */
 @keyframes scrollTrail {

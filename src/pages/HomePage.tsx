@@ -89,7 +89,107 @@ function AuctionIconStat({
 }
 
 /* ─────────────────────────────────────────────
-   Animated city network canvas
+   Editorial city-street visual — static SVG with two crossed pattern
+   grids (rotated), a radial fade mask, scattered glints, and a single
+   centered glowing map pin. Replaces the older animated network canvas.
+───────────────────────────────────────────── */
+const MAP_GLINTS: { x: number; y: number; r: number; o: number }[] = [
+  { x: 8,  y: 22, r: 1.1, o: 0.45 }, { x: 18, y: 38, r: 1.4, o: 0.7  },
+  { x: 26, y: 14, r: 1.0, o: 0.35 }, { x: 34, y: 62, r: 1.3, o: 0.55 },
+  { x: 42, y: 28, r: 1.1, o: 0.5  }, { x: 56, y: 18, r: 1.5, o: 0.75 },
+  { x: 62, y: 48, r: 1.2, o: 0.6  }, { x: 70, y: 72, r: 1.1, o: 0.4  },
+  { x: 78, y: 32, r: 1.3, o: 0.65 }, { x: 86, y: 58, r: 1.4, o: 0.55 },
+  { x: 22, y: 78, r: 1.2, o: 0.45 }, { x: 50, y: 84, r: 1.1, o: 0.35 },
+  { x: 14, y: 56, r: 1.0, o: 0.4  }, { x: 90, y: 14, r: 1.2, o: 0.5  },
+]
+
+function AuctionMapVisual() {
+  return (
+    <>
+      {/* Underlying street-grid SVG */}
+      <svg
+        viewBox="0 0 800 320"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 w-full h-full"
+        aria-hidden
+      >
+        <defs>
+          {/* Pattern A — finer grid, rotated +22° */}
+          <pattern
+            id="auction-streets-a"
+            x="0" y="0" width="42" height="42"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(22)"
+          >
+            <line x1="0" y1="0" x2="42" y2="0" stroke="rgba(212,175,55,0.18)" strokeWidth="0.6" />
+            <line x1="0" y1="0" x2="0" y2="42" stroke="rgba(212,175,55,0.18)" strokeWidth="0.6" />
+          </pattern>
+          {/* Pattern B — broader arteries, rotated -18° */}
+          <pattern
+            id="auction-streets-b"
+            x="0" y="0" width="110" height="110"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(-18)"
+          >
+            <line x1="0" y1="0" x2="110" y2="0" stroke="rgba(212,175,55,0.32)" strokeWidth="0.9" />
+            <line x1="0" y1="55" x2="110" y2="55" stroke="rgba(212,175,55,0.14)" strokeWidth="0.6" />
+            <line x1="0" y1="0" x2="0" y2="110" stroke="rgba(212,175,55,0.22)" strokeWidth="0.8" />
+          </pattern>
+          {/* Soft radial fade — edges dissolve into card surface */}
+          <radialGradient id="auction-map-fade" cx="50%" cy="50%" r="60%">
+            <stop offset="0%"  stopColor="#fff" stopOpacity="1"   />
+            <stop offset="55%" stopColor="#fff" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0"  />
+          </radialGradient>
+          <mask id="auction-mask">
+            <rect width="800" height="320" fill="url(#auction-map-fade)" />
+          </mask>
+        </defs>
+
+        <rect width="800" height="320" fill="url(#auction-streets-a)" mask="url(#auction-mask)" />
+        <rect width="800" height="320" fill="url(#auction-streets-b)" mask="url(#auction-mask)" />
+
+        {/* Scattered glints at intersections */}
+        {MAP_GLINTS.map((g, i) => (
+          <circle
+            key={i}
+            cx={(g.x / 100) * 800}
+            cy={(g.y / 100) * 320}
+            r={g.r}
+            fill="#d4af37"
+            opacity={g.o}
+          />
+        ))}
+      </svg>
+
+      {/* Centered glowing map pin */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative" style={{ animation: 'heroFadeUp 0.7s var(--ease-emphasis) 0.2s both' }}>
+          {/* Soft halo */}
+          <span
+            aria-hidden
+            className="absolute top-1/2 left-1/2"
+            style={{
+              width: 96, height: 96, transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle, rgba(212,175,55,0.35) 0%, rgba(212,175,55,0.08) 50%, transparent 75%)',
+              animation: 'pinHalo 2.6s ease-in-out infinite',
+              borderRadius: '50%',
+            }}
+          />
+          <MapPin
+            size={40}
+            strokeWidth={1.5}
+            className="text-gold relative"
+            style={{ filter: 'drop-shadow(0 0 10px rgba(212,175,55,0.9))' }}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Animated city network canvas (legacy — kept in case we want it back)
 ───────────────────────────────────────────── */
 function CityNetworkCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -592,34 +692,9 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                {/* Center: animated map with pin overlays */}
+                {/* Center: editorial street-grid visual with single centered pin */}
                 <div className="relative h-72 lg:h-auto min-h-[260px] overflow-hidden bg-bg-base lg:border-r border-white/[0.06]">
-                  <CityNetworkCanvas />
-                  {/* Static gold map-pin overlays for editorial richness */}
-                  {[
-                    { left: '18%', top: '28%' }, { left: '46%', top: '18%' },
-                    { left: '70%', top: '32%' }, { left: '34%', top: '52%' },
-                    { left: '58%', top: '58%' }, { left: '78%', top: '62%' },
-                    { left: '24%', top: '72%' }, { left: '50%', top: '78%' },
-                  ].map((p, i) => (
-                    <div
-                      key={i}
-                      className="absolute -translate-x-1/2 -translate-y-full pointer-events-none"
-                      style={{
-                        left: p.left, top: p.top,
-                        filter: 'drop-shadow(0 0 6px rgba(212,175,55,0.55))',
-                        animation: `heroFadeUp 0.5s var(--ease-standard) ${0.3 + i * 0.06}s both`,
-                      }}
-                    >
-                      <MapPin size={18} strokeWidth={2} fill="#d4af37" stroke="rgba(12,12,12,0.6)" />
-                    </div>
-                  ))}
-                  {/* Bottom fade so map blends into card */}
-                  <div
-                    aria-hidden
-                    className="absolute bottom-0 left-0 right-0 h-12"
-                    style={{ background: 'linear-gradient(to top, rgba(19,19,19,1), transparent)' }}
-                  />
+                  <AuctionMapVisual />
                 </div>
 
                 {/* Right: real-time insights */}
