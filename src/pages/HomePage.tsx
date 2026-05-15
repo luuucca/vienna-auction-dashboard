@@ -268,10 +268,46 @@ export default function HomePage() {
     <div className="min-h-screen bg-bg-base text-fg-primary overflow-x-hidden">
 
       {/* ════════════ HERO ════════════ */}
-      <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6 lg:px-10">
-        {/* Background pattern drifts down on scroll (opposite direction = depth) */}
-        <motion.div className="absolute inset-0 pointer-events-none" style={{ y: bgPatternY }}>
-          <BGPattern size={32} fill="rgba(212,175,55,0.06)" />
+      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6 lg:px-10">
+
+        {/* ── Background image — dramatic Vienna at night (parallax) ─────── */}
+        <motion.div
+          className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
+          style={{ y: bgPatternY }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=2400&q=85&auto=format&fit=crop"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: 0.55 }}
+            loading="eager"
+            decoding="async"
+            // @ts-ignore — valid HTML attribute
+            fetchpriority="high"
+          />
+          {/* Top→bottom darkening so text stays readable */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.65) 35%, rgba(12,12,12,0.88) 75%, rgba(12,12,12,1) 100%)',
+            }}
+          />
+          {/* Side / center vignette to focus on the headline */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(12,12,12,0.55) 100%)',
+            }}
+          />
+        </motion.div>
+
+        {/* Subtle gold dots over the image — keeps the editorial texture */}
+        <motion.div className="absolute inset-0 z-[1] pointer-events-none" style={{ y: bgPatternY }}>
+          <BGPattern size={36} fill="rgba(212,175,55,0.04)" />
         </motion.div>
 
         {/* Hero content fades + parallax-translates as user scrolls */}
@@ -357,6 +393,87 @@ export default function HomePage() {
             </div>
           </motion.div>
 
+        </motion.div>
+
+        {/* ── Golden flowing waves — bottom of hero ─────────────────────── */}
+        <motion.div
+          aria-hidden
+          className="absolute bottom-0 left-0 right-0 pointer-events-none z-[5] gold-waves-wrap"
+          style={{ height: 260, opacity: heroOpacity }}
+        >
+          <svg
+            className="absolute bottom-0 left-0 w-full h-full"
+            preserveAspectRatio="none"
+            viewBox="0 0 1920 260"
+          >
+            <defs>
+              <linearGradient id="goldWaveBright" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%"   stopColor="rgba(212,175,55,0)" />
+                <stop offset="20%"  stopColor="rgba(212,175,55,0.5)" />
+                <stop offset="50%"  stopColor="rgba(255,225,140,1)" />
+                <stop offset="80%"  stopColor="rgba(212,175,55,0.5)" />
+                <stop offset="100%" stopColor="rgba(212,175,55,0)" />
+              </linearGradient>
+              <linearGradient id="goldWaveSoft" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%"   stopColor="rgba(212,175,55,0)" />
+                <stop offset="50%"  stopColor="rgba(212,175,55,0.7)" />
+                <stop offset="100%" stopColor="rgba(212,175,55,0)" />
+              </linearGradient>
+              <filter id="goldGlow" x="-5%" y="-50%" width="110%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Bright main wave with glow */}
+            <path
+              d="M 0 140 C 320 80, 640 200, 960 130 S 1600 90, 1920 150"
+              stroke="url(#goldWaveBright)"
+              strokeWidth="1.8"
+              fill="none"
+              filter="url(#goldGlow)"
+              className="gold-wave-1"
+            />
+            {/* Second wave, softer */}
+            <path
+              d="M 0 170 C 320 110, 640 230, 960 160 S 1600 120, 1920 180"
+              stroke="url(#goldWaveSoft)"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.6"
+              className="gold-wave-2"
+            />
+            {/* Third wave, thinnest */}
+            <path
+              d="M 0 200 C 320 140, 640 260, 960 190 S 1600 150, 1920 210"
+              stroke="url(#goldWaveSoft)"
+              strokeWidth="0.8"
+              fill="none"
+              opacity="0.35"
+              className="gold-wave-3"
+            />
+            {/* Sparkle dots along the main wave */}
+            {[
+              { cx: 240,  cy: 138 },
+              { cx: 640,  cy: 175 },
+              { cx: 960,  cy: 142 },
+              { cx: 1280, cy: 110 },
+              { cx: 1640, cy: 130 },
+            ].map((p, i) => (
+              <circle
+                key={i}
+                cx={p.cx}
+                cy={p.cy}
+                r="1.6"
+                fill="rgba(255,225,140,0.95)"
+                filter="url(#goldGlow)"
+                className={`gold-sparkle gold-sparkle-${i}`}
+              />
+            ))}
+          </svg>
         </motion.div>
 
         {/* Scroll hint — absolutely pinned to the bottom of the hero so it
