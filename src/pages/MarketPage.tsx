@@ -87,7 +87,7 @@ export default function MarketPage() {
     for (const l of listings) {
       if (l.forRent || l.price <= 0 || l.sqm <= 0) continue
       const d = districtFromText(l.address?.district)
-      if (d <= 0) continue
+      if (d < 1 || d > 23) continue   // Vienna has only 23 districts
       const perSqm = l.price / l.sqm
       const g = groups.get(d) ?? { district: d, count: 0, sumPerSqm: 0, avgPerSqm: 0, minPrice: Infinity, maxPrice: 0 }
       g.count += 1
