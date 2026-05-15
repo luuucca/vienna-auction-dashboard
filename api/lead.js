@@ -133,8 +133,9 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: '提交失败，请稍后重试或直接微信联系' })
     }
 
-    // Fire-and-forget Telegram notification (don't block response)
-    notifyTelegram({ name, contact, email, message, source: finalSource, address })
+    // Await Telegram so the serverless runtime doesn't freeze the fetch
+    // mid-flight. ~300ms extra is unnoticeable to the user.
+    await notifyTelegram({ name, contact, email, message, source: finalSource, address })
 
     return res.status(200).json({ ok: true })
   } catch (e) {
