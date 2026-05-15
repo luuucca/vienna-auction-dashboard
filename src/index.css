@@ -258,43 +258,37 @@ body {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Gold waves — slow horizontal drift gives the hero "in motion" feel.
-   Each wave drifts at a slightly different speed (parallax depth).
+   HeroFlowLines — flowing gold contour lines.
+   Each dashed path drifts via stroke-dashoffset, slow enough (14–22s) to
+   feel like silk threads or financial-chart lines, not arcade visuals.
    ────────────────────────────────────────────────────────────────────────── */
-@keyframes goldWaveDrift1 {
-  0%   { transform: translate3d(-2%, 0, 0); }
-  50%  { transform: translate3d( 2%, 4px, 0); }
-  100% { transform: translate3d(-2%, 0, 0); }
+@keyframes hfl-flow {
+  to { stroke-dashoffset: -290; }
 }
-@keyframes goldWaveDrift2 {
-  0%   { transform: translate3d( 2%, 0, 0); }
-  50%  { transform: translate3d(-2%, -3px, 0); }
-  100% { transform: translate3d( 2%, 0, 0); }
-}
-@keyframes goldWaveDrift3 {
-  0%   { transform: translate3d(-3%, 0, 0); }
-  50%  { transform: translate3d( 3%, 2px, 0); }
-  100% { transform: translate3d(-3%, 0, 0); }
-}
-.gold-wave-1 { animation: goldWaveDrift1 16s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-.gold-wave-2 { animation: goldWaveDrift2 22s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-.gold-wave-3 { animation: goldWaveDrift3 28s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.hfl-flow { animation: hfl-flow 18s linear infinite; }
+.hfl-flow-1 { animation-duration: 14s; }
+.hfl-flow-2 { animation-duration: 19s; }
+.hfl-flow-3 { animation-duration: 22s; }
 
-/* Sparkle dots along the wave — staggered pulse */
-@keyframes goldSparkle {
+/* Sparkle particles — slow staggered breathing */
+@keyframes hfl-sparkle {
   0%, 100% { opacity: 0.25; transform: scale(0.7); }
-  50%      { opacity: 1;    transform: scale(1.4); }
+  50%      { opacity: 1;    transform: scale(1.5); }
 }
-.gold-sparkle {
+.hfl-sparkle {
   transform-box: fill-box;
   transform-origin: center;
-  animation: goldSparkle 3.6s ease-in-out infinite;
+  animation: hfl-sparkle 4.2s ease-in-out infinite;
 }
-.gold-sparkle-0 { animation-delay: 0s;    }
-.gold-sparkle-1 { animation-delay: 0.7s;  }
-.gold-sparkle-2 { animation-delay: 1.4s;  }
-.gold-sparkle-3 { animation-delay: 2.1s;  }
-.gold-sparkle-4 { animation-delay: 2.8s;  }
+.hfl-sparkle-0 { animation-delay: 0s;   }
+.hfl-sparkle-1 { animation-delay: 1.4s; }
+.hfl-sparkle-2 { animation-delay: 2.8s; }
+
+/* Mobile — reduce opacity of the whole layer so curves never compete
+   with the smaller text */
+@media (max-width: 640px) {
+  .hero-flow-lines { opacity: 0.55; }
+}
 
 /* ──────────────────────────────────────────────────────────────────────────
    Marquee pause-on-hover already exists; no change.
