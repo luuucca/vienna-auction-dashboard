@@ -26,7 +26,9 @@ import { useReducedMotion } from 'framer-motion'
 
 const SLIDES = [
   '/hero/01-stephansdom-dusk.mp4',
+  '/hero/05-votivkirche-night.mp4',
   '/hero/02-belvedere-golden.mp4',
+  '/hero/06-hofburg-sunset.mp4',
   '/hero/03-ringstrasse-night.mp4',
   '/hero/04-donaukanal-twilight.mp4',
 ]
