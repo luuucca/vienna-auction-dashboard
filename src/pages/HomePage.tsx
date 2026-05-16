@@ -764,8 +764,11 @@ export default function HomePage() {
               </div>
 
               {/* ── Bottom row: icon stats + CTA ────────────────────────────── */}
+              {/* Mobile: stats grid full-width, CTA on a second row,
+                  right-aligned via self-end so the right-handed thumb
+                  can reach it. Desktop: row layout, CTA at the far right. */}
               <div
-                className="border-t border-white/[0.06] p-6 sm:p-7 flex flex-col lg:flex-row items-start lg:items-center gap-6"
+                className="border-t border-white/[0.06] p-6 sm:p-7 flex flex-col lg:flex-row items-stretch lg:items-center gap-5 lg:gap-6"
                 style={{ background: 'rgba(12,12,12,0.4)' }}
               >
                 <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-5 w-full">
@@ -790,14 +793,16 @@ export default function HomePage() {
                     label="无需注册"
                   />
                 </div>
-                <ButtonLink
-                  to="/auction"
-                  variant="primary"
-                  size="md"
-                  trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
-                >
-                  进入看板
-                </ButtonLink>
+                <div className="self-end lg:self-auto">
+                  <ButtonLink
+                    to="/auction"
+                    variant="primary"
+                    size="md"
+                    trailingIcon={<ArrowRight size={13} strokeWidth={1.75} />}
+                  >
+                    进入看板
+                  </ButtonLink>
+                </div>
               </div>
             </div>
           </Reveal>

@@ -68,7 +68,9 @@ export function NavBar() {
     <>
       <nav
         className={[
-          'fixed top-0 left-0 right-0 z-50',
+          // z-[1500] beats Leaflet's z-1000 controls so the auction
+          // map can't poke through the navbar or block the menu toggle.
+          'fixed top-0 left-0 right-0 z-[1500]',
           'bg-bg-base border-b',
           'transition-[height,border-color] duration-base ease-standard',
           scrolled ? 'h-14 border-white/[0.06]' : 'h-16 border-transparent',
@@ -184,9 +186,11 @@ export function NavBar() {
       </nav>
 
       {/* ── Mobile menu — full-screen overlay ───────────────────────────── */}
+      {/* z-[1400] sits above Leaflet's z-1000 controls but below the navbar
+          itself so the hamburger / close button stays interactive. */}
       <div
         className={[
-          'fixed inset-0 z-40 md:hidden',
+          'fixed inset-0 z-[1400] md:hidden',
           'transition-[opacity,visibility] duration-base ease-standard',
           open ? 'opacity-100 visible' : 'opacity-0 invisible',
         ].join(' ')}
