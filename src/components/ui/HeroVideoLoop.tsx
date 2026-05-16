@@ -32,12 +32,11 @@ const SLIDES = [
   '/hero/04-donaukanal-twilight.mp4',
 ]
 
-// Seedance clips are 5.06s native. We stretch them to ~8.1s by
-// playing at 0.625× rate — gentler camera motion, less dizzying
-// for the viewer. Cycle 6.5s + 1.5s crossfade means the fade ends
-// right when the slowed video naturally ends (8s ≈ 5.06s × 1.6).
-const PLAYBACK_RATE     = 0.625
-const SLIDE_DURATION_MS = 6500
+// Seedance clips are 5.06s native. We stretch to ~6.5s real time
+// at 0.78× — a touch slower than natural, calmer than raw playback,
+// without feeling like slow-mo replay.
+const PLAYBACK_RATE     = 0.78
+const SLIDE_DURATION_MS = 5000
 const CROSSFADE_MS      = 1500
 const PEAK_OPACITY      = 0.72
 

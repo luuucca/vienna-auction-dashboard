@@ -10,6 +10,7 @@ import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 import { Reveal } from '../components/ui/Reveal'
 import { HeroVideoLoop } from '../components/ui/HeroVideoLoop'
+import { LogoConverge } from '../components/ui/LogoConverge'
 import { CountUp } from '../components/ui/CountUp'
 
 /* ─────────────────────────────────────────────
@@ -525,13 +526,9 @@ export default function HomePage() {
           className="relative z-10 w-full max-w-content mx-auto py-24 text-center"
           style={{ opacity: heroOpacity }}
         >
-          {/* Overline badge — fastest parallax */}
+          {/* AX logomark — A and X letterforms converge into the logo */}
           <motion.div className="hero-fade-1 mb-8 flex justify-center" style={{ y: badgeY }}>
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-overline text-gold"
-              style={{ background: 'var(--gold-tint)', border: '1px solid var(--gold-line)' }}>
-              <Building2 size={11} strokeWidth={1.75} />
-              维也纳 · 华人房产经纪
-            </div>
+            <LogoConverge height={56} />
           </motion.div>
 
           {/* Display headline */}
