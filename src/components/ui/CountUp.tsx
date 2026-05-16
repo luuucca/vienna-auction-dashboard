@@ -33,12 +33,16 @@ export function CountUp({
   const ref = useRef<HTMLSpanElement | null>(null)
   const [display, setDisplay] = useState(0)
   const startedRef = useRef(false)
+  const displayRef = useRef(0)
+  // Keep displayRef in sync so the value-change effect can read it
+  // without listing `display` as a dependency.
+  displayRef.current = display
 
+  // ── First-paint animation: viewport-triggered 0 → target ──
   useEffect(() => {
     const el = ref.current
     if (!el) return
 
-    // Reduced motion: jump straight to target
     if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       setDisplay(value)
       startedRef.current = true
@@ -52,16 +56,12 @@ export function CountUp({
           io.disconnect()
 
           const start = performance.now()
-          const from = 0
-          const to = value
-
           const tick = (now: number) => {
             const t = Math.min(1, (now - start) / duration)
-            // Standard ease-out
             const eased = 1 - Math.pow(1 - t, 3)
-            setDisplay(from + (to - from) * eased)
+            setDisplay(eased * value)
             if (t < 1) requestAnimationFrame(tick)
-            else setDisplay(to)
+            else setDisplay(value)
           }
           requestAnimationFrame(tick)
         }
@@ -70,7 +70,33 @@ export function CountUp({
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [value, duration])
+    // intentionally empty deps — first-paint only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ── Post-mount value changes: smoothly catch up to new target ──
+  // Triggered when async data (e.g. /api/listings) arrives after the
+  // initial viewport-triggered animation has already locked startedRef.
+  useEffect(() => {
+    if (!startedRef.current) return
+    if (Math.abs(displayRef.current - value) < 0.5) return
+
+    const start = performance.now()
+    const from = displayRef.current
+    const to = value
+    const dur = 600
+
+    let raf = 0
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / dur)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setDisplay(from + (to - from) * eased)
+      if (t < 1) raf = requestAnimationFrame(tick)
+      else setDisplay(to)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [value])
 
   const formatted = display.toLocaleString(locale, {
     minimumFractionDigits: decimals,
