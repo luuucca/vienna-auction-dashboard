@@ -26,7 +26,6 @@ import { useReducedMotion } from 'framer-motion'
 
 const SLIDES = [
   '/hero/01-stephansdom-dusk.mp4',
-  '/hero/05-votivkirche-night.mp4',
   '/hero/02-belvedere-golden.mp4',
   '/hero/06-hofburg-sunset.mp4',
   '/hero/03-ringstrasse-night.mp4',
@@ -39,7 +38,7 @@ const SLIDES = [
 // it's visible.
 const SLIDE_DURATION_MS = 4000
 const CROSSFADE_MS      = 1200
-const PEAK_OPACITY      = 0.58
+const PEAK_OPACITY      = 0.72
 
 export function HeroVideoLoop() {
   const [index, setIndex] = React.useState(0)
