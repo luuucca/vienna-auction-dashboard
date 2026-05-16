@@ -76,13 +76,22 @@ export function NavBar() {
       >
         <div className="max-w-content mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between">
 
-          {/* Wordmark */}
+          {/* Wordmark — AX logomark + text */}
           <Link
             to="/"
-            className="font-semibold tracking-tight text-gold hover:text-gold-hover transition-colors duration-base ease-standard"
+            className="inline-flex items-center gap-2 font-semibold tracking-tight text-gold hover:text-gold-hover transition-colors duration-base ease-standard group"
             style={{ fontSize: 15, letterSpacing: '-0.01em' }}
           >
-            奥匈置业研究所
+            <img
+              src="/logo.png"
+              alt=""
+              className="h-6 w-auto"
+              // Recolor the dark-grey mark to the brand gold (#d4af37).
+              // Computed via approximate hex→filter conversion; tweak if
+              // the rendered shade looks off.
+              style={{ filter: 'brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(615%) hue-rotate(2deg) brightness(91%) contrast(86%)' }}
+            />
+            <span>奥匈置业研究所</span>
           </Link>
 
           {/* Desktop links */}

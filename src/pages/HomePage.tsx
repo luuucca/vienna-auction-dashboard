@@ -1078,7 +1078,15 @@ export default function HomePage() {
       <footer className="px-4 sm:px-6 lg:px-10 pt-10 pb-8 bg-bg-base border-t border-white/[0.06]">
         <div className="max-w-content mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
-            <div className="text-body font-semibold text-gold">奥匈置业研究所</div>
+            <div className="inline-flex items-center gap-2 text-body font-semibold text-gold">
+              <img
+                src="/logo.png"
+                alt=""
+                className="h-5 w-auto"
+                style={{ filter: 'brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(615%) hue-rotate(2deg) brightness(91%) contrast(86%)' }}
+              />
+              <span>奥匈置业研究所</span>
+            </div>
             <p className="text-caption text-fg-tertiary text-center">
               © 2025 Yellowbird Immobilienmakler GmbH · Wien, Austria
             </p>
