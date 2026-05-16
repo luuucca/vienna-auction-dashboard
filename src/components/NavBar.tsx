@@ -85,10 +85,8 @@ export function NavBar() {
             <img
               src="/logo.png"
               alt=""
-              className="h-6 w-auto"
+              className="h-9 sm:h-10 w-auto"
               // Recolor the dark-grey mark to the brand gold (#d4af37).
-              // Computed via approximate hex→filter conversion; tweak if
-              // the rendered shade looks off.
               style={{ filter: 'brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(615%) hue-rotate(2deg) brightness(91%) contrast(86%)' }}
             />
             <span>奥匈置业研究所</span>

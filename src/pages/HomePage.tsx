@@ -1082,7 +1082,7 @@ export default function HomePage() {
               <img
                 src="/logo.png"
                 alt=""
-                className="h-5 w-auto"
+                className="h-8 w-auto"
                 style={{ filter: 'brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(615%) hue-rotate(2deg) brightness(91%) contrast(86%)' }}
               />
               <span>奥匈置业研究所</span>
