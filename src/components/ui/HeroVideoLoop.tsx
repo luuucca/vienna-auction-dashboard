@@ -32,12 +32,13 @@ const SLIDES = [
   '/hero/04-donaukanal-twilight.mp4',
 ]
 
-// Seedance-2.0 default output is 5.06s per clip. Cycle 4s before
-// the next slide so the 1.2s crossfade ends right at the 5s natural
-// end-of-clip — the outgoing video is still moving the entire time
-// it's visible.
-const SLIDE_DURATION_MS = 4000
-const CROSSFADE_MS      = 1200
+// Seedance clips are 5.06s native. We stretch them to ~8.1s by
+// playing at 0.625× rate — gentler camera motion, less dizzying
+// for the viewer. Cycle 6.5s + 1.5s crossfade means the fade ends
+// right when the slowed video naturally ends (8s ≈ 5.06s × 1.6).
+const PLAYBACK_RATE     = 0.625
+const SLIDE_DURATION_MS = 6500
+const CROSSFADE_MS      = 1500
 const PEAK_OPACITY      = 0.72
 
 export function HeroVideoLoop() {
@@ -73,6 +74,7 @@ export function HeroVideoLoop() {
     if (incoming) {
       try {
         incoming.currentTime = 0
+        incoming.playbackRate = PLAYBACK_RATE
         // play() returns a Promise; swallow rejections from autoplay
         // policies — muted + playsInline means the browser will
         // generally grant it, but a tab-throttle race can still
@@ -110,6 +112,11 @@ export function HeroVideoLoop() {
           // Mount-time autoplay for slide 0. The effect above takes
           // over from there.
           autoPlay={i === 0}
+          // Ensure slide 0 inherits the slowdown the first time it
+          // loads. Subsequent loads are handled by the index effect.
+          onLoadedMetadata={(e) => {
+            if (i === 0) (e.currentTarget as HTMLVideoElement).playbackRate = PLAYBACK_RATE
+          }}
           onError={() => {
             setAvailable(a => a.map((v, idx) => idx === i ? false : v))
           }}
