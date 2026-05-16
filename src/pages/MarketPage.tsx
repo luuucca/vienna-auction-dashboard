@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { TrendingUp, ArrowRight } from 'lucide-react'
 import { ButtonLink } from '../components/ui/Button'
 import { Reveal } from '../components/ui/Reveal'
@@ -198,79 +198,33 @@ export default function MarketPage() {
             </div>
 
             <div className="rounded-2xl p-5 sm:p-7 bg-bg-elev-1 border border-white/[0.06] space-y-2">
-              {DISTRICT_DATA.map((d, i) => (
-                <DistrictBar
-                  key={d.district}
-                  district={d.district}
-                  name={DISTRICT_NAMES[d.district] || ''}
-                  avgPerSqm={d.avgPerSqm}
-                  yoyPct={d.yoyPct}
-                  maxValue={maxDistrictPrice}
-                  selected={d.district === selectedDistrict}
-                  onClick={() => setSelectedDistrict(d.district)}
-                  delay={i * 30}
-                />
-              ))}
+              {DISTRICT_DATA.map((d, i) => {
+                const selected = d.district === selectedDistrict
+                return (
+                  <React.Fragment key={d.district}>
+                    <DistrictBar
+                      district={d.district}
+                      name={DISTRICT_NAMES[d.district] || ''}
+                      avgPerSqm={d.avgPerSqm}
+                      yoyPct={d.yoyPct}
+                      maxValue={maxDistrictPrice}
+                      selected={selected}
+                      onClick={() => setSelectedDistrict(prev => prev === d.district ? prev : d.district)}
+                      delay={i * 30}
+                    />
+                    {/* Inline detail panel — opens directly under the
+                        clicked district instead of at the bottom. */}
+                    <AnimatePresence initial={false}>
+                      {selected && (
+                        <DistrictDetail row={d} />
+                      )}
+                    </AnimatePresence>
+                  </React.Fragment>
+                )
+              })}
             </div>
           </section>
         </Reveal>
-
-        {/* ── 3. Selected district detail — official data ──────────────── */}
-        {selectedRow && (
-          <Reveal>
-            <section>
-              <div className="mb-6 flex items-baseline justify-between gap-3 flex-wrap">
-                <div>
-                  <p className="text-overline text-fg-tertiary uppercase mb-2">District {selectedRow.district}</p>
-                  <h2 className="font-serif text-display-lg text-fg-primary tracking-tight">
-                    {selectedRow.district} 区 · {DISTRICT_NAMES[selectedRow.district]}
-                  </h2>
-                </div>
-                <p className="text-caption text-fg-tertiary tabular">
-                  数据来源 · ImmoUnited 2026
-                </p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-                <DetailStat
-                  label="售价 · 均价"
-                  value={`€${selectedRow.avgPerSqm.toLocaleString()}`}
-                  unit="/ m²"
-                  accent
-                />
-                <DetailStat
-                  label="售价 · 区间"
-                  value={`€${(selectedRow.lowPerSqm/1000).toFixed(1)}K – €${(selectedRow.highPerSqm/1000).toFixed(1)}K`}
-                  unit="/ m²"
-                />
-                <DetailStat
-                  label="租金 · Hauptmiete"
-                  value={`€${selectedRow.rentPerSqm.toFixed(1)}`}
-                  unit="/ m² / 月"
-                />
-                <DetailStat
-                  label="同比涨幅"
-                  value={`+${selectedRow.yoyPct.toFixed(1)}%`}
-                  unit="2025 → 2026"
-                />
-              </div>
-
-              <div className="mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl p-5 bg-gold-tint border border-gold-line">
-                <p className="text-body text-fg-secondary">
-                  想看本站 <span className="text-fg-primary font-medium">{selectedRow.district} 区</span> 当前在售的房源？
-                </p>
-                <ButtonLink
-                  to={`/listings?district=${selectedRow.district}`}
-                  variant="primary"
-                  size="md"
-                  trailingIcon={<ArrowRight size={14} strokeWidth={1.75} />}
-                >
-                  浏览 {selectedRow.district} 区房源
-                </ButtonLink>
-              </div>
-            </section>
-          </Reveal>
-        )}
 
         {/* Disclaimer */}
         <p className="text-caption text-fg-tertiary max-w-prose leading-relaxed pt-4 border-t border-white/[0.06]">
@@ -450,13 +404,65 @@ function DistrictBar({
   )
 }
 
-// ─── Stat block ─────────────────────────────────────────────────────────────
+// ─── Inline district detail panel — renders directly under the clicked bar ──
+function DistrictDetail({ row }: { row: DistrictRow }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      style={{ overflow: 'hidden' }}
+    >
+      <div className="pt-3 pb-2 px-1">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <DetailStat
+            label="售价 · 均价"
+            value={`€${row.avgPerSqm.toLocaleString()}`}
+            unit="/ m²"
+            accent
+          />
+          <DetailStat
+            label="售价 · 区间"
+            value={`€${(row.lowPerSqm / 1000).toFixed(1)}K – €${(row.highPerSqm / 1000).toFixed(1)}K`}
+            unit="/ m²"
+          />
+          <DetailStat
+            label="租金 · Hauptmiete"
+            value={`€${row.rentPerSqm.toFixed(1)}`}
+            unit="/ m² / 月"
+          />
+          <DetailStat
+            label="同比涨幅"
+            value={`+${row.yoyPct.toFixed(1)}%`}
+            unit="2025 → 2026"
+          />
+        </div>
+        <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl p-4 bg-gold-tint border border-gold-line">
+          <p className="text-caption text-fg-secondary">
+            想看本站 <span className="text-fg-primary font-medium">{row.district} 区</span> 当前在售的房源？
+          </p>
+          <ButtonLink
+            to={`/listings?district=${row.district}`}
+            variant="primary"
+            size="sm"
+            trailingIcon={<ArrowRight size={12} strokeWidth={1.75} />}
+          >
+            浏览 {row.district} 区房源
+          </ButtonLink>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── Stat block (compact variant for inline use) ────────────────────────────
 function DetailStat({ label, value, unit, accent = false }: { label: string; value: string; unit?: string; accent?: boolean }) {
   return (
-    <div className="rounded-xl p-5 bg-bg-elev-1 border border-white/[0.06]">
+    <div className="rounded-xl p-4 bg-bg-base border border-white/[0.06]">
       <p className="text-overline text-fg-tertiary uppercase mb-2">{label}</p>
-      <div className="flex items-baseline gap-1.5">
-        <span className={['font-serif text-display-lg tabular leading-none', accent ? 'text-gold' : 'text-fg-primary'].join(' ')}>
+      <div className="flex items-baseline gap-1.5 flex-wrap">
+        <span className={['text-heading-lg tabular leading-none font-semibold', accent ? 'text-gold' : 'text-fg-primary'].join(' ')}>
           {value}
         </span>
         {unit && <span className="text-caption text-fg-tertiary">{unit}</span>}
