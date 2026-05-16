@@ -2,29 +2,27 @@ import React from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 /**
- * Hero background video loop. Replaces the static-image cinemagraph
- * with 4 cinematic Seedance-generated Vienna clips (~8s each). Each
- * clip crossfades into the next as it nears the end of its run.
+ * Hero background video loop — silky-smooth version.
  *
- * Why not a single long video?
- *  - Multiple short clips give visual variety without ballooning the
- *    file size of any one asset (each clip stays ≤ ~5MB).
- *  - Crossfading short clips hides the moment the loop "rewinds",
- *    which on a single video file always feels mechanical.
+ * Why not the obvious autoPlay + loop on every video?
+ *   - Each <video loop> hard-seeks to t=0 at end-of-clip. If the
+ *     clip is the same length as the slide interval, that rewind
+ *     hits during the crossfade and looks like a stutter.
+ *   - 4 simultaneous video streams under autoplay starve mobile
+ *     decoders. iOS Safari historically allowed 1 active video.
  *
- * Accessibility:
- *  - `playsInline` so iOS Safari doesn't fullscreen on play.
- *  - `muted` (autoplay requirement on all browsers).
- *  - prefers-reduced-motion → freeze on the first frame (poster) of
- *    the first clip; never advance.
- *  - `loading="lazy"` on slides 2-4 so first paint isn't blocked.
- *
- * Drop-in compatible with HeroCinemagraph — same wrapper expectations:
- * lives inside an absolute-positioned container with its own parent
- * styling, gradient overlays painted on top by the page itself.
+ * Strategy here:
+ *   - All clips preload="auto" so the data is already on disk by
+ *     the time we cycle to them. No cold-start buffering.
+ *   - Only ONE clip plays at a time (current index). Others get
+ *     .pause() after the crossfade settles.
+ *   - On index change we set currentTime=0 + .play() on the
+ *     incoming clip. The outgoing one keeps playing through the
+ *     crossfade; the brief tail past the clip's natural end shows
+ *     the last frame, which is invisible behind a 0-opacity layer.
+ *   - prefers-reduced-motion freezes on slide 1, no advancement.
  */
 
-/* All paths relative to /public — Vite serves them at the root. */
 const SLIDES = [
   '/hero/01-stephansdom-dusk.mp4',
   '/hero/02-belvedere-golden.mp4',
@@ -32,39 +30,64 @@ const SLIDES = [
   '/hero/04-donaukanal-twilight.mp4',
 ]
 
-const SLIDE_DURATION_MS = 8000   // length of each clip (matches Seedance output)
-const CROSSFADE_MS      = 1200   // overlap of the next clip fading in
-const PEAK_OPACITY      = 0.58   // matches the prior cinemagraph treatment
+const SLIDE_DURATION_MS = 7400   // cycle period — slightly less than clip length so the fade lands while video is still moving
+const CROSSFADE_MS      = 1600   // opacity transition
+const PEAK_OPACITY      = 0.58
 
 export function HeroVideoLoop() {
   const [index, setIndex] = React.useState(0)
   const [available, setAvailable] = React.useState<boolean[]>(() => SLIDES.map(() => true))
+  const refs = React.useRef<(HTMLVideoElement | null)[]>([])
   const reduce = useReducedMotion()
 
-  // Advance every SLIDE_DURATION_MS. Pause when tab is hidden so we
-  // don't waste cycles or trigger needless network seeks.
+  // Advance through the rotation
   React.useEffect(() => {
-    if (reduce) return
+    if (reduce || SLIDES.length <= 1) return
     const id = window.setInterval(() => {
       if (document.hidden) return
       setIndex(i => {
         let next = (i + 1) % SLIDES.length
-        // Skip any slide that previously failed to load
+        // Skip slides that failed to load
         for (let n = 0; n < SLIDES.length; n++) {
           if (available[next]) break
           next = (next + 1) % SLIDES.length
         }
         return next
       })
-    }, SLIDE_DURATION_MS - CROSSFADE_MS / 2)
+    }, SLIDE_DURATION_MS)
     return () => clearInterval(id)
   }, [reduce, available])
+
+  // On index change (and on mount):
+  //  - rewind + play the incoming clip
+  //  - after the crossfade settles, pause everyone else so only
+  //    the visible clip is decoding.
+  React.useEffect(() => {
+    const incoming = refs.current[index]
+    if (incoming) {
+      try {
+        incoming.currentTime = 0
+        // play() returns a Promise; swallow rejections from autoplay
+        // policies — muted + playsInline means the browser will
+        // generally grant it, but a tab-throttle race can still
+        // throw NotAllowedError. The next interval tick will retry.
+        incoming.play().catch(() => {})
+      } catch { /* readyState too low — will succeed on the next tick */ }
+    }
+    const t = window.setTimeout(() => {
+      refs.current.forEach((v, i) => {
+        if (i !== index && v && !v.paused) v.pause()
+      })
+    }, CROSSFADE_MS + 80)
+    return () => clearTimeout(t)
+  }, [index])
 
   return (
     <>
       {SLIDES.map((src, i) => (
         <video
           key={src}
+          ref={(el) => { refs.current[i] = el }}
           src={src}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
@@ -72,15 +95,15 @@ export function HeroVideoLoop() {
             transition: `opacity ${CROSSFADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
             willChange: 'opacity',
           }}
-          autoPlay
-          loop
           muted
           playsInline
-          // Browsers won't autoplay without these
+          preload="auto"
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — valid HTML attribute
           disablePictureInPicture
-          preload={i === 0 ? 'auto' : 'metadata'}
+          // Mount-time autoplay for slide 0. The effect above takes
+          // over from there.
+          autoPlay={i === 0}
           onError={() => {
             setAvailable(a => a.map((v, idx) => idx === i ? false : v))
           }}
