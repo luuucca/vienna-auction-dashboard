@@ -379,7 +379,6 @@ function CityNetworkCanvas() {
 function useFeaturedListings() {
   const [pool, setPool] = useState<ListingCardData[]>([])
   const [current, setCurrent] = useState<ListingCardData[]>([])
-  const [totalSale, setTotalSale] = useState(0)
 
   // Fetch the pool once
   useEffect(() => {
@@ -387,7 +386,6 @@ function useFeaturedListings() {
       .then(r => r.json())
       .then(data => {
         const all = (data.listings || []) as any[]
-        setTotalSale(all.filter(l => !l.forRent).length)
         const filtered = all.filter(l => l.coverImage && !l.forRent && (l.images?.length || 0) >= 3)
         // Fallback to anything with a cover image if filter is empty
         const usable = filtered.length >= 3 ? filtered : all.filter(l => l.coverImage)
@@ -426,17 +424,14 @@ function useFeaturedListings() {
     }
   }, [pool])
 
-  return { current, totalSale }
+  return current
 }
 
 /* ─────────────────────────────────────────────
    Page
 ───────────────────────────────────────────── */
 export default function HomePage() {
-  const { current: featured, totalSale } = useFeaturedListings()
-  // Round down to nearest 50 so the stat reads "200+", "250+", etc.
-  // Floor to 100+ at minimum so the hero never looks empty on cold load.
-  const saleStatValue = Math.max(100, Math.floor(totalSale / 50) * 50)
+  const featured = useFeaturedListings()
   const [formSent, setFormSent] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
 
@@ -591,7 +586,7 @@ export default function HomePage() {
           >
             <div>
               <div className="text-heading-lg text-gold">
-                <CountUp value={saleStatValue} suffix="+" duration={1400} />
+                <CountUp value={200} suffix="+" duration={1400} />
               </div>
               <div className="mt-1 text-caption text-fg-tertiary">在售房源</div>
             </div>
