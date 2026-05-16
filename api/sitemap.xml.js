@@ -9,7 +9,7 @@ const STATIC_ROUTES = [
   { path: '/auction',       changefreq: 'hourly',  priority: '0.8' },
   { path: '/quiz',          changefreq: 'monthly', priority: '0.85' },
   { path: '/mortgage',      changefreq: 'monthly', priority: '0.8' },
-  { path: '/buying-guide',  changefreq: 'monthly', priority: '0.85' },
+  { path: '/buying-guide',  changefreq: 'weekly',  priority: '0.95' },
   { path: '/market',        changefreq: 'weekly',  priority: '0.85' },
   { path: '/about',         changefreq: 'monthly', priority: '0.6' },
   { path: '/list-property', changefreq: 'monthly', priority: '0.5' },

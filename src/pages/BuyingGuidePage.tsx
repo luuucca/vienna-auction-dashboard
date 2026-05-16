@@ -26,6 +26,52 @@ const TOC = [
 export default function BuyingGuidePage() {
   const [activeId, setActiveId] = useState<string>(TOC[0].id)
 
+  // ── Per-page SEO: title, description, FAQPage schema ──
+  // Targets the high-intent query 维也纳买房 specifically. Google reads
+  // dynamic document.title and parses on-page JSON-LD on JS-rendered
+  // pages, but a server-side prerender would be safer long-term.
+  useEffect(() => {
+    const origTitle = document.title
+    document.title = '维也纳买房完整指南 2026 — 流程、税费、贷款 | 奥匈置业研究所'
+
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null
+      if (!el) { el = document.createElement('meta'); el.name = name; document.head.appendChild(el) }
+      el.content = content
+    }
+    setMeta('description', '维也纳买房完整指南：购房流程、税费明细、贷款规则、Altbau 与 Neubau 选择、常见陷阱。华人买家中文一站式参考，覆盖维也纳全 23 区。')
+
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: '中国人能在维也纳买房吗？',
+          acceptedAnswer: { '@type': 'Answer', text: '可以。EU 公民和奥地利长居身份持有人自由购房；非 EU 签证持有人（红白红卡、工作签、学生签）大部分情况可购房，部分区域需要 MA 35 移民局审批；纯境外买家也可购房，但流程更复杂，常通过设立奥地利 GmbH 持有。' } },
+        { '@type': 'Question', name: '维也纳买房一共要花多少税费？',
+          acceptedAnswer: { '@type': 'Answer', text: '维也纳买房的 Nebenkosten 约为房价的 10%：土地交易税 Grunderwerbsteuer 3.5%、土地登记费 Grundbucheintragung 1.1%、公证/律师费 1-2%、买方中介费 3% + 20% VAT ≈ 3.6%。除房价外必须准备这 10% 现金。' } },
+        { '@type': 'Question', name: '维也纳买房流程要多久？',
+          acceptedAnswer: { '@type': 'Answer', text: '典型节奏 6-12 周：看房 1-4 周 → Kaufanbot 报价数天 → 公证签约 2-3 周 → 付款 + Grundbuch 登记 4-8 周 → 交房 + Anmeldung 户籍登记。' } },
+        { '@type': 'Question', name: '在维也纳买房可以贷款吗？',
+          acceptedAnswer: { '@type': 'Answer', text: '可以。奥地利银行向非居民贷款门槛较高：奥地利公民 LTV 上限 90%，EU 公民 80%，非 EU 通常 60-70%。KIM-V 法规要求自住房至少 35% 首付、最长 35 年期、月供不超过净收入 40%。' } },
+        { '@type': 'Question', name: '维也纳买房 Altbau 和 Neubau 怎么选？',
+          acceptedAnswer: { '@type': 'Answer', text: 'Altbau（1945 年前老建筑）有租金管制，自住者获益于地段和层高，但出租收益受限；Neubau 无租金管制，回报率高但通常远离市中心。投资者一般倾向 Neubau，自住者倾向 Altbau。' } },
+      ],
+    }
+    let faqEl = document.getElementById('buying-guide-faq-schema') as HTMLScriptElement | null
+    if (!faqEl) {
+      faqEl = document.createElement('script')
+      faqEl.type = 'application/ld+json'
+      faqEl.id = 'buying-guide-faq-schema'
+      document.head.appendChild(faqEl)
+    }
+    faqEl.text = JSON.stringify(faqSchema)
+
+    return () => {
+      document.title = origTitle
+      faqEl?.remove()
+    }
+  }, [])
+
   // Track which section is currently in view
   useEffect(() => {
     const sections = TOC.map(t => document.getElementById(t.id)).filter(Boolean) as HTMLElement[]
@@ -52,10 +98,10 @@ export default function BuyingGuidePage() {
         <div className="max-w-content mx-auto">
           <p className="text-overline text-gold/80 uppercase mb-3">Guide · 完整指南</p>
           <h1 className="font-serif text-display-lg sm:text-display-xl lg:text-display-2xl text-fg-primary mb-4 tracking-tight">
-            维也纳购房指南
+            维也纳买房完整指南
           </h1>
           <p className="text-body-lg text-fg-secondary max-w-prose mb-5">
-            华人买家在奥地利购房的完整流程、税费、贷款规则、常见陷阱与各方角色 — 一文读懂。
+            华人买家在维也纳买房的完整流程、税费、贷款规则、Altbau 与 Neubau 选择、常见陷阱与各方角色 — 一文读懂。覆盖奥地利购房的所有关键节点。
           </p>
           <p className="inline-flex items-center gap-1.5 text-caption text-fg-tertiary">
             <Clock size={12} strokeWidth={1.5} />
@@ -95,8 +141,9 @@ export default function BuyingGuidePage() {
 
           <Section id="eligibility" title="1. 能不能买？">
             <p>
+              在<strong className="text-fg-primary">维也纳买房</strong>之前，第一个要确认的就是身份是否符合购房资格。
               奥地利对外国买家购置房产有一定限制 — 具体规则由<strong className="text-fg-primary">各州（Bundesland）</strong>制定，
-              称为 <em className="not-italic text-gold">Ausländergrundverkehrsgesetz</em>。维也纳的规则相对宽松：
+              称为 <em className="not-italic text-gold">Ausländergrundverkehrsgesetz</em>。维也纳的规则在全奥地利属于最宽松：
             </p>
             <ul>
               <li><strong className="text-fg-primary">EU 公民、奥地利长期居留 (NL / Daueraufenthalt-EU) 持有人</strong>：自由购房，与本地公民同等待遇。</li>
@@ -111,7 +158,8 @@ export default function BuyingGuidePage() {
 
           <Section id="budget" title="2. 预算怎么算">
             <p>
-              维也纳房价（2026 年中位数）：
+              维也纳买房的预算公式很简单：<strong className="text-fg-primary">房价 × 1.1</strong>。多出来的 10% 是
+              Nebenkosten（税费 + 公证 + 登记），是除了房价之外必须准备的现金。维也纳房价（2026 年中位数）：
             </p>
             <ul>
               <li>1-9 区（市中心）：€7,000-12,000 / m²</li>
@@ -135,7 +183,7 @@ export default function BuyingGuidePage() {
           </Section>
 
           <Section id="timeline" title="3. 流程时间线">
-            <p>典型购房节奏 6–12 周：</p>
+            <p>从看房到拿到钥匙，维也纳买房典型节奏 <strong className="text-fg-primary">6–12 周</strong>：</p>
             <ol>
               <li><strong className="text-fg-primary">看房（1-4 周）</strong>：联系经纪人 → 预约 → 实地看房 → 缩短候选名单。</li>
               <li><strong className="text-fg-primary">Kaufanbot 买方报价（几天）</strong>：以书面方式提交报价，通常会附 ~3% 定金条件。</li>
@@ -146,7 +194,7 @@ export default function BuyingGuidePage() {
           </Section>
 
           <Section id="taxes" title="4. 关键税费">
-            <p>购房时一次性支付：</p>
+            <p>维也纳买房一次性支付的税费汇总（合计约房价 10%）：</p>
             <ul>
               <li><strong className="text-fg-primary">Grunderwerbsteuer（土地交易税）3.5%</strong>：基于房价。</li>
               <li><strong className="text-fg-primary">Grundbucheintragung（登记费）1.1%</strong>：登记到土地册的费用。</li>
