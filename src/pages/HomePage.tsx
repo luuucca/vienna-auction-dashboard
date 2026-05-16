@@ -9,6 +9,7 @@ import {
 import { ButtonLink } from '../components/ui/Button'
 import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 import { Reveal } from '../components/ui/Reveal'
+import { HeroVideoLoop } from '../components/ui/HeroVideoLoop'
 import { CountUp } from '../components/ui/CountUp'
 
 /* ─────────────────────────────────────────────
@@ -493,7 +494,7 @@ export default function HomePage() {
           className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
           style={{ y: bgPatternY }}
         >
-          <HeroCinemagraph />
+          <HeroVideoLoop />
           {/* Top→bottom darkening so text stays readable */}
           <div
             aria-hidden
