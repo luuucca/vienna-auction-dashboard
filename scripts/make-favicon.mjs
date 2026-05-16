@@ -11,7 +11,7 @@ import fs from 'node:fs';
 const SRC = 'public/logo.png';
 const OUT = 'public/favicon.png';
 const SIZE = 512;
-const PADDING = 0.06;          // 6% margin — logo nearly fills the canvas
+const PADDING = 0.02;          // 2% margin — logo edge-to-edge after trim
 const BG    = { r: 0x0c, g: 0x0c, b: 0x0c, alpha: 1 };  // --bg-base
 const GOLD  = { r: 0xd4, g: 0xaf, b: 0x37, alpha: 1 };  // --gold
 
@@ -21,8 +21,11 @@ async function main() {
   }
   const inner = Math.round(SIZE * (1 - PADDING * 2));
 
-  // 1. Resize logo, preserve transparency.
+  // 1. Trim transparent borders so the AX glyph itself, not the
+  //    canvas it was drawn on, decides what "edge-to-edge" means.
+  //    Then resize to the inner box.
   const logoBuf = await sharp(SRC)
+    .trim()                            // strip empty alpha border
     .resize({ width: inner, height: inner, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
