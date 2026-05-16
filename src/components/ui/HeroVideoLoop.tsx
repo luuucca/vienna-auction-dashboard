@@ -18,8 +18,9 @@ import { useReducedMotion } from 'framer-motion'
  *     .pause() after the crossfade settles.
  *   - On index change we set currentTime=0 + .play() on the
  *     incoming clip. The outgoing one keeps playing through the
- *     crossfade; the brief tail past the clip's natural end shows
- *     the last frame, which is invisible behind a 0-opacity layer.
+ *     entire crossfade (clips are 5s, we cycle at 4s, fade is 1.2s
+ *     so the fade-out completes right at the 5s natural end).
+ *     No visible freeze-on-last-frame.
  *   - prefers-reduced-motion freezes on slide 1, no advancement.
  */
 
@@ -30,8 +31,12 @@ const SLIDES = [
   '/hero/04-donaukanal-twilight.mp4',
 ]
 
-const SLIDE_DURATION_MS = 7400   // cycle period — slightly less than clip length so the fade lands while video is still moving
-const CROSSFADE_MS      = 1600   // opacity transition
+// Seedance-2.0 default output is 5.06s per clip. Cycle 4s before
+// the next slide so the 1.2s crossfade ends right at the 5s natural
+// end-of-clip — the outgoing video is still moving the entire time
+// it's visible.
+const SLIDE_DURATION_MS = 4000
+const CROSSFADE_MS      = 1200
 const PEAK_OPACITY      = 0.58
 
 export function HeroVideoLoop() {
