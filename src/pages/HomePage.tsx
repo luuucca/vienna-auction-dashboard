@@ -528,7 +528,7 @@ export default function HomePage() {
         >
           {/* AX logomark — A and X letterforms converge into the logo */}
           <motion.div className="hero-fade-1 mb-8 flex justify-center" style={{ y: badgeY }}>
-            <LogoConverge height={56} />
+            <LogoConverge height={80} />
           </motion.div>
 
           {/* Display headline */}
