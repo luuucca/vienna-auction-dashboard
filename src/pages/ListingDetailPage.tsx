@@ -11,6 +11,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Lightbox } from '../components/ui/Lightbox'
 import { MortgageCalculator } from '../components/ui/MortgageCalculator'
+import { DistrictIntro } from '../components/ui/DistrictIntro'
 
 // ─── POI types ───────────────────────────────────────────────────────────────
 interface POIPoint { lat: number; lng: number; name: string; type: 'subway' | 'shop' }
@@ -555,6 +556,13 @@ export default function ListingDetailPage() {
               <span>{data.address.plz} {data.address.city}{data.address.street ? ` · ${data.address.street}` : ''}</span>
             </div>
           </motion.div>
+
+          {/* Neighborhood intro video — fires only for districts that
+              have a clip generated (currently 22; falls through silently
+              for others). */}
+          {districtNum && (
+            <DistrictIntro district={parseInt(districtNum, 10)} />
+          )}
 
           {/* Stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
