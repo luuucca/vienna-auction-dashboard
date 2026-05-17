@@ -21,10 +21,15 @@ export function LogoConverge({ height = 56 }: { height?: number }) {
     return () => clearTimeout(t)
   }, [reduce])
 
+  // The final logo is rendered at full `height`. The incoming A/X
+  // glyphs come in slightly smaller (0.72×) so the post-slide PNG
+  // visibly grows into a more prominent mark.
+  const glyphSize = height * 0.72
+
   const glyphStyle: React.CSSProperties = {
     fontFamily: '"Playfair Display", "Noto Serif SC", serif',
     fontWeight: 700,
-    fontSize: height * 0.85,
+    fontSize: glyphSize,
     lineHeight: 1,
     color: '#d4af37',
     letterSpacing: '-0.04em',
@@ -35,7 +40,7 @@ export function LogoConverge({ height = 56 }: { height?: number }) {
   return (
     <div
       className="relative flex items-center justify-center"
-      style={{ height, width: height * 2.4 }}
+      style={{ height, width: height * 2.6 }}
       aria-label="奥匈置业研究所"
     >
       {!reduce && !done && (
@@ -68,13 +73,15 @@ export function LogoConverge({ height = 56 }: { height?: number }) {
           </motion.span>
         </>
       )}
-      {/* Final stylized AX mark — fades in as the glyphs fade out */}
+      {/* Final stylized AX mark — fades in as the glyphs fade out.
+          Starts at the glyph's smaller size and scales UP to full
+          height so the post-slide logo visibly grows. */}
       <motion.img
         src="/logo.png"
         alt=""
-        initial={reduce ? { opacity: 1 } : { opacity: 0, scale: 0.92 }}
+        initial={reduce ? { opacity: 1, scale: 1 } : { opacity: 0, scale: glyphSize / height }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={reduce ? { duration: 0 } : { delay: 1.0, duration: 0.6, ease }}
+        transition={reduce ? { duration: 0 } : { delay: 1.0, duration: 0.7, ease }}
         style={{
           height,
           width: 'auto',
