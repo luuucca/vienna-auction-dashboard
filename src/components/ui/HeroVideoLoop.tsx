@@ -94,18 +94,27 @@ export function HeroVideoLoop() {
     return () => clearTimeout(t)
   }, [index])
 
+  // The fallback poster should ONLY appear when no video can play.
+  // Both poster and video at PEAK_OPACITY would alpha-blend together
+  // and the poster would bleed through the video — the bug we just
+  // fixed. Track "has any video successfully started" and hide the
+  // poster once it does.
+  const [anyVideoStarted, setAnyVideoStarted] = React.useState(false)
+  // Re-render fallback if every slide errored
+  const allFailed = available.every(v => !v)
+
   // Strategy: ALWAYS attempt video, even on WeChat. Modern WeChat
   // (iOS ≥ 8.0, Android TBS ≥ 045500) honours muted + playsinline +
   // x5-video-player-type when properly attributed. If a video fails
   // (play() rejects, decoder error, etc.), the existing onError +
   // available[] handling drops that slide and keeps cycling. If ALL
-  // videos fail, the static poster underneath remains visible.
+  // videos fail, the static poster underneath becomes visible again.
 
   return (
     <>
-      {/* Always-on still image behind the videos. Visible until the
-          first video starts decoding; remains visible if any
-          environment blocks playback entirely. */}
+      {/* Static fallback poster — only painted on screen when no
+          video has begun playing yet (initial cold-start frame) or
+          when every video failed to load. */}
       <div
         aria-hidden
         className="absolute inset-0 w-full h-full"
@@ -113,7 +122,8 @@ export function HeroVideoLoop() {
           backgroundImage: `url(${FALLBACK_POSTER})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          opacity: PEAK_OPACITY,
+          opacity: anyVideoStarted && !allFailed ? 0 : PEAK_OPACITY,
+          transition: 'opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       />
       {SLIDES.map((src, i) => (
@@ -149,6 +159,7 @@ export function HeroVideoLoop() {
           onLoadedMetadata={(e) => {
             if (i === 0) (e.currentTarget as HTMLVideoElement).playbackRate = PLAYBACK_RATE
           }}
+          onPlaying={() => setAnyVideoStarted(true)}
           onError={() => {
             setAvailable(a => a.map((v, idx) => idx === i ? false : v))
           }}
