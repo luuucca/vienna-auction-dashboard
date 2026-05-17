@@ -917,7 +917,14 @@ export default function HomePage() {
       <section className="relative overflow-hidden py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-t border-white/[0.06]">
         {/* Ambient sunlit-apartment video behind the form. Opacity
             low so the contact form card and copy remain primary. */}
-        <AmbientVideoBg src="/contact/apartment-keys.mp4" opacity={0.18} />
+        <AmbientVideoBg
+          src={[
+            '/contact/apartment-keys.mp4',
+            '/contact/kitchen-dawn.mp4',
+            '/contact/plant-window.mp4',
+          ]}
+          opacity={0.18}
+        />
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none"

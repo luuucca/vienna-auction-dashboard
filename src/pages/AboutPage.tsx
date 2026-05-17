@@ -28,7 +28,14 @@ export default function AboutPage() {
       {/* Header — with subtle Kaffeehaus video behind the copy.
           Opacity 0.22 keeps the text fully legible. */}
       <div className="relative overflow-hidden px-4 sm:px-6 lg:px-10 pt-12 pb-10 border-b border-white/[0.06]">
-        <AmbientVideoBg src="/about/kaffeehaus.mp4" opacity={0.22} />
+        <AmbientVideoBg
+          src={[
+            '/about/kaffeehaus.mp4',
+            '/about/street-twilight.mp4',
+            '/about/stadtpark-autumn.mp4',
+          ]}
+          opacity={0.22}
+        />
         {/* Bottom-fade gradient so cards below transition smoothly */}
         <div
           aria-hidden
