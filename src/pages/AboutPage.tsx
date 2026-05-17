@@ -67,6 +67,7 @@ export default function AboutPage() {
           ]}
           opacity={0.22}
           scanlines
+          scanlineColor="black"
         />
         <div
           aria-hidden
@@ -78,17 +79,15 @@ export default function AboutPage() {
         />
 
         <div className="relative max-w-content mx-auto px-5 sm:px-8 lg:px-12 pt-20 pb-24 sm:pt-28 sm:pb-32">
-          {/* Vertical kicker — sits in the left gutter on desktop,
-              becomes a horizontal overline on mobile. */}
+          {/* Vertical kicker — Chinese-only so characters read in their
+              natural orientation under writing-mode: vertical-rl, top
+              to bottom, no rotation hack needed. */}
           <div className="hidden lg:block absolute left-12 top-28">
             <div
-              className="text-overline text-gold/70"
-              style={{
-                writingMode: 'vertical-rl',
-                transform: 'rotate(180deg)',
-              }}
+              className="text-overline text-gold/70 tracking-[0.4em]"
+              style={{ writingMode: 'vertical-rl' }}
             >
-              Contact ·  联系
+              联系
             </div>
           </div>
 
@@ -102,7 +101,7 @@ export default function AboutPage() {
               <span className="block text-[44px] sm:text-[64px] lg:text-[96px]">
                 联系
               </span>
-              <span className="block text-[44px] sm:text-[64px] lg:text-[96px] -mt-1 text-fg-secondary">
+              <span className="block text-[44px] sm:text-[64px] lg:text-[96px] -mt-1 text-gold">
                 <em className="not-italic font-serif">我们</em>
               </span>
             </motion.h1>

@@ -30,6 +30,7 @@ export function AmbientVideoBg({
   opacity = 0.3,
   playbackRate = 0.77,
   scanlines = false,
+  scanlineColor = 'gold',
   scanlineIntensity = 0.18,
   videoStyles,
 }: {
@@ -40,7 +41,10 @@ export function AmbientVideoBg({
   playbackRate?: number
   /** Overlay a CRT-style horizontal scanline pattern on top. */
   scanlines?: boolean
-  /** 0–1 darkness of each line. 0.15 is subtle, 0.30 is heavy. */
+  /** "gold" tint (additive screen blend) or "black" (subtractive
+   *  multiply). Default gold to match the brand accent. */
+  scanlineColor?: 'gold' | 'black'
+  /** 0–1 intensity of each line. 0.15 is subtle, 0.30 is heavy. */
   scanlineIntensity?: number
   /** Optional per-slide CSS style overrides (e.g. translateX for
    *  a specific clip whose subject sits off-center). Index matches
@@ -186,12 +190,16 @@ export function AmbientVideoBg({
           style={{
             backgroundImage: `repeating-linear-gradient(
               0deg,
-              rgba(212, 175, 55, ${scanlineIntensity}) 0px,
-              rgba(212, 175, 55, ${scanlineIntensity}) 1px,
+              ${scanlineColor === 'gold'
+                ? `rgba(212, 175, 55, ${scanlineIntensity})`
+                : `rgba(0, 0, 0, ${scanlineIntensity})`} 0px,
+              ${scanlineColor === 'gold'
+                ? `rgba(212, 175, 55, ${scanlineIntensity})`
+                : `rgba(0, 0, 0, ${scanlineIntensity})`} 1px,
               transparent 1px,
               transparent 3px
             )`,
-            mixBlendMode: 'screen',
+            mixBlendMode: scanlineColor === 'gold' ? 'screen' : 'multiply',
           }}
         />
       )}
