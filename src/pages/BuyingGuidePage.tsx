@@ -276,13 +276,50 @@ export default function BuyingGuidePage() {
             </ul>
           </Section>
 
+          {/* ── Deep-dive sub-guides ──────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-16 mb-4"
+          >
+            <h2 className="font-serif text-heading-xl sm:text-display-lg text-fg-primary mb-2 tracking-tight">
+              深度专题
+            </h2>
+            <p className="text-body text-fg-secondary mb-7">
+              想就某个主题挖更深？下面 5 个专题各自展开维也纳买房的关键议题。
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { to: '/buying-guide/process',     title: '买房流程详解',      desc: '从看房到过户的完整 8 步时间线' },
+                { to: '/buying-guide/taxes',       title: '税费完整清单',      desc: 'Nebenkosten 10% 明细 + 实例计算' },
+                { to: '/buying-guide/loan',        title: '贷款指南',          desc: 'KIM-V、LTV、外国人贷款全解' },
+                { to: '/buying-guide/doebling-19', title: '19 区 Döbling 专题', desc: '高端区域 6 个街区对比' },
+                { to: '/buying-guide/students',    title: '留学生买房',        desc: '学生签 / 红白红卡 Plus 路径' },
+              ].map(card => (
+                <Link
+                  key={card.to}
+                  to={card.to}
+                  className="block p-5 rounded-xl bg-bg-elev-1 border border-white/[0.06] hover:border-gold-line transition-[border-color,transform] duration-base ease-standard hover:-translate-y-0.5"
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <h3 className="text-heading-md text-fg-primary">{card.title}</h3>
+                    <ChevronRight size={16} strokeWidth={1.5} className="text-gold flex-shrink-0" />
+                  </div>
+                  <p className="text-caption text-fg-tertiary">{card.desc}</p>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+
           {/* End CTA */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-16 p-7 sm:p-8 rounded-2xl bg-gold-tint border border-gold-line"
+            className="mt-12 p-7 sm:p-8 rounded-2xl bg-gold-tint border border-gold-line"
           >
             <h3 className="text-heading-lg text-fg-primary mb-2">读完了，下一步？</h3>
             <p className="text-body text-fg-secondary mb-5">

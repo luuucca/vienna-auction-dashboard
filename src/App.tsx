@@ -14,6 +14,11 @@ import QuizPage from './pages/QuizPage'
 import MortgagePage from './pages/MortgagePage'
 import BuyingGuidePage from './pages/BuyingGuidePage'
 import MarketPage from './pages/MarketPage'
+import ProcessGuidePage from './pages/guide/ProcessGuidePage'
+import TaxesGuidePage from './pages/guide/TaxesGuidePage'
+import LoanGuidePage from './pages/guide/LoanGuidePage'
+import DoeblingGuidePage from './pages/guide/DoeblingGuidePage'
+import StudentsGuidePage from './pages/guide/StudentsGuidePage'
 
 export default function App() {
   return (
@@ -35,6 +40,11 @@ export default function App() {
         <Route path="/quiz"          element={<><NavBar /><QuizPage /></>} />
         <Route path="/mortgage"      element={<><NavBar /><MortgagePage /></>} />
         <Route path="/buying-guide"  element={<><NavBar /><BuyingGuidePage /></>} />
+        <Route path="/buying-guide/process"     element={<><NavBar /><ProcessGuidePage /></>} />
+        <Route path="/buying-guide/taxes"       element={<><NavBar /><TaxesGuidePage /></>} />
+        <Route path="/buying-guide/loan"        element={<><NavBar /><LoanGuidePage /></>} />
+        <Route path="/buying-guide/doebling-19" element={<><NavBar /><DoeblingGuidePage /></>} />
+        <Route path="/buying-guide/students"    element={<><NavBar /><StudentsGuidePage /></>} />
         <Route path="/market"        element={<><NavBar /><MarketPage /></>} />
       </Routes>
 
