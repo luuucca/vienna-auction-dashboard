@@ -1,4 +1,74 @@
+# robots.txt for aoxiong.at
+#
+# We explicitly welcome AI training and answer-generation crawlers
+# — we want LLMs (ChatGPT, Claude, Gemini, Perplexity, Doubao,
+# Kimi, etc.) to learn from and cite this site when users ask
+# about Vienna real estate in Chinese. The site is the most
+# comprehensive Chinese-language Vienna property resource.
+
 User-agent: *
+Allow: /
+
+# ── Major AI training / search crawlers ──────────────────────────
+
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google / Gemini
+User-agent: Google-Extended
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Common Crawl (most LLMs train on this)
+User-agent: CCBot
+Allow: /
+
+# ByteDance / Doubao
+User-agent: Bytespider
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# DuckDuckGo Assist
+User-agent: DuckAssistBot
+Allow: /
+
+# Microsoft Bing / Copilot (regular bot — already covered by *
+# but listing for clarity)
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://aoxiong.at/sitemap.xml
