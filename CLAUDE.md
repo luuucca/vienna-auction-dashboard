@@ -1,8 +1,12 @@
-# Project: vienna-auction-dashboard
+# Project: aoxiong-at
 
 - **Live URL: https://aoxiong.at** (also `www.aoxiong.at`)
 - **Site name**: 奥匈置业研究所
-- GitHub: `luuucca/vienna-auction-dashboard`
+- GitHub: `luuucca/aoxiong-at` (formerly `vienna-auction-dashboard`,
+  GitHub auto-redirects from the old name)
+- **Local folder**: `C:\Users\ASUS\vienna-auction-dashboard`
+  (kept the old folder name to avoid breaking session paths +
+  launch.json — only the GitHub repo was renamed)
 
 Vienna real estate website for Chinese clients. Dark theme + gold accent
 (`#d4af37`) minimalist luxury aesthetic. The user is an Austrian-Chinese
