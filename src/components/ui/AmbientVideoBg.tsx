@@ -71,23 +71,21 @@ export function AmbientVideoBg({
     return () => clearInterval(id)
   }, [reduce, sources.length, available])
 
-  // Each index change: rewind + play new, pause others after crossfade
+  // All clips loop continuously and play simultaneously. Crossfading
+  // is opacity-only — we never pause hidden videos because resuming
+  // a long-paused video drops decoder state and causes the stutter
+  // the user reported on the 2→3 / 3→1 transitions. Three concurrent
+  // 720p decoders is fine on modern phones; older hardware would
+  // show degraded quality long before this becomes the bottleneck.
   React.useEffect(() => {
-    const v = refs.current[index]
-    if (v) {
-      try {
-        v.currentTime = 0
-        v.playbackRate = playbackRate
-        v.play().catch(() => {})
-      } catch { /* readyState too low */ }
-    }
-    const t = window.setTimeout(() => {
-      refs.current.forEach((vid, i) => {
-        if (i !== index && vid && !vid.paused) vid.pause()
-      })
-    }, CROSSFADE_MS + 100)
-    return () => clearTimeout(t)
-  }, [index, playbackRate])
+    refs.current.forEach((v) => {
+      if (!v) return
+      v.playbackRate = playbackRate
+      // Ensure the clip is playing — if a tab-throttle paused it,
+      // resume.
+      if (v.paused) v.play().catch(() => {})
+    })
+  }, [playbackRate])
 
   // Reduced motion: poster only, no video
   if (reduce) {
@@ -144,8 +142,8 @@ export function AmbientVideoBg({
             transition: `opacity ${CROSSFADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
             willChange: 'opacity',
           }}
-          autoPlay={i === 0}
-          loop={sources.length === 1}   // only loop when single clip
+          autoPlay
+          loop
           muted
           playsInline
           preload="auto"

@@ -922,6 +922,7 @@ export default function HomePage() {
             '/contact/apartment-keys.mp4',
             '/contact/kitchen-dawn.mp4',
             '/contact/plant-window.mp4',
+            '/contact/lucky-cat-gold.mp4',
           ]}
           opacity={0.18}
           scanlines
