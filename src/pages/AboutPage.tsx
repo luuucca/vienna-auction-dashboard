@@ -61,7 +61,9 @@ export default function AboutPage() {
           src={[
             '/about/kaffeehaus.mp4',
             '/about/street-twilight.mp4',
-            '/about/stadtpark-autumn.mp4',
+            '/contact/apartment-keys.mp4',
+            '/contact/kitchen-dawn.mp4',
+            '/contact/plant-window.mp4',
           ]}
           opacity={0.22}
           scanlines
@@ -98,10 +100,10 @@ export default function AboutPage() {
               className="font-serif text-fg-primary tracking-tight leading-[0.95]"
             >
               <span className="block text-[44px] sm:text-[64px] lg:text-[96px]">
-                我们
+                联系
               </span>
               <span className="block text-[44px] sm:text-[64px] lg:text-[96px] -mt-1 text-fg-secondary">
-                <em className="not-italic font-serif">联系</em>
+                <em className="not-italic font-serif">我们</em>
               </span>
             </motion.h1>
 

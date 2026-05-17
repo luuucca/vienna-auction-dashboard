@@ -31,6 +31,7 @@ export function AmbientVideoBg({
   playbackRate = 0.77,
   scanlines = false,
   scanlineIntensity = 0.18,
+  videoStyles,
 }: {
   /** A single video URL, or an array of URLs to rotate through. */
   src: string | string[]
@@ -41,6 +42,10 @@ export function AmbientVideoBg({
   scanlines?: boolean
   /** 0–1 darkness of each line. 0.15 is subtle, 0.30 is heavy. */
   scanlineIntensity?: number
+  /** Optional per-slide CSS style overrides (e.g. translateX for
+   *  a specific clip whose subject sits off-center). Index matches
+   *  src array. */
+  videoStyles?: React.CSSProperties[]
 }) {
   const sources = React.useMemo(() => Array.isArray(src) ? src : [src], [src])
   const reduce = useReducedMotion()
@@ -148,6 +153,7 @@ export function AmbientVideoBg({
             opacity: available[i] && i === index ? opacity : 0,
             transition: `opacity ${CROSSFADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
             willChange: 'opacity',
+            ...(videoStyles?.[i] || {}),
           }}
           autoPlay
           loop

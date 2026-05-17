@@ -906,13 +906,18 @@ export default function HomePage() {
             low so the contact form card and copy remain primary. */}
         <AmbientVideoBg
           src={[
-            '/contact/apartment-keys.mp4',
-            '/contact/kitchen-dawn.mp4',
-            '/contact/plant-window.mp4',
             '/contact/lucky-cat-gold.mp4',
+            '/about/stadtpark-autumn.mp4',
           ]}
           opacity={0.18}
           scanlines
+          // Lucky-cat sits in the right third of its frame; nudge
+          // further right so the waving paw clears the centered
+          // contact-form card.
+          videoStyles={[
+            { transform: 'translateX(12%)' },
+            {},
+          ]}
         />
         <div
           aria-hidden
