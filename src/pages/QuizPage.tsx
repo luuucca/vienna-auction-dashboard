@@ -1,13 +1,26 @@
 import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, ArrowRight, RefreshCw, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react'
-import { ButtonLink, Button } from '../components/ui/Button'
+import { ButtonLink } from '../components/ui/Button'
 
 /**
- * "Can I buy property in Vienna?" — 7-question funnel that ends with a
- * tiered result + lead-capture handoff. Built to be a top-funnel hook
- * for social traffic.
+ * "Can I buy property in Vienna?" — 6-question eligibility funnel.
+ *
+ * Focuses on the LEGAL gates that decide whether a Chinese-speaking
+ * buyer can actually purchase in Vienna, not their budget or taste:
+ *   1. Citizenship                    (the master switch)
+ *   2. Residence permit               (modifies citizenship's effect)
+ *   3. Anmeldung registration         (affects bank + notary flow)
+ *   4. Existing Austrian property     (KIM-V + AGVG implications)
+ *   5. Purpose                        (self / rental / vacation / hold)
+ *   6. Mortgage need                  (financing pathway)
+ *
+ * Result is one of three tiers:
+ *   - green  : full eligibility, can proceed normally
+ *   - yellow : some restrictions; needs planning
+ *   - red    : direct purchase blocked; we offer compliant
+ *              alternatives (GmbH ownership, residence-application
+ *              pathway, etc.) → strong contact CTA.
  */
 
 // ─── Question schema ────────────────────────────────────────────────────────
@@ -26,128 +39,156 @@ interface Question {
 
 const QUESTIONS: Question[] = [
   {
-    id: 'residency',
-    prompt: '您目前的居留状态？',
+    id: 'citizenship',
+    prompt: '您的身份？',
     helper: '这是影响购房资格的最关键因素。',
     choices: [
-      { label: '奥地利 / EU 公民',                value: 'eu',          score: 20 },
-      { label: '奥地利长期居留 (NL / Daueraufenthalt-EU)', value: 'permanent', score: 18 },
-      { label: '红白红卡 / 工作签 / 学生签',       value: 'rwr',         score: 10 },
-      { label: '目前在中国 / 无奥地利身份',         value: 'china',       score: 4  },
+      { label: '奥地利公民',                       value: 'austrian', score: 25 },
+      { label: 'EU 公民',                          value: 'eu',       score: 22 },
+      { label: '红白红卡 / 工作签 / 学生签（非 EU）', value: 'rwr',      score: 12 },
+      { label: '无奥地利身份，纯境外',                value: 'foreign',  score: 3  },
+    ],
+  },
+  {
+    id: 'residence',
+    prompt: '您的居留许可状态？',
+    helper: '永久居留（NL / Daueraufenthalt-EU）在购房上等同于 EU 公民。',
+    choices: [
+      { label: 'NL / Daueraufenthalt-EU 长期居留', value: 'permanent', score: 18 },
+      { label: '临时居留（红白红卡 / 工作 / 学生）', value: 'temporary', score: 10 },
+      { label: '无居留许可',                        value: 'none',      score: 2  },
+    ],
+  },
+  {
+    id: 'anmeldung',
+    prompt: '您在奥地利的登记地址（Anmeldung）？',
+    helper: '登记地址影响开户、贷款审批与公证流程。',
+    choices: [
+      { label: '维也纳有',         value: 'wien',        score: 15 },
+      { label: '其他州有',         value: 'other_state', score: 10 },
+      { label: '没有',             value: 'none',        score: 4  },
+    ],
+  },
+  {
+    id: 'existing_property',
+    prompt: '您在奥地利名下是否已有房产？',
+    helper: '非 EU 身份 + 已有房产可能触发购房限制（KIM-V / AGVG）。',
+    choices: [
+      { label: '没有',                  value: 'no',        score: 10 },
+      { label: '有 1 套（自住）',         value: 'one_self',  score: 6  },
+      { label: '有多套 / 投资性持有',     value: 'multiple',  score: 3  },
     ],
   },
   {
     id: 'purpose',
     prompt: '您计划买房的目的？',
     choices: [
-      { label: '自住',          value: 'self',       score: 12 },
-      { label: '出租投资',       value: 'rental',     score: 10 },
-      { label: '度假房 / 第二居所', value: 'vacation', score: 6  },
-      { label: '长期持有 / 资产配置', value: 'hold',  score: 9  },
-    ],
-  },
-  {
-    id: 'budget',
-    prompt: '您的预算？',
-    helper: '维也纳中位数 60-80㎡ 公寓约 €300-450K。',
-    choices: [
-      { label: '< €300K',           value: 'low',     score: 8  },
-      { label: '€300K – €500K',     value: 'mid',     score: 12 },
-      { label: '€500K – €1M',       value: 'high',    score: 14 },
-      { label: '> €1M 或暂未确定',   value: 'flex',    score: 10 },
+      { label: '自住',              value: 'self',     score: 10 },
+      { label: '出租投资',           value: 'rental',   score: 8  },
+      { label: '度假房 / 第二居所',    value: 'vacation', score: 5  },
+      { label: '长期资产配置',        value: 'hold',     score: 7  },
     ],
   },
   {
     id: 'finance',
     prompt: '您计划在奥地利贷款吗？',
     choices: [
-      { label: '是，需要本地贷款',      value: 'yes',      score: 8  },
-      { label: '否，全款支付',         value: 'no',       score: 14 },
-      { label: '不确定，想先了解',      value: 'unsure',   score: 10 },
-    ],
-  },
-  {
-    id: 'district',
-    prompt: '您计划买在维也纳哪个区？',
-    helper: '不同区有不同的非 EU 买家审批政策。',
-    choices: [
-      { label: '1–9 区（市中心 / Innere Bezirke）',    value: 'inner', score: 12 },
-      { label: '10–17 区（核心居住区）',                value: 'mid',   score: 13 },
-      { label: '18–19 区（高端区域 Döbling / Währing）', value: 'lux',   score: 12 },
-      { label: '20–23 区（外围 / Donaustadt 等）',     value: 'outer', score: 11 },
-      { label: '还在了解，全部考虑',                   value: 'any',   score: 10 },
-    ],
-  },
-  {
-    id: 'address',
-    prompt: '您是否已经在奥地利有居所 / 注册地址？',
-    choices: [
-      { label: '有，已 Anmeldung',           value: 'yes',      score: 12 },
-      { label: '没有，但有 EU 身份',          value: 'eu',       score: 10 },
-      { label: '没有，计划购房后再处理',       value: 'after',    score: 6  },
-    ],
-  },
-  {
-    id: 'timeline',
-    prompt: '您计划多久内出手？',
-    choices: [
-      { label: '1–3 个月内',     value: 'q',       score: 14 },
-      { label: '3–6 个月',       value: 'half',    score: 12 },
-      { label: '6–12 个月',      value: 'year',    score: 10 },
-      { label: '还在观望了解',    value: 'browse',  score: 6  },
+      { label: '是，需要本地贷款',      value: 'yes',      score: 6  },
+      { label: '否，全款支付',         value: 'no',       score: 10 },
+      { label: '不确定，想先了解',      value: 'unsure',   score: 8  },
     ],
   },
 ]
 
-// Tier thresholds (max possible ≈ 92 points)
-function getTier(score: number, residency: string): 'green' | 'yellow' | 'red' {
-  if (residency === 'china') return 'red'
-  if (residency === 'rwr' && score < 65) return 'yellow'
-  if (score >= 75) return 'green'
-  if (score >= 55) return 'yellow'
+const MAX_SCORE = 88 // 25 + 18 + 15 + 10 + 10 + 10
+
+// ─── Tier logic ─────────────────────────────────────────────────────────────
+// Decisive rules override numeric score so legal hard-stops are caught.
+function getTier(a: Record<string, string>, score: number): 'green' | 'yellow' | 'red' {
+  // Hard-red: zero foothold in Austria
+  if (a.citizenship === 'foreign' && a.residence === 'none' && a.anmeldung === 'none') return 'red'
+  // Hard-red: non-EU + multiple existing properties (KIM-V / AGVG block)
+  if (a.citizenship === 'rwr' && a.existing_property === 'multiple') return 'red'
+  if (a.citizenship === 'foreign' && a.existing_property === 'multiple') return 'red'
+
+  // Hard-green: full Austrian/EU rights
+  if (a.citizenship === 'austrian' || a.citizenship === 'eu') return 'green'
+  if (a.residence === 'permanent') return 'green'
+
+  // Numeric thresholds (only RWR + foreign without overrides reach here)
+  if (score >= 60) return 'green'
+  if (score >= 40) return 'yellow'
   return 'red'
 }
 
 const TIER_META = {
-  green:  { color: '#4ade80', icon: <CheckCircle2 size={20} strokeWidth={1.5} />, title: '可以直接进入',  caption: '您的条件非常成熟，可以立即开始看房' },
-  yellow: { color: '#d4af37', icon: <AlertTriangle size={20} strokeWidth={1.5} />, title: '需要前期规划',  caption: '您有一些条件需要先处理，但完全可以买房' },
-  red:    { color: '#f87171', icon: <AlertCircle   size={20} strokeWidth={1.5} />, title: '建议先做铺垫',  caption: '当前条件下需要更多前置准备工作' },
+  green: {
+    color: '#4ade80',
+    icon: <CheckCircle2 size={20} strokeWidth={1.5} />,
+    title: '可以直接购房',
+    heading: '您完全符合购房资格',
+    caption: '基于您的身份与居留状态，可以立即开始看房 — 没有额外审批障碍',
+  },
+  yellow: {
+    color: '#d4af37',
+    icon: <AlertTriangle size={20} strokeWidth={1.5} />,
+    title: '可以买，但需规划',
+    heading: '您有一些条件需要先处理',
+    caption: '当前条件下能买房，但建议先完成登记 / 居留 / 资金等准备工作',
+  },
+  red: {
+    color: '#f87171',
+    icon: <AlertCircle size={20} strokeWidth={1.5} />,
+    title: '直接购房受限',
+    heading: '直接购房有限制，但仍有合规通道',
+    caption: '当前身份下直接购房较难，我们有合规合法的方式助您实现在维也纳买房',
+  },
 } as const
 
-function buildReasoning(answers: Record<string, string>, tier: 'green' | 'yellow' | 'red'): string[] {
-  const reasons: string[] = []
+function buildReasoning(a: Record<string, string>, tier: 'green' | 'yellow' | 'red'): string[] {
+  const r: string[] = []
 
-  // Residency
-  if (answers.residency === 'eu')        reasons.push('您拥有 EU 居留身份，全维也纳 23 区都可自由购房，无需额外审批。')
-  if (answers.residency === 'permanent') reasons.push('长期居留持有人在大部分区域等同于 EU 公民，购房流程顺畅。')
-  if (answers.residency === 'rwr')       reasons.push('非 EU 签证持有人需通过 Ausländergrundverkehrsgesetz 审批，不同区域差异较大。')
-  if (answers.residency === 'china')     reasons.push('从中国境内直接购买奥地利房产，需特别申请 + 公证授权 + 银行账户。建议先取得居留身份或考虑商业实体购房。')
+  // Citizenship-driven explanations
+  if (a.citizenship === 'austrian' || a.citizenship === 'eu') {
+    r.push('您拥有奥地利 / EU 公民身份，全维也纳 23 区均可自由购房，与本地公民同等待遇。')
+  } else if (a.residence === 'permanent') {
+    r.push('您持有奥地利长期居留（NL / Daueraufenthalt-EU），在购房上等同于 EU 公民，流程顺畅。')
+  } else if (a.citizenship === 'rwr') {
+    r.push('非 EU 签证持有人购房需通过 Ausländergrundverkehrsgesetz 审批，部分区域需 MA 35 协调。')
+  } else if (a.citizenship === 'foreign') {
+    r.push('从境外直接购买奥地利房产，需特殊审批 + 公证授权 + 在奥银行账户，或通过设立奥地利公司持有。')
+  }
 
-  // Budget vs purpose
-  if (answers.budget === 'low' && answers.purpose === 'self')
-    reasons.push('您的预算适合 1-2 区以外的小户型公寓（25-40㎡）或外围老房翻新。')
-  if (answers.budget === 'mid')
-    reasons.push('您的预算可以在 10-22 区买到不错的 60-80㎡ 公寓，性价比最高。')
-  if (answers.budget === 'high' || answers.budget === 'flex')
-    reasons.push('您的预算可以考虑 1-9 区市中心或 18-19 区高端区域，选择面广。')
+  // Anmeldung
+  if (a.anmeldung === 'wien') {
+    r.push('维也纳已有 Anmeldung，公证、开户、税务流程都更顺。')
+  } else if (a.anmeldung === 'none' && (a.citizenship === 'rwr' || a.citizenship === 'foreign')) {
+    r.push('建议先完成 Anmeldung — 没有登记地址会显著拉长开户和公证流程。')
+  }
+
+  // Existing property
+  if (a.existing_property === 'multiple' && a.citizenship !== 'austrian' && a.citizenship !== 'eu') {
+    r.push('已持有多套房产 + 非 EU 身份会触发 KIM-V 限制，需提前与税务师 / 律师评估架构。')
+  } else if (a.existing_property === 'no' && (a.citizenship === 'rwr')) {
+    r.push('首套房身份下条件相对宽松，建议优先以自住名义申请。')
+  }
 
   // Finance
-  if (answers.finance === 'yes' && answers.residency !== 'eu' && answers.residency !== 'permanent')
-    reasons.push('非 EU 身份贷款条件较严格，通常 LTV 60-70%，建议提前准备 30-40% 首付证明。')
-  if (answers.finance === 'no')
-    reasons.push('全款购买流程最简单，无需 KIM-V 限制，是大部分外国买家的常见路径。')
+  if (a.finance === 'yes' && a.citizenship !== 'austrian' && a.citizenship !== 'eu' && a.residence !== 'permanent') {
+    r.push('非 EU 身份贷款门槛较高，通常 LTV 60-70%，建议准备 30-40% 首付证明。')
+  } else if (a.finance === 'no') {
+    r.push('全款购买流程最简单，无 KIM-V 限制，是大部分外国买家的常见路径。')
+  }
 
-  // Address
-  if (answers.address === 'after' && (answers.residency === 'china' || answers.residency === 'rwr'))
-    reasons.push('建议在购房前先完成 Anmeldung（户籍登记）— 这能简化后续公证和银行流程。')
+  // Purpose
+  if (a.purpose === 'rental' && a.citizenship === 'rwr') {
+    r.push('非 EU 身份做出租投资，部分区域需要额外审批；我们可以协助预审。')
+  }
+  if (a.purpose === 'vacation' && tier === 'red') {
+    r.push('度假房 / 第二居所类购房对非居民审批最严，建议先建立居留身份。')
+  }
 
-  // Timeline
-  if (answers.timeline === 'q' && tier === 'red')
-    reasons.push('1-3 个月内出手对您当前条件较紧迫，建议先把身份 / 资金确认到位。')
-  if (answers.timeline === 'q' && tier !== 'red')
-    reasons.push('1-3 个月内可以走完看房 → Kaufanbot → 公证 → 过户全流程。')
-
-  return reasons.slice(0, 5)
+  return r.slice(0, 5)
 }
 
 // ─── Page ────────────────────────────────────────────────────────────────────
@@ -168,12 +209,11 @@ export default function QuizPage() {
     }, 0)
   }, [answers])
 
-  const tier = useMemo(() => getTier(score, answers.residency || ''), [score, answers])
+  const tier = useMemo(() => getTier(answers, score), [score, answers])
   const reasoning = useMemo(() => buildReasoning(answers, tier), [answers, tier])
 
   function selectChoice(value: string) {
     setAnswers(a => ({ ...a, [currentQ.id]: value }))
-    // Auto-advance after a small delay
     if (!isLast) {
       setTimeout(() => setStep(s => s + 1), 250)
     } else {
@@ -201,7 +241,6 @@ export default function QuizPage() {
           >
             <p className="text-overline text-fg-tertiary uppercase mb-3">您的结果</p>
 
-            {/* Tier badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
               style={{ background: `${meta.color}15`, border: `1px solid ${meta.color}40`, color: meta.color }}>
               {meta.icon}
@@ -209,25 +248,23 @@ export default function QuizPage() {
             </div>
 
             <h1 className="font-serif text-display-lg text-fg-primary mb-3 tracking-tight">
-              {tier === 'green' && '可以开始看房了'}
-              {tier === 'yellow' && '需要先做几件事'}
-              {tier === 'red' && '建议先打基础'}
+              {meta.heading}
             </h1>
             <p className="text-body-lg text-fg-secondary mb-10">
-              {meta.caption}。基于您的回答，下面是我们针对您情况的具体建议：
+              {meta.caption}。基于您的回答，下面是具体分析：
             </p>
 
             {/* Score bar */}
             <div className="mb-10">
               <div className="flex items-center justify-between mb-2 text-caption text-fg-tertiary">
                 <span>购房准备度</span>
-                <span className="tabular">{score} / 92</span>
+                <span className="tabular">{score} / {MAX_SCORE}</span>
               </div>
               <div className="h-2 rounded-full overflow-hidden bg-white/[0.06]">
                 <motion.div
                   className="h-full rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${(score / 92) * 100}%` }}
+                  animate={{ width: `${(score / MAX_SCORE) * 100}%` }}
                   transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                   style={{ background: meta.color }}
                 />
@@ -253,28 +290,66 @@ export default function QuizPage() {
               </ul>
             </div>
 
-            {/* Next-step CTAs */}
-            <div className="rounded-2xl p-6 sm:p-8 bg-bg-elev-1 border border-white/[0.06] mb-6">
-              <h3 className="text-heading-md text-fg-primary mb-2">下一步</h3>
-              <p className="text-body text-fg-secondary mb-5">
-                {tier === 'green' && '您可以立即开始浏览房源，或预约一次免费咨询，我们会基于您的具体需求推荐 3-5 套精准匹配的房子。'}
-                {tier === 'yellow' && '建议先和我们做一次 30 分钟的咨询，理清当前条件下的最优购房路径。'}
-                {tier === 'red' && '建议先了解购房流程和您身份下的限制，我们可以一对一帮您规划路径。'}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <ButtonLink to="/about" variant="primary" size="md" trailingIcon={<ArrowRight size={14} strokeWidth={1.75} />}>
-                  联系我们咨询
+            {/* RED-tier special block: compliant pathways */}
+            {tier === 'red' && (
+              <div
+                className="rounded-2xl p-6 sm:p-8 mb-6"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(212,175,55,0.10), rgba(212,175,55,0.04))',
+                  border: '1px solid var(--gold-line)',
+                }}
+              >
+                <h3 className="text-heading-md text-gold mb-3">我们有合规合法的方式助您买房</h3>
+                <ul className="space-y-2 mb-5 text-body text-fg-secondary">
+                  <li className="flex gap-2.5">
+                    <span className="text-gold flex-shrink-0">·</span>
+                    <span>通过<strong className="text-fg-primary">设立奥地利 GmbH 公司</strong>持有房产 — 绕开外国人个人购房限制</span>
+                  </li>
+                  <li className="flex gap-2.5">
+                    <span className="text-gold flex-shrink-0">·</span>
+                    <span>协助申请<strong className="text-fg-primary">居留许可</strong>（红白红卡 / 投资移民） — 先建立身份再购房</span>
+                  </li>
+                  <li className="flex gap-2.5">
+                    <span className="text-gold flex-shrink-0">·</span>
+                    <span>合作<strong className="text-fg-primary">奥地利律师走特殊审批通道</strong> — 部分情形可通过 MA 35 / Bezirkshauptmannschaft 单独申请</span>
+                  </li>
+                  <li className="flex gap-2.5">
+                    <span className="text-gold flex-shrink-0">·</span>
+                    <span>购房后协助办理<strong className="text-fg-primary">税务架构 + 持有人结构</strong>优化</span>
+                  </li>
+                </ul>
+                <ButtonLink
+                  to="/about"
+                  variant="primary"
+                  size="md"
+                  trailingIcon={<ArrowRight size={14} strokeWidth={1.75} />}
+                >
+                  联系我们一对一规划
                 </ButtonLink>
-                {tier !== 'red' && (
+              </div>
+            )}
+
+            {/* Standard next-step CTAs (green / yellow) */}
+            {tier !== 'red' && (
+              <div className="rounded-2xl p-6 sm:p-8 bg-bg-elev-1 border border-white/[0.06] mb-6">
+                <h3 className="text-heading-md text-fg-primary mb-2">下一步</h3>
+                <p className="text-body text-fg-secondary mb-5">
+                  {tier === 'green' && '您可以立即开始浏览房源，或预约一次免费咨询，我们会基于您的具体需求推荐 3-5 套精准匹配的房子。'}
+                  {tier === 'yellow' && '建议先和我们做一次 30 分钟的咨询，理清当前条件下的最优购房路径。'}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <ButtonLink to="/about" variant="primary" size="md" trailingIcon={<ArrowRight size={14} strokeWidth={1.75} />}>
+                    联系我们咨询
+                  </ButtonLink>
                   <ButtonLink to="/listings" variant="ghost" size="md">
                     浏览精选房源
                   </ButtonLink>
-                )}
-                <ButtonLink to="/buying-guide" variant="text" size="md">
-                  阅读购房指南 →
-                </ButtonLink>
+                  <ButtonLink to="/buying-guide" variant="text" size="md">
+                    阅读购房指南 →
+                  </ButtonLink>
+                </div>
               </div>
-            </div>
+            )}
 
             <button
               onClick={restart}
@@ -298,12 +373,12 @@ export default function QuizPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-overline text-gold/80 uppercase mb-3">Quiz · 90 秒</p>
+          <p className="text-overline text-gold/80 uppercase mb-3">Quiz · 60 秒</p>
           <h1 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-2 tracking-tight">
             我能在维也纳买房吗？
           </h1>
           <p className="text-body text-fg-secondary">
-            回答 {totalSteps} 个简单问题，我们根据您的情况给出准确判断。
+            回答 {totalSteps} 个问题，我们根据您的身份与情况给出准确判断。
           </p>
         </div>
 
@@ -338,7 +413,6 @@ export default function QuizPage() {
               <p className="text-body text-fg-tertiary mb-7">{currentQ.helper}</p>
             )}
 
-            {/* Choices */}
             <div className="space-y-2.5">
               {currentQ.choices.map((c, i) => {
                 const selected = answers[currentQ.id] === c.value
