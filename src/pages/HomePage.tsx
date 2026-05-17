@@ -911,6 +911,7 @@ export default function HomePage() {
           ]}
           opacity={0.18}
           scanlines
+          scanlineColor="black"
           // Lucky-cat sits in the right third of its frame; nudge
           // further right so the waving paw clears the centered
           // contact-form card.
