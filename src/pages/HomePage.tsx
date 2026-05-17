@@ -11,6 +11,7 @@ import { ListingCard, type ListingCardData } from '../components/ui/ListingCard'
 import { Reveal } from '../components/ui/Reveal'
 import { HeroVideoLoop } from '../components/ui/HeroVideoLoop'
 import { LogoConverge } from '../components/ui/LogoConverge'
+import { AmbientVideoBg } from '../components/ui/AmbientVideoBg'
 import { CountUp } from '../components/ui/CountUp'
 
 /* ─────────────────────────────────────────────
@@ -913,8 +914,19 @@ export default function HomePage() {
       </section>
 
       {/* ════════════ CONTACT FORM ════════════ */}
-      <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-t border-white/[0.06]">
-        <div className="max-w-prose mx-auto">
+      <section className="relative overflow-hidden py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-10 bg-bg-elev-1 border-t border-white/[0.06]">
+        {/* Ambient sunlit-apartment video behind the form. Opacity
+            low so the contact form card and copy remain primary. */}
+        <AmbientVideoBg src="/contact/apartment-keys.mp4" opacity={0.18} />
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(19,19,19,0.55) 0%, rgba(19,19,19,0.7) 50%, rgba(12,12,12,0.92) 100%)',
+          }}
+        />
+        <div className="relative max-w-prose mx-auto">
           <Reveal>
             <div className="mb-10">
               <p className="text-overline text-gold/80 mb-3 uppercase">Contact</p>

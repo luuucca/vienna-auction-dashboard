@@ -2,6 +2,7 @@ import React from 'react'
 import { Mail, Phone, ArrowRight, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { ButtonLink } from '../components/ui/Button'
+import { AmbientVideoBg } from '../components/ui/AmbientVideoBg'
 
 /**
  * Contact / About page.
@@ -24,9 +25,20 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-bg-base text-fg-primary pt-16">
 
-      {/* Header */}
-      <div className="px-4 sm:px-6 lg:px-10 pt-12 pb-8 border-b border-white/[0.06]">
-        <div className="max-w-prose mx-auto">
+      {/* Header — with subtle Kaffeehaus video behind the copy.
+          Opacity 0.22 keeps the text fully legible. */}
+      <div className="relative overflow-hidden px-4 sm:px-6 lg:px-10 pt-12 pb-10 border-b border-white/[0.06]">
+        <AmbientVideoBg src="/about/kaffeehaus.mp4" opacity={0.22} />
+        {/* Bottom-fade gradient so cards below transition smoothly */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(12,12,12,0.4) 0%, rgba(12,12,12,0.55) 60%, rgba(12,12,12,0.9) 100%)',
+          }}
+        />
+        <div className="relative max-w-prose mx-auto">
           <p className="text-overline text-gold/80 mb-3 uppercase">Contact</p>
           <h1 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-2 tracking-tight">
             联系我们
