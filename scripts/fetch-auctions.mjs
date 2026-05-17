@@ -63,10 +63,15 @@ async function geocodeAddress(streetAddress, plz) {
   try {
     // streetAddress already has "1190 Wien " stripped by the caller
     let hit = await nominatimQuery(streetAddress);
-    // Fallback for multi-street "Str A, Str B": try first street only
-    if (!hit && streetAddress.includes(',')) {
-      await sleep(1100);
-      hit = await nominatimQuery(streetAddress.split(',')[0].trim());
+    // Fallback for corner properties: Vienna data uses BOTH "A, B" and
+    // "A / B" / "A/B" separators. Try each street individually.
+    if (!hit && /[\/,]/.test(streetAddress)) {
+      const parts = streetAddress.split(/\s*[\/,]\s*/).filter(Boolean);
+      for (const part of parts) {
+        await sleep(1100);
+        hit = await nominatimQuery(part);
+        if (hit) break;
+      }
     }
     if (hit) {
       return { lat: parseFloat(hit.lat), lng: parseFloat(hit.lon), geocodeSource: 'official' };

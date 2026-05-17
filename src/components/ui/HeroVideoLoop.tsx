@@ -32,6 +32,11 @@ const SLIDES = [
   '/hero/04-donaukanal-twilight.mp4',
 ]
 
+// Still image shown by the WeChat in-app browser, slow connections, and
+// any environment where the <video> element refuses to render. Lives
+// at the same CDN so it loads alongside the markup.
+const FALLBACK_POSTER = 'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=2400&q=85&auto=format&fit=crop'
+
 // Seedance clips are 5.06s native. We stretch to ~6.5s real time
 // at 0.78× — a touch slower than natural, calmer than raw playback,
 // without feeling like slow-mo replay.
@@ -89,13 +94,37 @@ export function HeroVideoLoop() {
     return () => clearTimeout(t)
   }, [index])
 
+  // WeChat (MicroMessenger) and some older TBS / X5 browsers refuse to
+  // autoplay video even when muted. Fall back to a static still in
+  // those environments so the hero isn't black. The poster image also
+  // appears for any user whose connection is too slow to start the
+  // first video before paint.
+  const isWeChatOrTBS = typeof navigator !== 'undefined'
+    && /MicroMessenger|TBS|X5/i.test(navigator.userAgent)
+
   return (
     <>
-      {SLIDES.map((src, i) => (
+      {/* Always-on still image behind the videos. Visible until the
+          first video starts decoding; on WeChat / TBS browsers it
+          stays visible because the videos won't autoplay. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 w-full h-full"
+        style={{
+          backgroundImage: `url(${FALLBACK_POSTER})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: PEAK_OPACITY,
+        }}
+      />
+      {/* Don't even attempt to mount <video> on WeChat — saves a
+          decoder slot and avoids the broken-play-button overlay. */}
+      {!isWeChatOrTBS && SLIDES.map((src, i) => (
         <video
           key={src}
           ref={(el) => { refs.current[i] = el }}
           src={src}
+          poster={FALLBACK_POSTER}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             opacity: available[i] && i === index ? PEAK_OPACITY : 0,
@@ -104,6 +133,13 @@ export function HeroVideoLoop() {
           }}
           muted
           playsInline
+          // Tencent X5 / WeChat compat hints — harmless on other engines.
+          // eslint-disable-next-line react/no-unknown-property
+          x5-video-player-type="h5"
+          // eslint-disable-next-line react/no-unknown-property
+          x5-playsinline=""
+          // eslint-disable-next-line react/no-unknown-property
+          webkit-playsinline="true"
           preload="auto"
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — valid HTML attribute

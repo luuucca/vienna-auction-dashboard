@@ -315,13 +315,18 @@ function HeroGallery({ images, title }: { images: string[]; title: string }) {
             decoding="async"
             // @ts-ignore - fetchpriority is a valid HTML attribute
             fetchpriority="high"
-            // Touch swipe within the hero (without opening lightbox)
+            // Touch swipe within the hero (without opening lightbox).
+            // Threshold lowered 80 → 40px and velocity-aware so a light
+            // mobile flick is enough to advance — previously took a
+            // forceful drag to register.
             drag={images.length > 1 ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.18}
+            dragElastic={0.22}
             onDragEnd={(_, info) => {
-              if (info.offset.x < -80)      go(1)
-              else if (info.offset.x > 80)  go(-1)
+              const dist = info.offset.x
+              const vel  = info.velocity.x
+              if (dist < -40 || (dist < -10 && vel < -400))      go(1)
+              else if (dist > 40 || (dist > 10 && vel > 400))    go(-1)
             }}
           />
         </AnimatePresence>
@@ -658,8 +663,10 @@ export default function ListingDetailPage() {
           )}
         </div>
 
-        {/* Sticky sidebar */}
-        <aside className="space-y-4">
+        {/* Sticky sidebar. On mobile, ordered first so 出售价格
+            and CTA sit above the body content. On lg+, returns to
+            its natural right-column position via order-none. */}
+        <aside className="space-y-4 order-first lg:order-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -847,7 +847,7 @@ export default function HomePage() {
                 <p className="text-overline text-gold/80 mb-3 uppercase">For Property Owners</p>
                 <h2 className="font-serif text-display-lg sm:text-display-xl text-fg-primary mb-5 tracking-tight">
                   您的房产，<br className="sm:hidden" />
-                  <span className="text-gold">双向触达</span>
+                  <span className="text-gold block sm:inline text-right sm:text-left">双向触达</span>
                 </h2>
                 <p className="text-body-lg text-fg-secondary mb-7 max-w-prose">
                   我们同时覆盖中文圈层（小红书、微信）与维也纳本地市场（justimmo、willhaben 等主流平台）。
