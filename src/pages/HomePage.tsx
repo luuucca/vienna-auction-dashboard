@@ -924,6 +924,7 @@ export default function HomePage() {
             '/contact/plant-window.mp4',
           ]}
           opacity={0.18}
+          scanlines
         />
         <div
           aria-hidden

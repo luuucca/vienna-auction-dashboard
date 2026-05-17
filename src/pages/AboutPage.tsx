@@ -35,6 +35,7 @@ export default function AboutPage() {
             '/about/stadtpark-autumn.mp4',
           ]}
           opacity={0.22}
+          scanlines
         />
         {/* Bottom-fade gradient so cards below transition smoothly */}
         <div

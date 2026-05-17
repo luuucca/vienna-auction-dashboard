@@ -22,12 +22,18 @@ export function AmbientVideoBg({
   poster,
   opacity = 0.3,
   playbackRate = 0.85,
+  scanlines = false,
+  scanlineIntensity = 0.18,
 }: {
   /** A single video URL, or an array of URLs to rotate through. */
   src: string | string[]
   poster?: string
   opacity?: number
   playbackRate?: number
+  /** Overlay a CRT-style horizontal scanline pattern on top. */
+  scanlines?: boolean
+  /** 0–1 darkness of each line. 0.15 is subtle, 0.30 is heavy. */
+  scanlineIntensity?: number
 }) {
   const sources = React.useMemo(() => Array.isArray(src) ? src : [src], [src])
   const reduce = useReducedMotion()
@@ -145,6 +151,25 @@ export function AmbientVideoBg({
           }}
         />
       ))}
+      {/* CRT-style horizontal scanlines overlay. Sits ABOVE the video
+          but below any foreground content (parent should layer this
+          accordingly via z-index / source order). */}
+      {scanlines && (
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              0deg,
+              rgba(0, 0, 0, ${scanlineIntensity}) 0px,
+              rgba(0, 0, 0, ${scanlineIntensity}) 1px,
+              transparent 1px,
+              transparent 3px
+            )`,
+            mixBlendMode: 'multiply',
+          }}
+        />
+      )}
     </>
   )
 }
