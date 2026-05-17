@@ -94,19 +94,18 @@ export function HeroVideoLoop() {
     return () => clearTimeout(t)
   }, [index])
 
-  // WeChat (MicroMessenger) and some older TBS / X5 browsers refuse to
-  // autoplay video even when muted. Fall back to a static still in
-  // those environments so the hero isn't black. The poster image also
-  // appears for any user whose connection is too slow to start the
-  // first video before paint.
-  const isWeChatOrTBS = typeof navigator !== 'undefined'
-    && /MicroMessenger|TBS|X5/i.test(navigator.userAgent)
+  // Strategy: ALWAYS attempt video, even on WeChat. Modern WeChat
+  // (iOS ≥ 8.0, Android TBS ≥ 045500) honours muted + playsinline +
+  // x5-video-player-type when properly attributed. If a video fails
+  // (play() rejects, decoder error, etc.), the existing onError +
+  // available[] handling drops that slide and keeps cycling. If ALL
+  // videos fail, the static poster underneath remains visible.
 
   return (
     <>
       {/* Always-on still image behind the videos. Visible until the
-          first video starts decoding; on WeChat / TBS browsers it
-          stays visible because the videos won't autoplay. */}
+          first video starts decoding; remains visible if any
+          environment blocks playback entirely. */}
       <div
         aria-hidden
         className="absolute inset-0 w-full h-full"
@@ -117,9 +116,7 @@ export function HeroVideoLoop() {
           opacity: PEAK_OPACITY,
         }}
       />
-      {/* Don't even attempt to mount <video> on WeChat — saves a
-          decoder slot and avoids the broken-play-button overlay. */}
-      {!isWeChatOrTBS && SLIDES.map((src, i) => (
+      {SLIDES.map((src, i) => (
         <video
           key={src}
           ref={(el) => { refs.current[i] = el }}
