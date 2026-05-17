@@ -98,10 +98,10 @@ export default function AboutPage() {
               className="font-serif text-fg-primary tracking-tight leading-[0.95]"
             >
               <span className="block text-[44px] sm:text-[64px] lg:text-[96px]">
-                联系
+                我们
               </span>
               <span className="block text-[44px] sm:text-[64px] lg:text-[96px] -mt-1 text-fg-secondary">
-                <em className="not-italic font-serif">我们</em>
+                <em className="not-italic font-serif">联系</em>
               </span>
             </motion.h1>
 
@@ -114,14 +114,6 @@ export default function AboutPage() {
                 <br className="hidden sm:block" />
                 中文接洽，从看房到过户。
               </p>
-              <div className="sm:col-span-4 sm:col-start-9 flex sm:justify-end items-start gap-3">
-                <span className="text-overline text-fg-tertiary tabular-nums">
-                  06
-                </span>
-                <span className="text-caption text-fg-tertiary leading-[1.4] max-w-[140px]">
-                  Channels of <br />contact below
-                </span>
-              </div>
             </motion.div>
           </div>
         </div>
@@ -340,10 +332,7 @@ export default function AboutPage() {
           >
             <div className="relative grid grid-cols-12 gap-6 items-center p-7 sm:p-10">
               <div className="col-span-12 sm:col-span-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <ChannelNum n="06" />
-                  <p className="text-overline text-gold/80">下一步</p>
-                </div>
+                <p className="text-overline text-gold/80 mb-4">下一步</p>
                 <h3 className="font-serif text-[26px] sm:text-[34px] leading-[1.15] tracking-tight text-fg-primary mb-3">
                   立即查看法拍房机会
                 </h3>

@@ -380,54 +380,41 @@ function CityNetworkCanvas() {
  * homepage feels image-rich.
  */
 function useFeaturedListings() {
-  const [pool, setPool] = useState<ListingCardData[]>([])
   const [current, setCurrent] = useState<ListingCardData[]>([])
 
-  // Fetch the pool once
+  // Fetch + pick 3 ONCE per page load. No in-page rotation — the
+  // user wants a fresh trio every time they refresh, but stable
+  // while they browse the page.
+  // Preference order: sale listings priced ≥ €800K with 3+ photos
+  // → any sale listing with a cover image → fall through to whatever
+  // has a cover image.
   useEffect(() => {
     fetch('/api/listings')
       .then(r => r.json())
       .then(data => {
         const all = (data.listings || []) as any[]
-        const filtered = all.filter(l => l.coverImage && !l.forRent && (l.images?.length || 0) >= 3)
-        // Fallback to anything with a cover image if filter is empty
-        const usable = filtered.length >= 3 ? filtered : all.filter(l => l.coverImage)
-        setPool(usable)
+        const photographedSales = all.filter(
+          l => l.coverImage && !l.forRent && (l.images?.length || 0) >= 3
+        )
+        const premium = photographedSales.filter(l => (l.price || 0) >= 800_000)
+        const sourceTier =
+          premium.length >= 3              ? premium
+          : photographedSales.length >= 3   ? photographedSales
+          : all.filter(l => l.coverImage)
+
+        setCurrent(pickThree(sourceTier))
       })
-      .catch(() => setPool([]))
+      .catch(() => setCurrent([]))
   }, [])
 
-  // Pick 3 random distinct items from the pool
-  function pickThree(source: ListingCardData[]): ListingCardData[] {
-    if (source.length <= 3) return source.slice(0, 3)
-    const indices = new Set<number>()
-    while (indices.size < 3) indices.add(Math.floor(Math.random() * source.length))
-    return Array.from(indices).map(i => source[i])
-  }
-
-  // Initial pick when pool arrives
-  useEffect(() => {
-    if (pool.length > 0 && current.length === 0) setCurrent(pickThree(pool))
-  }, [pool, current.length])
-
-  // Auto-rotate every 8 seconds — only if there are enough listings to make
-  // the rotation meaningful, and only when the tab is focused.
-  useEffect(() => {
-    if (pool.length <= 3) return
-    let timer: number | undefined
-    const tick = () => setCurrent(pickThree(pool))
-    const start = () => { timer = window.setInterval(tick, 8000) }
-    const stop  = () => { if (timer) { clearInterval(timer); timer = undefined } }
-    if (!document.hidden) start()
-    const onVis = () => (document.hidden ? stop() : start())
-    document.addEventListener('visibilitychange', onVis)
-    return () => {
-      stop()
-      document.removeEventListener('visibilitychange', onVis)
-    }
-  }, [pool])
-
   return current
+}
+
+function pickThree(source: ListingCardData[]): ListingCardData[] {
+  if (source.length <= 3) return source.slice(0, 3)
+  const indices = new Set<number>()
+  while (indices.size < 3) indices.add(Math.floor(Math.random() * source.length))
+  return Array.from(indices).map(i => source[i])
 }
 
 /* ─────────────────────────────────────────────

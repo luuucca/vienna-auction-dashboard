@@ -71,21 +71,28 @@ export function AmbientVideoBg({
     return () => clearInterval(id)
   }, [reduce, sources.length, available])
 
-  // All clips loop continuously and play simultaneously. Crossfading
-  // is opacity-only — we never pause hidden videos because resuming
-  // a long-paused video drops decoder state and causes the stutter
-  // the user reported on the 2→3 / 3→1 transitions. Three concurrent
-  // 720p decoders is fine on modern phones; older hardware would
-  // show degraded quality long before this becomes the bottleneck.
+  // Keep all clips playing continuously (no pause/resume → no decoder
+  // state loss). When the rotation cycles to a clip, reset it to t=0
+  // so the user sees the clip start from its natural opening rather
+  // than mid-loop. The reset coincides with the opacity fade-in, so
+  // the seek frame is hidden.
   React.useEffect(() => {
-    refs.current.forEach((v) => {
+    refs.current.forEach((v, i) => {
       if (!v) return
       v.playbackRate = playbackRate
-      // Ensure the clip is playing — if a tab-throttle paused it,
-      // resume.
       if (v.paused) v.play().catch(() => {})
     })
   }, [playbackRate])
+
+  React.useEffect(() => {
+    const v = refs.current[index]
+    if (!v) return
+    try {
+      v.currentTime = 0
+      v.playbackRate = playbackRate
+      if (v.paused) v.play().catch(() => {})
+    } catch { /* readyState too low — interval tick will retry */ }
+  }, [index, playbackRate])
 
   // Reduced motion: poster only, no video
   if (reduce) {
@@ -173,12 +180,12 @@ export function AmbientVideoBg({
           style={{
             backgroundImage: `repeating-linear-gradient(
               0deg,
-              rgba(0, 0, 0, ${scanlineIntensity}) 0px,
-              rgba(0, 0, 0, ${scanlineIntensity}) 1px,
+              rgba(212, 175, 55, ${scanlineIntensity}) 0px,
+              rgba(212, 175, 55, ${scanlineIntensity}) 1px,
               transparent 1px,
               transparent 3px
             )`,
-            mixBlendMode: 'multiply',
+            mixBlendMode: 'screen',
           }}
         />
       )}
