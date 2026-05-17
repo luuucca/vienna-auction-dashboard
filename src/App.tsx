@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import { NavBar } from './components/NavBar'
 import { CookieBanner } from './components/CookieBanner'
 import HomePage from './pages/HomePage'
@@ -50,6 +51,11 @@ export default function App() {
 
       {/* Cookie consent — rendered outside Routes so it appears on every page */}
       <CookieBanner />
+
+      {/* Vercel Web Analytics — privacy-friendly pageview tracking,
+          GDPR compliant (no cookies). Dashboard:
+          https://vercel.com/<team>/vienna-auction-dashboard/analytics */}
+      <Analytics />
     </>
   )
 }
