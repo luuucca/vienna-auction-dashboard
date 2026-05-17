@@ -14,14 +14,21 @@ import { useReducedMotion } from 'framer-motion'
  * orchestration.
  */
 
-const CROSSFADE_MS      = 1400
-const SLIDE_DURATION_MS = 6500 // each clip visible ~5s + 1.5s fade
+// Seedance clips are 5.06s native. To eliminate the freeze-on-last-
+// frame between a video ending and the next fade-in, we:
+//   - cycle every 5s
+//   - 1.5s crossfade (so fade-out window = 5s → 6.5s real time)
+//   - playback rate 0.77 so the natural end-of-clip lands at 6.5s
+//     real time — exactly when the fade-out finishes
+// Mirrors the hero's exact timing for consistency.
+const SLIDE_DURATION_MS = 5000
+const CROSSFADE_MS      = 1500
 
 export function AmbientVideoBg({
   src,
   poster,
   opacity = 0.3,
-  playbackRate = 0.85,
+  playbackRate = 0.77,
   scanlines = false,
   scanlineIntensity = 0.18,
 }: {
@@ -121,7 +128,14 @@ export function AmbientVideoBg({
       {sources.map((url, i) => (
         <video
           key={url}
-          ref={(el) => { refs.current[i] = el }}
+          ref={(el) => {
+            refs.current[i] = el
+            // Apply playbackRate at the earliest possible moment — before
+            // the autoplay attribute has a chance to start the video at
+            // native speed. Race-free guarantee that slide 0 always
+            // plays at the intended slowdown.
+            if (el) el.playbackRate = playbackRate
+          }}
           src={url}
           poster={poster}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
