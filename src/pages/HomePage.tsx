@@ -909,7 +909,7 @@ export default function HomePage() {
             '/contact/lucky-cat-gold.mp4',
             '/about/stadtpark-autumn.mp4',
           ]}
-          opacity={0.18}
+          opacity={0.42}
           scanlines
           scanlineColor="black"
           // Lucky-cat sits in the right third of its frame; nudge
@@ -925,7 +925,7 @@ export default function HomePage() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(180deg, rgba(19,19,19,0.55) 0%, rgba(19,19,19,0.7) 50%, rgba(12,12,12,0.92) 100%)',
+              'linear-gradient(180deg, rgba(19,19,19,0.2) 0%, rgba(19,19,19,0.32) 50%, rgba(12,12,12,0.68) 100%)',
           }}
         />
         <div className="relative max-w-prose mx-auto">
