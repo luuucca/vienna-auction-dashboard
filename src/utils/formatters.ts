@@ -1,6 +1,9 @@
 import type { Auction } from '../types/auction'
 
 export function formatCurrency(value: number): string {
+  // Überbot / archival rows often have 0 for these fields — render an
+  // em-dash placeholder so the card doesn't show a misleading "€ 0".
+  if (!value || value <= 0) return '—'
   if (value >= 1_000_000) {
     const mio = value / 1_000_000
     return `€ ${mio % 1 === 0 ? mio.toFixed(0) : mio.toFixed(2).replace('.', ',')} Mio.`
@@ -20,7 +23,9 @@ export function formatPriceLabel(value: number): string {
 }
 
 export function formatDate(dateStr: string): string {
+  if (!dateStr) return '—'
   const date = new Date(dateStr + 'T00:00:00')
+  if (isNaN(date.getTime())) return '—'
   return date.toLocaleDateString('de-AT', {
     day: '2-digit',
     month: '2-digit',
@@ -29,18 +34,22 @@ export function formatDate(dateStr: string): string {
 }
 
 export function formatArea(area: number): string {
+  if (!area || area <= 0) return '—'
   return `${area.toFixed(2).replace('.', ',')} m²`
 }
 
 export function formatPerSqm(value: number): string {
+  if (!value || value <= 0) return '—'
   return `€ ${Math.round(value).toLocaleString('de-AT')}/m²`
 }
 
 export function formatPercent(value: number): string {
+  if (!isFinite(value) || value <= 0) return '—'
   return `${(value * 100).toFixed(1)} %`
 }
 
 export function bidRatio(auction: Auction): number {
+  if (!auction.estimatedValue || auction.estimatedValue <= 0) return 0
   return auction.minimumBid / auction.estimatedValue
 }
 
