@@ -100,7 +100,9 @@ const QUESTIONS: Question[] = [
   },
 ]
 
-const MAX_SCORE = 88 // 25 + 18 + 15 + 10 + 10 + 10
+// maxScore is computed dynamically per active question set, since
+// Austrian / EU citizens skip the residence question (max 18) — see
+// `activeQuestions` derivation in the component below.
 
 // ─── Tier logic ─────────────────────────────────────────────────────────────
 // Decisive rules override numeric score so legal hard-stops are caught.
@@ -197,17 +199,39 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const totalSteps = QUESTIONS.length
-  const currentQ = QUESTIONS[step]
-  const isLast = step === totalSteps - 1
+  // Austrian / EU citizens already have full purchase rights — asking
+  // them about residence permit adds zero signal and feels patronizing.
+  // Filter the question list once citizenship is answered.
+  const activeQuestions = useMemo(() => {
+    if (answers.citizenship === 'austrian' || answers.citizenship === 'eu') {
+      return QUESTIONS.filter(q => q.id !== 'residence')
+    }
+    return QUESTIONS
+  }, [answers.citizenship])
+
+  const totalSteps = activeQuestions.length
+  // Clamp step in case the user goes back, changes citizenship to
+  // austrian/eu, and the active set shrinks.
+  const safeStep = Math.min(step, totalSteps - 1)
+  const currentQ = activeQuestions[safeStep]
+  const isLast = safeStep === totalSteps - 1
+
+  const maxScore = useMemo(() => activeQuestions.reduce((sum, q) => {
+    return sum + Math.max(...q.choices.map(c => c.score))
+  }, 0), [activeQuestions])
 
   const score = useMemo(() => {
+    // Only count answers to currently active questions, so a stale
+    // residence answer left over from before the user switched their
+    // citizenship doesn't inflate the readiness bar.
+    const activeIds = new Set(activeQuestions.map(q => q.id))
     return Object.entries(answers).reduce((sum, [qid, val]) => {
-      const q = QUESTIONS.find(q => q.id === qid)
+      if (!activeIds.has(qid)) return sum
+      const q = activeQuestions.find(q => q.id === qid)
       const c = q?.choices.find(c => c.value === val)
       return sum + (c?.score || 0)
     }, 0)
-  }, [answers])
+  }, [answers, activeQuestions])
 
   const tier = useMemo(() => getTier(answers, score), [score, answers])
   const reasoning = useMemo(() => buildReasoning(answers, tier), [answers, tier])
@@ -215,7 +239,10 @@ export default function QuizPage() {
   function selectChoice(value: string) {
     setAnswers(a => ({ ...a, [currentQ.id]: value }))
     if (!isLast) {
-      setTimeout(() => setStep(s => s + 1), 250)
+      // Use safeStep so we stay aligned with the (possibly filtered)
+      // active question list — important when citizenship just flipped
+      // to austrian/eu and the residence step disappeared.
+      setTimeout(() => setStep(safeStep + 1), 250)
     } else {
       setTimeout(() => setSubmitted(true), 300)
     }
@@ -258,13 +285,13 @@ export default function QuizPage() {
             <div className="mb-10">
               <div className="flex items-center justify-between mb-2 text-caption text-fg-tertiary">
                 <span>购房准备度</span>
-                <span className="tabular">{score} / {MAX_SCORE}</span>
+                <span className="tabular">{score} / {maxScore}</span>
               </div>
               <div className="h-2 rounded-full overflow-hidden bg-white/[0.06]">
                 <motion.div
                   className="h-full rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${(score / MAX_SCORE) * 100}%` }}
+                  animate={{ width: `${(score / maxScore) * 100}%` }}
                   transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                   style={{ background: meta.color }}
                 />
@@ -365,7 +392,7 @@ export default function QuizPage() {
   }
 
   // ─── Question screen ────────────────────────────────────────────────────
-  const progress = ((step + 1) / totalSteps) * 100
+  const progress = ((safeStep + 1) / totalSteps) * 100
 
   return (
     <div className="min-h-screen bg-bg-base text-fg-primary pt-16">
@@ -385,7 +412,7 @@ export default function QuizPage() {
         {/* Progress bar */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-2 text-caption text-fg-tertiary tabular">
-            <span>第 {step + 1} 题 / 共 {totalSteps} 题</span>
+            <span>第 {safeStep + 1} 题 / 共 {totalSteps} 题</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="h-1 rounded-full overflow-hidden bg-white/[0.06]">
@@ -443,8 +470,8 @@ export default function QuizPage() {
         {/* Nav */}
         <div className="flex items-center justify-between mt-10">
           <button
-            onClick={() => setStep(s => Math.max(0, s - 1))}
-            disabled={step === 0}
+            onClick={() => setStep(Math.max(0, safeStep - 1))}
+            disabled={safeStep === 0}
             className="inline-flex items-center gap-1.5 text-caption text-fg-secondary hover:text-fg-primary transition-colors duration-base ease-standard disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={14} strokeWidth={1.5} />
@@ -452,7 +479,7 @@ export default function QuizPage() {
           </button>
           {answers[currentQ.id] && !isLast && (
             <button
-              onClick={() => setStep(s => Math.min(totalSteps - 1, s + 1))}
+              onClick={() => setStep(Math.min(totalSteps - 1, safeStep + 1))}
               className="inline-flex items-center gap-1.5 text-caption text-gold hover:text-gold-hover transition-colors duration-base ease-standard"
             >
               下一题

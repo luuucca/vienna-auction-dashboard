@@ -97,7 +97,7 @@ export function MortgageCalculator({ initialPrice = 450_000, variant = 'full', h
           value={years}
           onChange={setYears}
           min={5}
-          max={30}
+          max={35}
           step={5}
         />
 
@@ -207,17 +207,45 @@ function Row({ label, value }: { label: string; value: string }) {
 function NumberInput({
   label, value, onChange, suffix, step, min, max,
 }: { label: string; value: number; onChange: (n: number) => void; suffix?: string; step: number; min: number; max: number }) {
+  // Local draft so the user can freely type partial values (e.g. erase
+  // "450000" → start typing "35..." without the keystroke "3" snapping
+  // to min). On blur we clamp to [min, max] and commit; during typing,
+  // only valid in-range values propagate to the parent so the rest of
+  // the calculator stays in sync.
+  const [draft, setDraft] = useState<string>(String(value))
+  const [focused, setFocused] = useState(false)
+
+  // Sync external changes (e.g. parent updates initialPrice) — but only
+  // when the input isn't focused, otherwise we'd overwrite the user's
+  // in-progress edit.
+  React.useEffect(() => {
+    if (!focused) setDraft(String(value))
+  }, [value, focused])
+
   return (
     <div>
       <label className="block text-overline text-fg-tertiary uppercase mb-2">{label}</label>
       <div className="relative">
         <input
-          type="number"
-          value={value}
-          step={step}
-          min={min}
-          max={max}
-          onChange={e => onChange(Math.max(min, Math.min(max, Number(e.target.value) || 0)))}
+          type="text"
+          inputMode="numeric"
+          value={draft}
+          onFocus={() => setFocused(true)}
+          onChange={e => {
+            const clean = e.target.value.replace(/[^\d]/g, '')
+            setDraft(clean)
+            const n = Number(clean)
+            // Only push to parent while user types if the value is sensible.
+            // Don't clamp here — that would silently rewrite the input.
+            if (clean !== '' && n >= min && n <= max) onChange(n)
+          }}
+          onBlur={() => {
+            setFocused(false)
+            const n = Number(draft)
+            const clamped = Math.max(min, Math.min(max, isNaN(n) || draft === '' ? min : n))
+            setDraft(String(clamped))
+            onChange(clamped)
+          }}
           className="w-full pl-4 pr-10 py-3 text-heading-md text-fg-primary tabular bg-bg-elev-2 border border-white/[0.08] rounded-md outline-none transition-[border-color] duration-base ease-standard focus:border-gold-line"
         />
         {suffix && (
