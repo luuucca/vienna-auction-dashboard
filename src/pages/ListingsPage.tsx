@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Gavel, ArrowRight, SlidersHorizontal, X, ChevronDown, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ListingCard as SharedListingCard } from '../components/ui/ListingCard'
@@ -118,19 +118,46 @@ function ListingCard({ listing }: { listing: Listing }) {
   )
 }
 
+/**
+ * Hydrate filter state from the URL search params on first render so
+ * that browsing into a listing and pressing the browser back button
+ * (or following a shared link) lands the user on the exact filtered
+ * view they had before. Defaults match the previous hard-coded initial
+ * state so untouched URLs keep their original behavior.
+ */
+function readUrlFilters(sp: URLSearchParams) {
+  const sortRaw = sp.get('sort')
+  const validSorts = SORT_OPTIONS.map(o => o.key) as readonly string[]
+  return {
+    mode: (sp.get('mode') === 'rent' ? 'rent' : 'buy') as 'buy' | 'rent',
+    priceIdx: Math.max(0, Number(sp.get('p')) || 0),
+    district: sp.get('d') ? `${sp.get('d')}区` : '全部区域',
+    rooms: sp.get('r') || '全部',
+    propType: sp.get('t') || '全部类型',
+    sortBy: (sortRaw && validSorts.includes(sortRaw) ? sortRaw : 'default') as SortKey,
+    pageSize: [10, 20, 50, 100].includes(Number(sp.get('per'))) ? Number(sp.get('per')) : 20,
+    currentPage: Math.max(1, Number(sp.get('page')) || 1),
+  }
+}
+
 export default function ListingsPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  // Lazy-init from URL — read once, then the component owns the state
+  // and writes back to the URL whenever it changes.
+  const initial = useMemo(() => readUrlFilters(searchParams), [])  // eslint-disable-line react-hooks/exhaustive-deps
+
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [mode, setMode] = useState<'buy' | 'rent'>('buy')
-  const [priceIdx, setPriceIdx] = useState(0)
-  const [district, setDistrict] = useState('全部区域')
-  const [rooms, setRooms] = useState('全部')
-  const [propType, setPropType] = useState('全部类型')
-  const [sortBy, setSortBy] = useState<SortKey>('default')
+  const [mode, setMode] = useState<'buy' | 'rent'>(initial.mode)
+  const [priceIdx, setPriceIdx] = useState(initial.priceIdx)
+  const [district, setDistrict] = useState(initial.district)
+  const [rooms, setRooms] = useState(initial.rooms)
+  const [propType, setPropType] = useState(initial.propType)
+  const [sortBy, setSortBy] = useState<SortKey>(initial.sortBy)
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [pageSize, setPageSize] = useState(20)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(initial.pageSize)
+  const [currentPage, setCurrentPage] = useState(initial.currentPage)
 
   useEffect(() => {
     let cancelled = false
@@ -218,8 +245,40 @@ export default function ListingsPage() {
     [filtered, safePage, pageSize]
   )
 
-  // Reset to page 1 whenever the filter or sort or page size changes
-  useEffect(() => { setCurrentPage(1) }, [mode, priceIdx, district, rooms, propType, sortBy, pageSize])
+  // Reset to page 1 whenever the filter or sort or page size changes —
+  // but skip the first mount so a URL-restored page (e.g. ?page=3) is
+  // preserved when the user returns from a listing detail page.
+  const filtersFirstMount = useRef(true)
+  useEffect(() => {
+    if (filtersFirstMount.current) { filtersFirstMount.current = false; return }
+    setCurrentPage(1)
+  }, [mode, priceIdx, district, rooms, propType, sortBy, pageSize])
+
+  // Persist filter state to URL query params (replace:true so each
+  // tweak doesn't pollute the browser history stack — only the
+  // navigation into a listing should create a new history entry).
+  // Also mirror to sessionStorage so the listing detail page's
+  // "返回列表" button can restore the same filtered view even when the
+  // user reached the detail page through a different path.
+  useEffect(() => {
+    const next = new URLSearchParams()
+    if (mode === 'rent') next.set('mode', 'rent')
+    if (priceIdx !== 0) next.set('p', String(priceIdx))
+    if (district !== '全部区域') next.set('d', district.replace('区', ''))
+    if (rooms !== '全部') next.set('r', rooms)
+    if (propType !== '全部类型') next.set('t', propType)
+    if (sortBy !== 'default') next.set('sort', sortBy)
+    if (pageSize !== 20) next.set('per', String(pageSize))
+    if (currentPage > 1) next.set('page', String(currentPage))
+    setSearchParams(next, { replace: true })
+    try {
+      const queryString = next.toString()
+      sessionStorage.setItem(
+        'lastListingsURL',
+        queryString ? `/listings?${queryString}` : '/listings'
+      )
+    } catch { /* sessionStorage may be unavailable in private mode */ }
+  }, [mode, priceIdx, district, rooms, propType, sortBy, pageSize, currentPage, setSearchParams])
 
   // Scroll to top whenever the page changes (better UX)
   useEffect(() => {

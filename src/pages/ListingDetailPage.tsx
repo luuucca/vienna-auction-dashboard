@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -431,6 +431,16 @@ export default function ListingDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Resolve the URL the "返回列表" button should link to. We restore
+  // whatever filtered listings view the user was on last (saved by
+  // ListingsPage into sessionStorage). Falls back to plain /listings
+  // if they reached this detail page through a direct/share link.
+  const backToListings = useMemo(() => {
+    if (typeof window === 'undefined') return '/listings'
+    try { return sessionStorage.getItem('lastListingsURL') || '/listings' }
+    catch { return '/listings' }
+  }, [])
+
 
   useEffect(() => {
     if (!id) return
@@ -459,7 +469,7 @@ export default function ListingDetailPage() {
         <p className="text-3xl mb-3">😶</p>
         <p className="font-semibold mb-2">房源未找到</p>
         <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>{error || '该房源可能已下架'}</p>
-        <Link to="/listings" className="px-5 py-2 rounded-xl text-sm font-semibold" style={{ background: '#d4af37', color: '#141414' }}>
+        <Link to={backToListings} className="px-5 py-2 rounded-xl text-sm font-semibold" style={{ background: '#d4af37', color: '#141414' }}>
           返回房源列表
         </Link>
       </div>
@@ -491,7 +501,7 @@ export default function ListingDetailPage() {
 
       {/* Top toolbar */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-5 pb-2 flex items-center justify-between">
-        <Link to="/listings"
+        <Link to={backToListings}
           className="inline-flex items-center gap-1.5 text-sm transition-all px-3 py-1.5 rounded-xl"
           style={{ color: 'rgba(255,255,255,0.55)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
           onMouseEnter={e => { e.currentTarget.style.color = '#d4af37'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
