@@ -181,9 +181,30 @@ function parseSearchResults(html) {
 
     const isPostponed = dateText.toLowerCase().includes('verschiebung');
 
-    // Skip completed/cancelled entries — only keep active auctions
-    const isActive = /^(Versteigerung|Verschiebung)/i.test(dateText);
-    if (!isActive) continue;
+    // Status derivation from the date-cell prefix. The Edikte search
+    // result puts one of these words at the start of the link text:
+    //
+    //   "Versteigerung (DD.MM.YYYY)"           — upcoming auction
+    //   "Verschiebung (von ... auf ...)"       — postponed
+    //   "Zuschlag mit Überbot (DD.MM.YYYY)"    — awarded but still biddable
+    //                                            in the Überbotsfrist
+    //   "Zuschlag (DD.MM.YYYY)"                — awarded, truly done
+    //   "Erloschen" / "Abgebrochen"            — ended
+    //
+    // We keep aktiv / verschoben / ueberbot; drop the rest.
+    let status;
+    const dtLower = dateText.toLowerCase();
+    if (/^versteigerung/i.test(dateText)) {
+      status = 'aktiv';
+    } else if (/^verschiebung/i.test(dateText)) {
+      status = 'verschoben';
+    } else if (dtLower.includes('überbot') || dtLower.includes('ueberbot')) {
+      // "Zuschlag mit Überbot" — still publicly biddable
+      status = 'ueberbot';
+    } else {
+      // Plain "Zuschlag", "Erloschen", "Abgebrochen", etc. — skip
+      continue;
+    }
 
     entries.push({
       unidPath,
@@ -191,6 +212,7 @@ function parseSearchResults(html) {
       detailUrl: `${BASE}/${unidPath}!OpenDocument`,
       auctionDate,
       isPostponed,
+      status,
       address,
       plz,
       categoriesRaw,
@@ -281,6 +303,7 @@ function upsert(existing, incoming) {
   // Use UNID-based id as the unique key (each unit/document has its own UNID)
   const idx = new Map(existing.map((r, i) => [r.id, i]));
   let added = 0, updated = 0;
+  const now = new Date().toISOString();
   const merged = [...existing];
 
   for (const rec of incoming) {
@@ -292,10 +315,14 @@ function upsert(existing, incoming) {
         summary: merged[i].summary || rec.summary,
         riskTags: merged[i].riskTags?.length ? merged[i].riskTags : rec.riskTags,
         shortReportUrl: merged[i].shortReportUrl || rec.shortReportUrl,
+        // Preserve the original "first seen" stamp across re-runs.
+        // Old records without it stay without it — the frontend treats
+        // missing firstSeenAt as oldest in the "newest added" sort.
+        firstSeenAt: merged[i].firstSeenAt || rec.firstSeenAt || '',
       };
       updated++;
     } else {
-      merged.push(rec);
+      merged.push({ ...rec, firstSeenAt: now });
       idx.set(key, merged.length - 1);
       added++;
     }
@@ -378,6 +405,10 @@ async function main() {
         ownershipType: parsed.ownershipType,
         summary: parsed.ownershipType || '',
         riskTags: [],
+        // Auction lifecycle status: 'aktiv' (scheduled), 'verschoben'
+        // (postponed), or 'ueberbot' (awarded but still biddable in the
+        // Überbotsfrist). Anything else has been filtered out upstream.
+        status: entry.status,
         detailUrl: entry.detailUrl,
         pdfUrl: parsed.pdfUrl,
         shortReportUrl: parsed.shortReportUrl,

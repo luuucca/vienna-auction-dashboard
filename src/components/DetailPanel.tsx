@@ -47,10 +47,19 @@ export function DetailPanel({ auction, onClose }: Props) {
       {/* Header row */}
       <div className="flex items-start justify-between gap-3 px-4 pt-3 pb-2">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className="text-xs font-medium text-gold-600 bg-gold-50 border border-gold-200 px-2 py-0.5 rounded-full">
               当前选中
             </span>
+            {auction.status === 'ueberbot' && (
+              <span
+                className="text-xs font-semibold px-2 py-0.5 rounded-full border"
+                style={{ background: '#FBF4DC', color: '#8C6A12', borderColor: '#D4AF37' }}
+                title="此房源已成交,但仍处于 Überbotsfrist —— 出更高价仍有机会获得"
+              >
+                可超价 · Zuschlag mit Überbot
+              </span>
+            )}
             <span className="text-xs text-warm-400 font-mono">{auction.caseNumber}</span>
           </div>
           <h2 className="font-serif font-semibold text-forest-700 text-base leading-tight">
@@ -72,6 +81,21 @@ export function DetailPanel({ auction, onClose }: Props) {
 
       {/* Metrics row */}
       <div className="px-4 pb-3">
+        {auction.status === 'ueberbot' && (
+          <div
+            className="rounded-md px-3 py-2 mb-3 text-xs leading-relaxed"
+            style={{
+              background: '#FBF4DC',
+              color: '#5C4308',
+              border: '1px solid #E8C766',
+            }}
+          >
+            <strong>Zuschlag mit Überbot</strong> · 此房源已在拍卖中落槌成交,
+            但在 <strong>Überbotsfrist</strong>(法定超价期,通常 14 天)内,
+            任何人仍可向法院提交至少高出 25% 的"超价竞买"申请,获得购房机会。
+            建议先联系我们核实当前期限及详细条件。
+          </div>
+        )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
           <BigMetric
             label="估值"

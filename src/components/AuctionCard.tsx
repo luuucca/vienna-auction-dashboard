@@ -42,6 +42,28 @@ function getCategoryColor(cat: string): string {
   return CATEGORY_COLORS[cat] ?? '#6E685F'
 }
 
+/**
+ * Badge for auctions in the Überbotsfrist — formally awarded but still
+ * publicly biddable for ~14 days after the original auction date. We
+ * show this instead of the "X 天后 / 已结束" chip because either of
+ * those would be misleading.
+ */
+function UeberbotChip() {
+  return (
+    <span
+      className="text-xs px-2 py-0.5 rounded-full font-semibold border"
+      style={{
+        background: '#FBF4DC',
+        color: '#8C6A12',
+        borderColor: '#D4AF37',
+      }}
+      title="此房源已成交,但仍处于 Überbotsfrist —— 出更高价仍有机会获得"
+    >
+      可超价 · Überbot
+    </span>
+  )
+}
+
 function DaysChip({ dateStr }: { dateStr: string }) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -120,7 +142,11 @@ export function AuctionCard({ auction, isSelected, onClick }: Props) {
           <span className="text-xs text-warm-400 truncate font-mono">{auction.caseNumber}</span>
         </div>
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <DaysChip dateStr={auction.auctionDate} />
+          {auction.status === 'ueberbot' ? (
+            <UeberbotChip />
+          ) : (
+            <DaysChip dateStr={auction.auctionDate} />
+          )}
           {isSelected && <ChevronRight size={14} className="text-gold-500" />}
         </div>
       </div>

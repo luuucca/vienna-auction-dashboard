@@ -14,6 +14,7 @@ const CATEGORIES: AuctionCategory[] = [
 ]
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'added-desc', label: '最新添加' },
   { value: 'date-asc', label: '拍卖日期最近' },
   { value: 'value-desc', label: '估价最高' },
   { value: 'sqm-value-desc', label: '每平米估价最高' },

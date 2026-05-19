@@ -22,8 +22,16 @@ export default function AuctionPage() {
 
   const filteredAuctions = useMemo(() => {
     const q = filters.search.toLowerCase()
+    // Today as YYYY-MM-DD for direct comparison against auctionDate.
+    const today = new Date().toISOString().slice(0, 10)
     return auctions
       .filter((a) => {
+        // Hide auctions whose date has passed UNLESS they're in the
+        // Überbotsfrist — those can still receive a higher bid and
+        // remain commercially relevant for our buyers.
+        const isPast = a.auctionDate && a.auctionDate < today
+        if (isPast && a.status !== 'ueberbot') return false
+
         const matchSearch =
           !q ||
           a.address.toLowerCase().includes(q) ||
@@ -37,6 +45,16 @@ export default function AuctionPage() {
       })
       .sort((a, b) => {
         switch (filters.sortBy) {
+          case 'added-desc': {
+            // Newest first by firstSeenAt. Records scraped before this
+            // field was added have firstSeenAt = '' and fall to the
+            // bottom, which matches user intent ("最新添加" = most
+            // recently added to the dashboard).
+            const aSeen = a.firstSeenAt || ''
+            const bSeen = b.firstSeenAt || ''
+            if (aSeen === bSeen) return a.auctionDate.localeCompare(b.auctionDate)
+            return bSeen.localeCompare(aSeen)
+          }
           case 'date-asc':       return a.auctionDate.localeCompare(b.auctionDate)
           case 'value-desc':     return b.estimatedValue - a.estimatedValue
           case 'sqm-value-desc': return b.pricePerSqm - a.pricePerSqm
