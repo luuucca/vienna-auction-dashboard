@@ -181,30 +181,11 @@ function parseSearchResults(html) {
 
     const isPostponed = dateText.toLowerCase().includes('verschiebung');
 
-    // Status derivation from the date-cell prefix. The Edikte search
-    // result puts one of these words at the start of the link text:
-    //
-    //   "Versteigerung (DD.MM.YYYY)"           — upcoming auction
-    //   "Verschiebung (von ... auf ...)"       — postponed
-    //   "Zuschlag mit Überbot (DD.MM.YYYY)"    — awarded but still biddable
-    //                                            in the Überbotsfrist
-    //   "Zuschlag (DD.MM.YYYY)"                — awarded, truly done
-    //   "Erloschen" / "Abgebrochen"            — ended
-    //
-    // We keep aktiv / verschoben / ueberbot; drop the rest.
-    let status;
-    const dtLower = dateText.toLowerCase();
-    if (/^versteigerung/i.test(dateText)) {
-      status = 'aktiv';
-    } else if (/^verschiebung/i.test(dateText)) {
-      status = 'verschoben';
-    } else if (dtLower.includes('überbot') || dtLower.includes('ueberbot')) {
-      // "Zuschlag mit Überbot" — still publicly biddable
-      status = 'ueberbot';
-    } else {
-      // Plain "Zuschlag", "Erloschen", "Abgebrochen", etc. — skip
-      continue;
-    }
+    // Skip completed/cancelled entries — only keep active auctions.
+    // (Earlier experiment with "Zuschlag mit Überbot" was rolled back
+    //  per product decision.)
+    const isActive = /^(Versteigerung|Verschiebung)/i.test(dateText);
+    if (!isActive) continue;
 
     entries.push({
       unidPath,
@@ -212,7 +193,6 @@ function parseSearchResults(html) {
       detailUrl: `${BASE}/${unidPath}!OpenDocument`,
       auctionDate,
       isPostponed,
-      status,
       address,
       plz,
       categoriesRaw,
@@ -405,10 +385,6 @@ async function main() {
         ownershipType: parsed.ownershipType,
         summary: parsed.ownershipType || '',
         riskTags: [],
-        // Auction lifecycle status: 'aktiv' (scheduled), 'verschoben'
-        // (postponed), or 'ueberbot' (awarded but still biddable in the
-        // Überbotsfrist). Anything else has been filtered out upstream.
-        status: entry.status,
         detailUrl: entry.detailUrl,
         pdfUrl: parsed.pdfUrl,
         shortReportUrl: parsed.shortReportUrl,

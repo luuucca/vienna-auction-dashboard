@@ -17,8 +17,6 @@ export type SortOption =
   | 'bid-ratio-asc'
   | 'added-desc'
 
-export type AuctionStatus = 'aktiv' | 'verschoben' | 'ueberbot'
-
 export interface Auction {
   id: string
   caseNumber: string
@@ -51,16 +49,6 @@ export interface Auction {
   detailUrl: string
   pdfUrl: string
   shortReportUrl: string
-  /**
-   * Auction lifecycle status, populated by the scraper:
-   *   - 'aktiv'     : 已公示,即将开拍
-   *   - 'verschoben': 已延期,新日期在 auctionDate
-   *   - 'ueberbot'  : 已落槌,但仍处于 Überbotsfrist —— 理论上还能被超价竞买
-   *
-   * Older records scraped before this field existed may be missing it;
-   * the frontend treats `undefined` as 'aktiv' for backwards compat.
-   */
-  status?: AuctionStatus
   /** ISO timestamp of when the scraper first encountered this UNID. */
   firstSeenAt?: string
 }

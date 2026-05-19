@@ -48,18 +48,11 @@ export function useAuctions(): UseAuctionsResult {
       .then((data) => {
         const PARKING_KEYWORDS = /stellplatz|parkplatz|garage|tiefgarage|abstellplatz|motorrad|fahrrad/i
         setAuctions(data.filter((a) => {
-          // Überbot rows often have empty Schätzwert / Mindestgebot
-          // (those fields disappear once the auction has been awarded
-          // — only Meistbot remains). Don't drop them on missing price
-          // — they're commercially relevant precisely because the
-          // user can still submit a higher bid.
-          const isUeberbot = a.status === 'ueberbot'
-          if (!isUeberbot && !(a.estimatedValue > 0 || a.minimumBid > 0)) return false
+          if (!(a.estimatedValue > 0 || a.minimumBid > 0)) return false
           // 剔除停车位、车库等非住宅标的
           if (PARKING_KEYWORDS.test(a.summary ?? '')) return false
-          // 估值极低（< €15,000）基本是停车位或储藏室。对 Überbot
-          // 不适用,因为 estimatedValue 多半是 0。
-          if (!isUeberbot && a.estimatedValue > 0 && a.estimatedValue < 15000) return false
+          // 估值极低（< €15,000）基本是停车位或储藏室
+          if (a.estimatedValue > 0 && a.estimatedValue < 15000) return false
           return true
         }))
         setLoading(false)

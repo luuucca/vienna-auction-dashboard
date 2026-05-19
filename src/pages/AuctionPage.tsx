@@ -26,11 +26,9 @@ export default function AuctionPage() {
     const today = new Date().toISOString().slice(0, 10)
     return auctions
       .filter((a) => {
-        // Hide auctions whose date has passed UNLESS they're in the
-        // Überbotsfrist — those can still receive a higher bid and
-        // remain commercially relevant for our buyers.
-        const isPast = a.auctionDate && a.auctionDate < today
-        if (isPast && a.status !== 'ueberbot') return false
+        // Hide auctions whose date has passed — they're no longer
+        // actionable for buyers.
+        if (a.auctionDate && a.auctionDate < today) return false
 
         const matchSearch =
           !q ||
