@@ -24,12 +24,19 @@ import { useReducedMotion } from 'framer-motion'
  *   - prefers-reduced-motion freezes on slide 1, no advancement.
  */
 
-const SLIDES = [
-  '/hero/01-stephansdom-dusk.mp4',
-  '/hero/02-belvedere-golden.mp4',
-  '/hero/06-hofburg-sunset.mp4',
-  '/hero/03-ringstrasse-night.mp4',
-  '/hero/04-donaukanal-twilight.mp4',
+// Each slide can override the default duration (e.g. the AX-logo
+// intro is 10s native and needs a longer window than the 5s Seedance
+// clips).
+const SLIDES: { src: string; duration?: number; rate?: number }[] = [
+  // Custom AX logo intro — 10s native, 16:9. Plays at natural speed
+  // (rate 1.0) so the brand reveal lands cleanly; gets a 10s slot
+  // before crossfading out to the cinematic Vienna footage.
+  { src: '/hero/00-AXLOGOSHOT.mp4', duration: 10000, rate: 1.0 },
+  { src: '/hero/01-stephansdom-dusk.mp4' },
+  { src: '/hero/02-belvedere-golden.mp4' },
+  { src: '/hero/06-hofburg-sunset.mp4' },
+  { src: '/hero/03-ringstrasse-night.mp4' },
+  { src: '/hero/04-donaukanal-twilight.mp4' },
 ]
 
 // Still image shown by the WeChat in-app browser, slow connections, and
@@ -51,10 +58,13 @@ export function HeroVideoLoop() {
   const refs = React.useRef<(HTMLVideoElement | null)[]>([])
   const reduce = useReducedMotion()
 
-  // Advance through the rotation
+  // Advance through the rotation. Use setTimeout (not setInterval) so
+  // each slide can carry its own custom duration — the AX intro
+  // (10s) needs more time than a 5s Seedance clip.
   React.useEffect(() => {
     if (reduce || SLIDES.length <= 1) return
-    const id = window.setInterval(() => {
+    const duration = SLIDES[index]?.duration ?? SLIDE_DURATION_MS
+    const id = window.setTimeout(() => {
       if (document.hidden) return
       setIndex(i => {
         let next = (i + 1) % SLIDES.length
@@ -65,9 +75,9 @@ export function HeroVideoLoop() {
         }
         return next
       })
-    }, SLIDE_DURATION_MS)
-    return () => clearInterval(id)
-  }, [reduce, available])
+    }, duration)
+    return () => clearTimeout(id)
+  }, [reduce, available, index])
 
   // On index change (and on mount):
   //  - rewind + play the incoming clip
@@ -78,7 +88,9 @@ export function HeroVideoLoop() {
     if (incoming) {
       try {
         incoming.currentTime = 0
-        incoming.playbackRate = PLAYBACK_RATE
+        // Per-slide rate override (e.g. logo intro plays at natural
+        // speed for clean brand reveal), else default to global rate.
+        incoming.playbackRate = SLIDES[index]?.rate ?? PLAYBACK_RATE
         // play() returns a Promise; swallow rejections from autoplay
         // policies — muted + playsInline means the browser will
         // generally grant it, but a tab-throttle race can still
@@ -126,11 +138,11 @@ export function HeroVideoLoop() {
           transition: 'opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       />
-      {SLIDES.map((src, i) => (
+      {SLIDES.map((slide, i) => (
         <video
-          key={src}
+          key={slide.src}
           ref={(el) => { refs.current[i] = el }}
-          src={src}
+          src={slide.src}
           poster={FALLBACK_POSTER}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
