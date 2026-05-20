@@ -514,27 +514,6 @@ export default function HomePage() {
                 'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(12,12,12,0.55) 100%)',
             }}
           />
-          {/* Watermark mask — covers the Gemini watermark baked into
-              the bottom-right of the AX intro clip. Feathered radial
-              gradient melts into the existing dimming layer so the
-              patch reads as natural corner shading, not a sticker.
-              Sized generously so the watermark is masked across
-              viewport sizes despite object-cover cropping. */}
-          <div
-            aria-hidden
-            className="absolute"
-            style={{
-              bottom: 0,
-              right: 0,
-              width: 'clamp(160px, 22vw, 280px)',
-              height: 'clamp(60px, 9vh, 110px)',
-              opacity: heroIndex === 0 ? 1 : 0,
-              transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
-              background:
-                'radial-gradient(ellipse at bottom right, rgba(10,10,10,1) 0%, rgba(10,10,10,0.96) 35%, rgba(10,10,10,0.7) 65%, rgba(10,10,10,0) 100%)',
-              pointerEvents: 'none',
-            }}
-          />
         </motion.div>
 
         {/* Subtle gold dots over the image — keeps the editorial texture */}
