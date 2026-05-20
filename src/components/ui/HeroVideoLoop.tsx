@@ -26,15 +26,15 @@ import { useReducedMotion } from 'framer-motion'
 
 // Each slide can override the default duration (e.g. the AX-logo
 // intro is 10s native and needs a longer window than the 5s Seedance
-// clips).
-const SLIDES: { src: string; duration?: number; rate?: number }[] = [
+// clips). `peakOpacity` overrides the global 0.72 dim — set to 1.0
+// for slides the brand wants shown at full intensity.
+const SLIDES: { src: string; duration?: number; rate?: number; peakOpacity?: number }[] = [
   // Custom AX logo intro — 10s native, 16:9. Plays at natural speed
-  // (rate 1.0) so the brand reveal lands cleanly. We give it a 12s
-  // window: 10s of full playback + ~2s holding on the last frame
-  // (videos auto-pause at end since there's no loop attribute), then
-  // the 1.5s crossfade begins. Without this buffer the fade-out
-  // overlapped the final beats of the clip and felt prematurely cut.
-  { src: '/hero/00-AXLOGOSHOT.mp4', duration: 12000, rate: 1.0 },
+  // (rate 1.0), full opacity (1.0), and the parent <HomePage> hides
+  // its gradient/vignette membrane while index === 0 so the brand
+  // reveal lands clean. Subsequent slides revert to dimmed +
+  // membrane on for editorial mood.
+  { src: '/hero/00-AXLOGOSHOT.mp4', duration: 12000, rate: 1.0, peakOpacity: 1.0 },
   { src: '/hero/01-stephansdom-dusk.mp4' },
   { src: '/hero/02-belvedere-golden.mp4' },
   { src: '/hero/06-hofburg-sunset.mp4' },
@@ -53,15 +53,26 @@ const FALLBACK_POSTER = 'https://images.unsplash.com/photo-1516550893923-42d28e5
 const PLAYBACK_RATE     = 0.78
 const SLIDE_DURATION_MS = 5000
 const CROSSFADE_MS      = 1500
-// Temporarily 1.0 (raw video) — testing how the hero feels without
-// the membrane overlay. Drop back to ~0.72 if text becomes unreadable.
-const PEAK_OPACITY      = 1.0
+// Default video opacity. The AX logo intro overrides this to 1.0 via
+// the per-slide `peakOpacity` field; other slides stay at 0.72 to
+// blend with the dimming overlay laid on top by HomePage.
+const PEAK_OPACITY      = 0.72
 
-export function HeroVideoLoop() {
+interface HeroVideoLoopProps {
+  /** Called whenever the visible slide changes — lets the parent
+   *  conditionally render UI like overlays based on which clip is
+   *  currently on screen. */
+  onIndexChange?: (index: number) => void
+}
+
+export function HeroVideoLoop({ onIndexChange }: HeroVideoLoopProps = {}) {
   const [index, setIndex] = React.useState(0)
   const [available, setAvailable] = React.useState<boolean[]>(() => SLIDES.map(() => true))
   const refs = React.useRef<(HTMLVideoElement | null)[]>([])
   const reduce = useReducedMotion()
+
+  // Notify the parent whenever the active slide changes (and on mount).
+  React.useEffect(() => { onIndexChange?.(index) }, [index, onIndexChange])
 
   // Advance through the rotation. Use setTimeout (not setInterval) so
   // each slide can carry its own custom duration — the AX intro
@@ -151,7 +162,7 @@ export function HeroVideoLoop() {
           poster={FALLBACK_POSTER}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            opacity: available[i] && i === index ? PEAK_OPACITY : 0,
+            opacity: available[i] && i === index ? (slide.peakOpacity ?? PEAK_OPACITY) : 0,
             transition: `opacity ${CROSSFADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
             willChange: 'opacity',
           }}

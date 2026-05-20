@@ -424,6 +424,10 @@ export default function HomePage() {
   const featured = useFeaturedListings()
   const [formSent, setFormSent] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
+  // Track which hero clip is on screen so we can disable the dimming
+  // overlays during the AX brand intro (slide 0) and re-enable them
+  // for the cinematic Vienna footage that follows.
+  const [heroIndex, setHeroIndex] = useState(0)
 
   // ── Scroll-driven hero animation ─────────────────────────────────────────
   // As the user scrolls down through the first viewport (0 → 100vh), the
@@ -483,11 +487,31 @@ export default function HomePage() {
           className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
           style={{ y: bgPatternY }}
         >
-          <HeroVideoLoop />
-          {/* Overlays temporarily stripped per user request — videos
-              render at full opacity with no gradient/vignette so the
-              raw footage is visible. Text readability may suffer;
-              we'll re-introduce dimming based on the preview. */}
+          <HeroVideoLoop onIndexChange={setHeroIndex} />
+          {/* Dimming + vignette membrane only shows on slides ≥ 1 —
+              the AX logo intro plays naked so the brand reveal lands
+              cleanly. Both layers fade in/out smoothly during the
+              slide crossfade so the transition stays cinematic. */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              opacity: heroIndex === 0 ? 0 : 1,
+              transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
+              background:
+                'linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.65) 35%, rgba(12,12,12,0.88) 75%, rgba(12,12,12,1) 100%)',
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              opacity: heroIndex === 0 ? 0 : 1,
+              transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
+              background:
+                'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(12,12,12,0.55) 100%)',
+            }}
+          />
         </motion.div>
 
         {/* Subtle gold dots over the image — keeps the editorial texture */}
