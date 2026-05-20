@@ -488,16 +488,15 @@ export default function HomePage() {
           style={{ y: bgPatternY }}
         >
           <HeroVideoLoop onIndexChange={setHeroIndex} />
-          {/* Dimming gradient — on slide 0 (AX logo) we fade it down
-              to ~25% so the brand reveal stays vibrant but the page
-              transition into the section below remains seamless. On
-              slides 1+ it goes back to full strength for the
-              cinematic editorial mood. */}
+          {/* Dimming gradient — on slide 0 (AX logo) we hold it at
+              ~45% so the brand reveal still sings but picks up a
+              slight membrane (user-requested tweak). Slides 1+ stay
+              at full strength for the cinematic editorial mood. */}
           <div
             aria-hidden
             className="absolute inset-0"
             style={{
-              opacity: heroIndex === 0 ? 0.25 : 1,
+              opacity: heroIndex === 0 ? 0.45 : 1,
               transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
               background:
                 'linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.65) 35%, rgba(12,12,12,0.88) 75%, rgba(12,12,12,1) 100%)',
@@ -513,6 +512,27 @@ export default function HomePage() {
               transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
               background:
                 'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(12,12,12,0.55) 100%)',
+            }}
+          />
+          {/* Watermark mask — covers the Gemini watermark baked into
+              the bottom-right of the AX intro clip. Feathered radial
+              gradient melts into the existing dimming layer so the
+              patch reads as natural corner shading, not a sticker.
+              Sized generously so the watermark is masked across
+              viewport sizes despite object-cover cropping. */}
+          <div
+            aria-hidden
+            className="absolute"
+            style={{
+              bottom: 0,
+              right: 0,
+              width: 'clamp(160px, 22vw, 280px)',
+              height: 'clamp(60px, 9vh, 110px)',
+              opacity: heroIndex === 0 ? 1 : 0,
+              transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
+              background:
+                'radial-gradient(ellipse at bottom right, rgba(10,10,10,1) 0%, rgba(10,10,10,0.96) 35%, rgba(10,10,10,0.7) 65%, rgba(10,10,10,0) 100%)',
+              pointerEvents: 'none',
             }}
           />
         </motion.div>
