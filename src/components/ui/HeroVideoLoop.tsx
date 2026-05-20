@@ -29,9 +29,12 @@ import { useReducedMotion } from 'framer-motion'
 // clips).
 const SLIDES: { src: string; duration?: number; rate?: number }[] = [
   // Custom AX logo intro — 10s native, 16:9. Plays at natural speed
-  // (rate 1.0) so the brand reveal lands cleanly; gets a 10s slot
-  // before crossfading out to the cinematic Vienna footage.
-  { src: '/hero/00-AXLOGOSHOT.mp4', duration: 10000, rate: 1.0 },
+  // (rate 1.0) so the brand reveal lands cleanly. We give it a 12s
+  // window: 10s of full playback + ~2s holding on the last frame
+  // (videos auto-pause at end since there's no loop attribute), then
+  // the 1.5s crossfade begins. Without this buffer the fade-out
+  // overlapped the final beats of the clip and felt prematurely cut.
+  { src: '/hero/00-AXLOGOSHOT.mp4', duration: 12000, rate: 1.0 },
   { src: '/hero/01-stephansdom-dusk.mp4' },
   { src: '/hero/02-belvedere-golden.mp4' },
   { src: '/hero/06-hofburg-sunset.mp4' },
