@@ -53,7 +53,9 @@ const FALLBACK_POSTER = 'https://images.unsplash.com/photo-1516550893923-42d28e5
 const PLAYBACK_RATE     = 0.78
 const SLIDE_DURATION_MS = 5000
 const CROSSFADE_MS      = 1500
-const PEAK_OPACITY      = 0.72
+// Temporarily 1.0 (raw video) — testing how the hero feels without
+// the membrane overlay. Drop back to ~0.72 if text becomes unreadable.
+const PEAK_OPACITY      = 1.0
 
 export function HeroVideoLoop() {
   const [index, setIndex] = React.useState(0)

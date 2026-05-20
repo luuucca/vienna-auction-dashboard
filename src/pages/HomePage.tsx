@@ -484,24 +484,10 @@ export default function HomePage() {
           style={{ y: bgPatternY }}
         >
           <HeroVideoLoop />
-          {/* Top→bottom darkening so text stays readable */}
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.65) 35%, rgba(12,12,12,0.88) 75%, rgba(12,12,12,1) 100%)',
-            }}
-          />
-          {/* Side / center vignette to focus on the headline */}
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(12,12,12,0.55) 100%)',
-            }}
-          />
+          {/* Overlays temporarily stripped per user request — videos
+              render at full opacity with no gradient/vignette so the
+              raw footage is visible. Text readability may suffer;
+              we'll re-introduce dimming based on the preview. */}
         </motion.div>
 
         {/* Subtle gold dots over the image — keeps the editorial texture */}
