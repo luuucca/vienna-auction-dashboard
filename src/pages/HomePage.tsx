@@ -488,20 +488,23 @@ export default function HomePage() {
           style={{ y: bgPatternY }}
         >
           <HeroVideoLoop onIndexChange={setHeroIndex} />
-          {/* Dimming + vignette membrane only shows on slides ≥ 1 —
-              the AX logo intro plays naked so the brand reveal lands
-              cleanly. Both layers fade in/out smoothly during the
-              slide crossfade so the transition stays cinematic. */}
+          {/* Dimming gradient — on slide 0 (AX logo) we fade it down
+              to ~25% so the brand reveal stays vibrant but the page
+              transition into the section below remains seamless. On
+              slides 1+ it goes back to full strength for the
+              cinematic editorial mood. */}
           <div
             aria-hidden
             className="absolute inset-0"
             style={{
-              opacity: heroIndex === 0 ? 0 : 1,
+              opacity: heroIndex === 0 ? 0.25 : 1,
               transition: 'opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)',
               background:
                 'linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.65) 35%, rgba(12,12,12,0.88) 75%, rgba(12,12,12,1) 100%)',
             }}
           />
+          {/* Center vignette — skipped entirely on slide 0 (would
+              darken the logo itself), full strength on others. */}
           <div
             aria-hidden
             className="absolute inset-0"
